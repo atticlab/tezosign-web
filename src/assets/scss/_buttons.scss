@@ -1,0 +1,18 @@
+.btn-primary {
+  color: $white;
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.disabled,
+  &:disabled {
+    color: $white;
+  }
+}
+
+.btn-outline-primary {
+  &:hover,
+  &:not(:disabled):not(.disabled):active {
+    color: $white;
+  }
+}
