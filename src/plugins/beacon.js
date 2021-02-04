@@ -14,6 +14,7 @@ const defNetwork = networkTypesMap[process.env.REACT_APP_TEZOS_NETWORK];
 
 const client = new DAppClient({
   name: 'TzSign',
+  preferredNetwork: defNetwork,
 });
 
 const initClient = () => {
@@ -62,7 +63,6 @@ const sendOrigination = async (balance = '0', script) => {
 };
 
 const requestSignPayload = (payload) => {
-  // edsig signature
   return client.requestSignPayload({
     payload,
     // sourceAddress
