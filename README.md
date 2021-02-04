@@ -1,5 +1,7 @@
 # TzSign (front-end)
 
+<p style="color:red">The project is under active development, use at your own discretion</p>
+
 TzSign is the first Tezos multisig web wallet developed by Attic Lab and based on the TQ’s multisig contract. TzSign allows you to create and send transactions, delegations and will also provide the vesting functionality.
 
 The wallet supports Beacon authentication and currently runs on the Delphi testnet.
