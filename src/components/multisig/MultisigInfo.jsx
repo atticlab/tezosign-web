@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import PropTypes from 'prop-types';
 import { Badge } from 'react-bootstrap';
 import styled from 'styled-components';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -65,8 +64,12 @@ ContractManagement.Address = styled.div`
   }
 `;
 
-const MultisigInfo = ({ contractAddress }) => {
-  const { isUserOwner, contractInfo } = useContractStateContext();
+const MultisigInfo = () => {
+  const {
+    contractAddress,
+    isUserOwner,
+    contractInfo,
+  } = useContractStateContext();
   const userType = useMemo(() => {
     return isUserOwner ? 'Owner' : 'Viewer';
   }, [isUserOwner]);
@@ -121,10 +124,6 @@ const MultisigInfo = ({ contractAddress }) => {
       {isUserOwner && <NewOperation contractAddress={contractAddress} />}
     </SectionMultisigInfo>
   );
-};
-
-MultisigInfo.propTypes = {
-  contractAddress: PropTypes.string.isRequired,
 };
 
 export default MultisigInfo;

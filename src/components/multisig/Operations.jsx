@@ -1,9 +1,9 @@
 import React, {
-  useMemo,
-  useState,
-  useEffect,
-  useRef,
   useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
@@ -20,8 +20,8 @@ import { requestSignPayload, sendTx } from '../../plugins/beacon';
 import { convertMutezToXTZ } from '../../utils/helpers';
 import { dateFormat } from '../../utils/constants';
 import {
-  useOperationsStateContext,
   useOperationsDispatchContext,
+  useOperationsStateContext,
 } from '../../store/operationsContext';
 
 dayjs.extend(utc);
@@ -90,6 +90,25 @@ const fields = [
   { key: 'status' },
 ];
 
+const initialOpsCounts = {
+  pending: 0,
+  rejected: 0,
+  approved: 0,
+};
+
+const countOpTypes = (status, setCount) => {
+  if (!status) return null;
+
+  switch (status) {
+    case 'pending':
+      return setCount((prev) => ({ ...prev, pending: prev.pending + 1 }));
+    case 'rejected':
+      return setCount((prev) => ({ ...prev, rejected: prev.rejected + 1 }));
+    default:
+      return setCount((prev) => ({ ...prev, approved: prev.approved + 1 }));
+  }
+};
+
 const Operations = () => {
   // eslint-disable-next-line no-unused-vars
   const {
@@ -104,6 +123,27 @@ const Operations = () => {
   const [isActionLoading, setIsActionLoading] = useState(false);
   const { ops, isOpsLoading } = useOperationsStateContext();
   const { getOps, setOps } = useOperationsDispatchContext();
+  const [opsCountsByStatus, setOpsCountsByStatus] = useState(initialOpsCounts);
+
+  useEffect(() => {
+    getOps();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageNumber]);
+
+  const observer = useRef();
+  const lastItem = useCallback(
+    (node) => {
+      if (isOpsLoading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPageNumber((prevPageNumber) => prevPageNumber + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [isOpsLoading, hasMore],
+  );
 
   const acceptOperation = async (operationID) => {
     try {
@@ -167,61 +207,15 @@ const Operations = () => {
     }
   };
 
-  useEffect(() => {
-    getOps();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNumber]);
-
-  const observer = useRef();
-  const lastItem = useCallback(
-    (node) => {
-      if (isOpsLoading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setPageNumber((prevPageNumber) => prevPageNumber + 1);
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [isOpsLoading, hasMore],
-  );
-
-  const opsCountsByStatus = useMemo(() => {
-    if (!ops || !ops.length) {
-      return {
-        pending: 0,
-        rejected: 0,
-        approved: 0,
-      };
-    }
-
-    return ops.reduce(
-      (acc, op) => {
-        switch (op.status) {
-          case 'pending':
-            acc.pending += 1;
-            break;
-          case 'rejected':
-            acc.rejected += 1;
-            break;
-          default:
-            acc.approved += 1;
-        }
-        return acc;
-      },
-      {
-        pending: 0,
-        rejected: 0,
-        approved: 0,
-      },
-    );
-  }, [ops]);
-
   const opsPrepared = useMemo(() => {
     if (!ops || !ops.length) return [];
+    setOpsCountsByStatus((prev) => ({ ...prev, ...initialOpsCounts }));
 
     return ops.map((op) => {
+      if (op && op.status) {
+        countOpTypes(op.status, setOpsCountsByStatus);
+      }
+
       // eslint-disable-next-line no-param-reassign
       op = { ...op, ...op.operation_info };
 
@@ -443,17 +437,17 @@ const Operations = () => {
       }, {});
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActionLoading, ops]);
+  }, [ops]);
 
   return (
     <section>
       <TblGenInfo>
-        <TblGenInfo.Item>Pending: {opsCountsByStatus.pending}</TblGenInfo.Item>
+        <TblGenInfo.Item>Pending: {opsCountsByStatus?.pending}</TblGenInfo.Item>
         <TblGenInfo.Item>
-          Approved: {opsCountsByStatus.approved}
+          Approved: {opsCountsByStatus?.approved}
         </TblGenInfo.Item>
         <TblGenInfo.Item>
-          Rejected: {opsCountsByStatus.rejected}
+          Rejected: {opsCountsByStatus?.rejected}
         </TblGenInfo.Item>
       </TblGenInfo>
 

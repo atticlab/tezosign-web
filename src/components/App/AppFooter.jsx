@@ -42,6 +42,14 @@ const AppFooter = () => {
           rel="noreferrer"
         >
           Front-end repo
+        </a>{' '}
+        |{' '}
+        <a
+          href="https://tzsignwallet.com/docs"
+          target="_blank"
+          rel="noreferrer"
+        >
+          API docs
         </a>
         {/* {' '} |  <a href="https://atticlab.net/">Terms</a> |{' '} */}
         {/* <a href="https://atticlab.net/">Licences</a> |{' '} */}
