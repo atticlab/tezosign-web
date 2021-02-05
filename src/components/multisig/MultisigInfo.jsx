@@ -65,7 +65,7 @@ ContractManagement.Address = styled.div`
   }
 `;
 
-const MultisigInfo = ({ contractAddress, onCreate }) => {
+const MultisigInfo = ({ contractAddress }) => {
   const { isUserOwner, contractInfo } = useContractStateContext();
   const userType = useMemo(() => {
     return isUserOwner ? 'Owner' : 'Viewer';
@@ -118,16 +118,13 @@ const MultisigInfo = ({ contractAddress, onCreate }) => {
         </ContractManagement.Address>
       </ContractManagement>
 
-      {isUserOwner && (
-        <NewOperation contractAddress={contractAddress} onCreate={onCreate} />
-      )}
+      {isUserOwner && <NewOperation contractAddress={contractAddress} />}
     </SectionMultisigInfo>
   );
 };
 
 MultisigInfo.propTypes = {
   contractAddress: PropTypes.string.isRequired,
-  onCreate: PropTypes.func.isRequired,
 };
 
 export default MultisigInfo;

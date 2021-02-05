@@ -9,12 +9,11 @@ import MultisigInfo from '../components/multisig/MultisigInfo';
 import Operations from '../components/multisig/Operations';
 import Spinner from '../components/Spinner';
 import { bs58Validation } from '../utils/helpers';
-import useRequest from '../hooks/useRequest';
-import useAPI from '../hooks/useApi';
 import {
   useContractStateContext,
   useContractDispatchContext,
 } from '../store/contractContext';
+import { OperationsProvider } from '../store/operationsContext';
 
 const NavTabs = styled(Nav).attrs({ variant: 'pills' })`
   border-bottom: ${({ theme }) => theme.borderGrey};
@@ -58,7 +57,6 @@ const Multisig = () => {
     setIsContractInfoLoading,
     getContract,
   } = useContractDispatchContext();
-  const { getOperations } = useAPI();
 
   useEffect(() => {
     setContractAddress(address);
@@ -85,14 +83,6 @@ const Multisig = () => {
     };
   }, []);
 
-  // TODO: Create a separate context
-  const {
-    request: getOps,
-    resp: ops,
-    setResp: setOps,
-    isLoading: isOpsLoading,
-  } = useRequest(getOperations, contractAddress, true, []);
-
   return isContractInfoLoading ? (
     <div
       style={{
@@ -105,10 +95,10 @@ const Multisig = () => {
       <Spinner />
     </div>
   ) : (
-    <>
+    <OperationsProvider>
       <BtnBack pageName="Manage Multisig" />
 
-      <MultisigInfo contractAddress={contractAddress} onCreate={setOps} />
+      <MultisigInfo contractAddress={contractAddress} />
 
       <section>
         <Tab.Container defaultActiveKey="ops">
@@ -126,17 +116,12 @@ const Multisig = () => {
 
           <Tab.Content style={{ paddingTop: '20px' }}>
             <Tab.Pane eventKey="ops">
-              <Operations
-                request={getOps}
-                resp={ops}
-                setResp={setOps}
-                isLoading={isOpsLoading}
-              />
+              <Operations />
             </Tab.Pane>
           </Tab.Content>
         </Tab.Container>
       </section>
-    </>
+    </OperationsProvider>
   );
 };
 
