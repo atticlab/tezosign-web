@@ -10,6 +10,7 @@ import * as Yup from 'yup';
 import { FormLabel, FormSubmit } from '../../styled/Forms';
 import { bs58Validation } from '../../../utils/helpers';
 import useAPI from '../../../hooks/useApi';
+import { useOperationsDispatchContext } from '../../../store/operationsContext';
 
 const schema = Yup.object({
   baker: Yup.string()
@@ -40,6 +41,7 @@ const schema = Yup.object({
 const CreateDelegation = ({ contractAddress, onCreate }) => {
   // const [alias, setAlias] = useState('');
   const { sendOperation } = useAPI();
+  const { setOps } = useOperationsDispatchContext();
 
   return (
     <div>
@@ -62,7 +64,10 @@ const CreateDelegation = ({ contractAddress, onCreate }) => {
               type: 'delegation',
               to: values.baker,
             });
-            onCreate(newDelegation.data);
+            await setOps((prev) => {
+              return [newDelegation.data, ...prev];
+            });
+            onCreate();
           } catch (e) {
             console.error(e);
           } finally {
@@ -136,7 +141,10 @@ const CreateDelegation = ({ contractAddress, onCreate }) => {
                       contract_id: contractAddress,
                       type: 'delegation',
                     });
-                    onCreate(newDelegation.data);
+                    await setOps((prev) => {
+                      return [newDelegation.data, ...prev];
+                    });
+                    onCreate();
                   } catch (e) {
                     console.error(e);
                   } finally {

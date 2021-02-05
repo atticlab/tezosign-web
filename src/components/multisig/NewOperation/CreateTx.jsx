@@ -14,6 +14,7 @@ import {
 } from '../../../utils/helpers';
 import XTZ from '../../../assets/img/assets/xtz.png';
 import { useContractStateContext } from '../../../store/contractContext';
+import { useOperationsDispatchContext } from '../../../store/operationsContext';
 
 const Check = styled(BForm.Check)`
   padding-left: 0;
@@ -93,6 +94,7 @@ const CreateTx = ({ contractAddress, onCreate }) => {
       // usdTz: 32.54,
     };
   }, [contractInfo]);
+  const { setOps } = useOperationsDispatchContext();
 
   return (
     <Formik
@@ -112,7 +114,10 @@ const CreateTx = ({ contractAddress, onCreate }) => {
             amount: Number(convertXTZToMutez(values.amount)),
             to: values.to,
           });
-          onCreate(newTx.data);
+          await setOps((prev) => {
+            return [newTx.data, ...prev];
+          });
+          onCreate();
         } catch (e) {
           console.error(e);
         } finally {

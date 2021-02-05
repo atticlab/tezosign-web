@@ -45,7 +45,7 @@ const ModalClose = styled(Button).attrs({ variant: 'link' })`
   }
 `;
 
-const NewOperation = ({ contractAddress, onCreate }) => {
+const NewOperation = ({ contractAddress }) => {
   const [show, setShow] = useState(false);
   const [opType, setOpType] = useState('');
   const handleClose = () => {
@@ -95,12 +95,7 @@ const NewOperation = ({ contractAddress, onCreate }) => {
                 return (
                   <CreateTx
                     contractAddress={contractAddress}
-                    onCreate={async (resp) => {
-                      await onCreate((prev) => {
-                        return [resp, ...prev];
-                      });
-                      handleClose();
-                    }}
+                    onCreate={handleClose}
                   />
                 );
               }
@@ -109,12 +104,7 @@ const NewOperation = ({ contractAddress, onCreate }) => {
                 return (
                   <CreateDelegation
                     contractAddress={contractAddress}
-                    onCreate={async (resp) => {
-                      await onCreate((prev) => {
-                        return [resp, ...prev];
-                      });
-                      handleClose();
-                    }}
+                    onCreate={handleClose}
                   />
                 );
               }
@@ -153,7 +143,6 @@ const NewOperation = ({ contractAddress, onCreate }) => {
 
 NewOperation.propTypes = {
   contractAddress: PropTypes.string.isRequired,
-  onCreate: PropTypes.func.isRequired,
 };
 
 export default NewOperation;

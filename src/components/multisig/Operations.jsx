@@ -5,7 +5,6 @@ import React, {
   useRef,
   useCallback,
 } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -20,6 +19,10 @@ import useAPI from '../../hooks/useApi';
 import { requestSignPayload, sendTx } from '../../plugins/beacon';
 import { convertMutezToXTZ } from '../../utils/helpers';
 import { dateFormat } from '../../utils/constants';
+import {
+  useOperationsStateContext,
+  useOperationsDispatchContext,
+} from '../../store/operationsContext';
 
 dayjs.extend(utc);
 
@@ -87,9 +90,7 @@ const fields = [
   { key: 'status' },
 ];
 
-// eslint-disable-next-line no-unused-vars
-
-const Operations = ({ request, resp, setResp, isLoading }) => {
+const Operations = () => {
   // eslint-disable-next-line no-unused-vars
   const {
     contractAddress,
@@ -101,6 +102,8 @@ const Operations = ({ request, resp, setResp, isLoading }) => {
   const [pageNumber, setPageNumber] = useState(1);
   const hasMore = false;
   const [isActionLoading, setIsActionLoading] = useState(false);
+  const { ops, isOpsLoading } = useOperationsStateContext();
+  const { getOps, setOps } = useOperationsDispatchContext();
 
   const acceptOperation = async (operationID) => {
     try {
@@ -115,8 +118,8 @@ const Operations = ({ request, resp, setResp, isLoading }) => {
         pub_key: publicKey,
         signature: resSignature.signature,
       });
-      await setResp(() => null);
-      await request();
+      await setOps(() => null);
+      await getOps();
     } catch (e) {
       console.error(e);
     } finally {
@@ -137,8 +140,8 @@ const Operations = ({ request, resp, setResp, isLoading }) => {
         pub_key: publicKey,
         signature: resSignature.signature,
       });
-      await setResp(() => null);
-      await request();
+      await setOps(() => null);
+      await getOps();
     } catch (e) {
       console.error(e);
     } finally {
@@ -155,8 +158,8 @@ const Operations = ({ request, resp, setResp, isLoading }) => {
         value: JSON.parse(res.data.value),
       };
       await sendTx(0, contractAddress, params);
-      await setResp(() => null);
-      await request();
+      await setOps(() => null);
+      await getOps();
     } catch (e) {
       console.error(e);
     } finally {
@@ -165,14 +168,14 @@ const Operations = ({ request, resp, setResp, isLoading }) => {
   };
 
   useEffect(() => {
-    request();
+    getOps();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);
 
   const observer = useRef();
   const lastItem = useCallback(
     (node) => {
-      if (isLoading) return;
+      if (isOpsLoading) return;
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
@@ -181,11 +184,11 @@ const Operations = ({ request, resp, setResp, isLoading }) => {
       });
       if (node) observer.current.observe(node);
     },
-    [isLoading, hasMore],
+    [isOpsLoading, hasMore],
   );
 
   const opsCountsByStatus = useMemo(() => {
-    if (!resp || !resp.length) {
+    if (!ops || !ops.length) {
       return {
         pending: 0,
         rejected: 0,
@@ -193,7 +196,7 @@ const Operations = ({ request, resp, setResp, isLoading }) => {
       };
     }
 
-    return resp.reduce(
+    return ops.reduce(
       (acc, op) => {
         switch (op.status) {
           case 'pending':
@@ -213,12 +216,12 @@ const Operations = ({ request, resp, setResp, isLoading }) => {
         approved: 0,
       },
     );
-  }, [resp]);
+  }, [ops]);
 
   const opsPrepared = useMemo(() => {
-    if (!resp || !resp.length) return [];
+    if (!ops || !ops.length) return [];
 
-    return resp.map((op) => {
+    return ops.map((op) => {
       // eslint-disable-next-line no-param-reassign
       op = { ...op, ...op.operation_info };
 
@@ -440,7 +443,7 @@ const Operations = ({ request, resp, setResp, isLoading }) => {
       }, {});
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActionLoading, resp]);
+  }, [isActionLoading, ops]);
 
   return (
     <section>
@@ -461,10 +464,10 @@ const Operations = ({ request, resp, setResp, isLoading }) => {
           maxHeight="600px"
           stickyHeader
           lastItem={lastItem}
-          isDataLoading={isLoading}
+          isDataLoading={isOpsLoading}
         />
 
-        {isLoading && (
+        {isOpsLoading && (
           <div style={{ textAlign: 'center' }}>
             <Spinner />
           </div>
@@ -472,13 +475,6 @@ const Operations = ({ request, resp, setResp, isLoading }) => {
       </Card>
     </section>
   );
-};
-
-Operations.propTypes = {
-  request: PropTypes.func.isRequired,
-  resp: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setResp: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
 };
 
 export default Operations;
