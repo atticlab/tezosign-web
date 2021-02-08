@@ -83,9 +83,9 @@ const assets = [
   // { key: 'usdTz', name: 'USDtz', logo: USDtz },
 ];
 
-const CreateTx = ({ contractAddress, onCreate }) => {
+const CreateTx = ({ onCreate }) => {
   const { sendOperation } = useAPI();
-  const { contractInfo } = useContractStateContext();
+  const { contractAddress, contractInfo } = useContractStateContext();
   const balances = useMemo(() => {
     return {
       xtz: convertMutezToXTZ(contractInfo.balance),
@@ -95,6 +95,24 @@ const CreateTx = ({ contractAddress, onCreate }) => {
     };
   }, [contractInfo]);
   const { setOps } = useOperationsDispatchContext();
+  const createTx = async (amount, to, setSubmitting) => {
+    try {
+      const newTx = await sendOperation({
+        contract_id: contractAddress,
+        type: 'transfer',
+        amount: Number(convertXTZToMutez(amount)),
+        to,
+      });
+      await setOps((prev) => {
+        return [newTx.data, ...prev];
+      });
+      onCreate();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <Formik
@@ -106,24 +124,9 @@ const CreateTx = ({ contractAddress, onCreate }) => {
           assets.find((asset) => asset.key === values.asset).name,
         ),
       )}
-      onSubmit={async (values, { setSubmitting }) => {
-        try {
-          const newTx = await sendOperation({
-            contract_id: contractAddress,
-            type: 'transfer',
-            amount: Number(convertXTZToMutez(values.amount)),
-            to: values.to,
-          });
-          await setOps((prev) => {
-            return [newTx.data, ...prev];
-          });
-          onCreate();
-        } catch (e) {
-          console.error(e);
-        } finally {
-          setSubmitting(false);
-        }
-      }}
+      onSubmit={async (values, { setSubmitting }) =>
+        createTx(values.amount, values.to, setSubmitting)
+      }
     >
       {({
         values,
@@ -223,7 +226,6 @@ const CreateTx = ({ contractAddress, onCreate }) => {
 };
 
 CreateTx.propTypes = {
-  contractAddress: PropTypes.string.isRequired,
   onCreate: PropTypes.func.isRequired,
 };
 

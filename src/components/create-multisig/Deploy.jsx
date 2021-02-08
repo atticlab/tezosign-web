@@ -31,7 +31,7 @@ const onSubmit = async (
 
     await sendOrigination('0', script);
 
-    history.push('/deployed');
+    history.replace('/deployed');
   } catch (e) {
     console.error();
   }

@@ -11,6 +11,7 @@ import { FormLabel, FormSubmit } from '../../styled/Forms';
 import { bs58Validation } from '../../../utils/helpers';
 import useAPI from '../../../hooks/useApi';
 import { useOperationsDispatchContext } from '../../../store/operationsContext';
+import { useContractStateContext } from '../../../store/contractContext';
 
 const schema = Yup.object({
   baker: Yup.string()
@@ -38,10 +39,28 @@ const schema = Yup.object({
 //   },
 // ];
 
-const CreateDelegation = ({ contractAddress, onCreate }) => {
+const CreateDelegation = ({ onCreate }) => {
   // const [alias, setAlias] = useState('');
   const { sendOperation } = useAPI();
+  const { contractAddress } = useContractStateContext();
   const { setOps } = useOperationsDispatchContext();
+  const createDelegation = async (baker, setSubmitting) => {
+    try {
+      const newDelegation = await sendOperation({
+        contract_id: contractAddress,
+        type: 'delegation',
+        to: baker,
+      });
+      await setOps((prev) => {
+        return [newDelegation.data, ...prev];
+      });
+      onCreate();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div>
@@ -57,23 +76,9 @@ const CreateDelegation = ({ contractAddress, onCreate }) => {
       <Formik
         initialValues={{ baker: '' }}
         validationSchema={schema}
-        onSubmit={async (values, { setSubmitting }) => {
-          try {
-            const newDelegation = await sendOperation({
-              contract_id: contractAddress,
-              type: 'delegation',
-              to: values.baker,
-            });
-            await setOps((prev) => {
-              return [newDelegation.data, ...prev];
-            });
-            onCreate();
-          } catch (e) {
-            console.error(e);
-          } finally {
-            setSubmitting(false);
-          }
-        }}
+        onSubmit={(values, { setSubmitting }) =>
+          createDelegation(values.baker, setSubmitting)
+        }
       >
         {({
           // setFieldValue,
@@ -134,23 +139,7 @@ const CreateDelegation = ({ contractAddress, onCreate }) => {
                 variant="danger"
                 size="lg"
                 style={{ marginLeft: '10px' }}
-                onClick={async () => {
-                  try {
-                    setSubmitting(true);
-                    const newDelegation = await sendOperation({
-                      contract_id: contractAddress,
-                      type: 'delegation',
-                    });
-                    await setOps((prev) => {
-                      return [newDelegation.data, ...prev];
-                    });
-                    onCreate();
-                  } catch (e) {
-                    console.error(e);
-                  } finally {
-                    setSubmitting(false);
-                  }
-                }}
+                onClick={() => createDelegation(undefined, setSubmitting)}
               >
                 Undelegate
               </Button>
@@ -163,7 +152,6 @@ const CreateDelegation = ({ contractAddress, onCreate }) => {
 };
 
 CreateDelegation.propTypes = {
-  contractAddress: PropTypes.string.isRequired,
   onCreate: PropTypes.func.isRequired,
 };
 

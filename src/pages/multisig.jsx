@@ -98,7 +98,7 @@ const Multisig = () => {
     <OperationsProvider>
       <BtnBack pageName="Manage Multisig" />
 
-      <MultisigInfo contractAddress={contractAddress} />
+      <MultisigInfo />
 
       <section>
         <Tab.Container defaultActiveKey="ops">

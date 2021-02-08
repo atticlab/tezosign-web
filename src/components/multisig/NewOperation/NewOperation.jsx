@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -45,7 +44,7 @@ const ModalClose = styled(Button).attrs({ variant: 'link' })`
   }
 `;
 
-const NewOperation = ({ contractAddress }) => {
+const NewOperation = () => {
   const [show, setShow] = useState(false);
   const [opType, setOpType] = useState('');
   const handleClose = () => {
@@ -92,21 +91,11 @@ const NewOperation = ({ contractAddress }) => {
           <ModalContent>
             {(() => {
               if (opType === 'transaction') {
-                return (
-                  <CreateTx
-                    contractAddress={contractAddress}
-                    onCreate={handleClose}
-                  />
-                );
+                return <CreateTx onCreate={handleClose} />;
               }
 
               if (opType === 'delegation') {
-                return (
-                  <CreateDelegation
-                    contractAddress={contractAddress}
-                    onCreate={handleClose}
-                  />
-                );
+                return <CreateDelegation onCreate={handleClose} />;
               }
 
               return (
@@ -139,10 +128,6 @@ const NewOperation = ({ contractAddress }) => {
       </Button>
     </>
   );
-};
-
-NewOperation.propTypes = {
-  contractAddress: PropTypes.string.isRequired,
 };
 
 export default NewOperation;
