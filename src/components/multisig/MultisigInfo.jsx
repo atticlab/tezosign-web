@@ -121,7 +121,7 @@ const MultisigInfo = () => {
         </ContractManagement.Address>
       </ContractManagement>
 
-      {isUserOwner && <NewOperation contractAddress={contractAddress} />}
+      {isUserOwner && <NewOperation />}
     </SectionMultisigInfo>
   );
 };
