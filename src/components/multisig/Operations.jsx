@@ -13,36 +13,43 @@ import Card from '../styled/Card';
 import Table from '../Table';
 import BtnCopy from '../BtnCopy';
 import Spinner from '../Spinner';
-import { useUserStateContext } from '../../store/userContext';
-import { useContractStateContext } from '../../store/contractContext';
 import useAPI from '../../hooks/useApi';
 import { requestSignPayload, sendTx } from '../../plugins/beacon';
-import { convertMutezToXTZ } from '../../utils/helpers';
-import { dateFormat } from '../../utils/constants';
+import { useUserStateContext } from '../../store/userContext';
+import { useContractStateContext } from '../../store/contractContext';
 import {
   useOperationsDispatchContext,
   useOperationsStateContext,
 } from '../../store/operationsContext';
+import { convertMutezToXTZ, capitalize } from '../../utils/helpers';
+import { dateFormat } from '../../utils/constants';
 
 dayjs.extend(utc);
 
 const BadgeOutline = styled(Badge)`
   background-color: transparent;
   text-transform: uppercase;
+  padding-top: 0.5em;
   border: 1px solid
     ${({ variant, theme }) =>
       // eslint-disable-next-line no-nested-ternary
       variant === 'danger'
         ? theme.red
-        : variant === 'secondary'
+        : // eslint-disable-next-line no-nested-ternary
+        variant === 'secondary'
         ? theme.black
+        : variant === 'warning'
+        ? theme.yellow
         : theme.lightGreen};
   color: ${({ variant, theme }) =>
     // eslint-disable-next-line no-nested-ternary
     variant === 'danger'
       ? theme.red
-      : variant === 'secondary'
+      : // eslint-disable-next-line no-nested-ternary
+      variant === 'secondary'
       ? theme.black
+      : variant === 'warning'
+      ? theme.yellow
       : theme.lightGreen};
 `;
 
@@ -61,12 +68,12 @@ const Status = styled.span`
   text-transform: uppercase;
   color: ${({ status, theme }) => {
     switch (status) {
-      case 'approved':
-        return theme.lightGreen;
       case 'rejected':
         return theme.red;
+      case 'pending':
+        return theme.yellow;
       default:
-        return '';
+        return theme.lightGreen;
     }
   }};
 `;
@@ -78,36 +85,11 @@ const Ellipsis = styled.span`
   text-overflow: ellipsis;
 `;
 
-const fields = [
-  // { key: 'operation_id', label: 'Operation ID' },
-  { key: 'type' },
-  { key: 'created_at', label: 'Created' },
-  { key: 'amount' },
-  { key: 'to', label: 'Recipient' },
-  { key: 'signatures_count', label: 'Signatures' },
-  { key: 'nonce' },
-  { key: 'actions' },
-  { key: 'status' },
-];
-
-const initialOpsCounts = {
-  pending: 0,
-  rejected: 0,
-  approved: 0,
-};
-
-const countOpTypes = (status, setCount) => {
-  if (!status) return null;
-
-  switch (status) {
-    case 'pending':
-      return setCount((prev) => ({ ...prev, pending: prev.pending + 1 }));
-    case 'rejected':
-      return setCount((prev) => ({ ...prev, rejected: prev.rejected + 1 }));
-    default:
-      return setCount((prev) => ({ ...prev, approved: prev.approved + 1 }));
-  }
-};
+const FlexCenter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const countSignatures = (signatures) =>
   signatures.reduce(
@@ -126,8 +108,21 @@ const countSignatures = (signatures) =>
     },
   );
 
+const checkOwnersIndices = (signatures, owners, signatureType = 'approve') => {
+  if (!signatures) return null;
+
+  return signatures.some(
+    (signature) => owners[signature.index] && signature.type === signatureType,
+  );
+};
+
+const initialOpsCounts = {
+  pending: 0,
+  rejected: 0,
+  approved: 0,
+};
+
 const Operations = () => {
-  // eslint-disable-next-line no-unused-vars
   const {
     contractAddress,
     contractInfo,
@@ -140,7 +135,6 @@ const Operations = () => {
   const [isActionLoading, setIsActionLoading] = useState(false);
   const { ops, isOpsLoading } = useOperationsStateContext();
   const { getOps, setOps } = useOperationsDispatchContext();
-  const [opsCountsByStatus, setOpsCountsByStatus] = useState(initialOpsCounts);
 
   useEffect(() => {
     getOps();
@@ -224,218 +218,223 @@ const Operations = () => {
     }
   };
 
-  const opsPrepared = useMemo(() => {
-    if (!ops || !ops.length) return [];
-    setOpsCountsByStatus((prev) => ({ ...prev, ...initialOpsCounts }));
+  const cols = [
+    {
+      key: 'operation_id',
+      label: 'ID',
+      process(operation) {
+        const id = operation[this.key];
 
-    return ops.map((op) => {
-      countOpTypes(op.status, setOpsCountsByStatus);
+        return (
+          <FlexCenter>
+            <Ellipsis style={{ maxWidth: '70px' }}>{id}</Ellipsis>
+            <BtnCopy
+              textToCopy={id}
+              style={{ paddingTop: 0, paddingBottom: 0 }}
+            />
+          </FlexCenter>
+        );
+      },
+    },
+    {
+      key: 'type',
+      process(operation) {
+        // eslint-disable-next-line react/no-this-in-sfc
+        const opType = operation.operation_info[this.key].split('_').join(' ');
 
-      // eslint-disable-next-line no-param-reassign
-      op.signatures_count = op.signatures && countSignatures(op.signatures);
+        return capitalize(opType);
+      },
+    },
+    {
+      key: 'created_at',
+      label: 'Created',
+      process(operation) {
+        // eslint-disable-next-line react/no-this-in-sfc
+        return dayjs.unix(operation[this.key]).utc().format(dateFormat);
+      },
+    },
+    {
+      key: 'amount',
+      process(operation) {
+        // eslint-disable-next-line react/no-this-in-sfc
+        const amount = operation.operation_info[this.key];
+        return amount ? `${convertMutezToXTZ(amount)} XTZ` : '';
+      },
+    },
+    {
+      key: 'to',
+      label: 'Recipient',
+      process(operation) {
+        const to = operation.operation_info[this.key];
 
-      // eslint-disable-next-line no-param-reassign
-      op = { ...op, ...op.operation_info };
-
-      return Object.keys(op).reduce((acc, key) => {
-        // eslint-disable-next-line no-param-reassign
-        if (op.status === 'rejected') {
-          acc.actions = (
-            <BadgeOutline variant="danger">{op.status}</BadgeOutline>
-          );
-        }
-        if (op.status === 'approved') {
-          acc.actions = (
-            <BadgeOutline variant="success">{op.status}</BadgeOutline>
-          );
-        }
-        if (isUserOwner && op.status === 'pending') {
-          if (!op.signatures) {
-            acc.actions = (
-              <span>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  style={{ paddingTop: '1px', paddingBottom: '1px' }}
-                  disabled={isActionLoading}
-                  onClick={() => acceptOperation(op.operation_id)}
-                >
-                  APPROVE
-                </Button>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  style={{
-                    paddingTop: '1px',
-                    paddingBottom: '1px',
-                    marginLeft: '5px',
-                  }}
-                  disabled={isActionLoading}
-                  onClick={() => rejectOperation(op.operation_id)}
-                >
-                  REJECT
-                </Button>
-              </span>
-            );
-          } else if (
-            op.signatures &&
-            op.signatures_count.approve + op.signatures_count.reject >=
-              contractInfo?.threshold &&
-            op.nonce === contractInfo.counter
-          ) {
-            acc.actions = contractInfo.balance ? (
-              <Button
-                variant="primary"
-                size="sm"
-                style={{ paddingTop: '1px', paddingBottom: '1px' }}
-                disabled={isActionLoading}
-                onClick={() => {
-                  const opDecision =
-                    op.signatures_count.approve >= op.signatures_count.reject
-                      ? 'approve'
-                      : 'reject';
-                  sendOperation(op.operation_id, { type: opDecision });
-                }}
-              >
-                SEND
-              </Button>
+        return (
+          <FlexCenter>
+            {to ? (
+              <>
+                <Ellipsis>{to}</Ellipsis>
+                <BtnCopy
+                  textToCopy={to}
+                  style={{ paddingTop: 0, paddingBottom: 0 }}
+                />
+              </>
             ) : (
+              ''
+            )}
+          </FlexCenter>
+        );
+      },
+    },
+    {
+      key: 'signatures_count',
+      label: 'Signatures',
+      process(operation) {
+        const signaturesCount = operation.signatures
+          ? [
+              ...new Set(
+                operation.signatures.map((signature) => signature.index),
+              ),
+            ].length
+          : 0;
+
+        return `${signaturesCount}/${
+          contractInfo ? contractInfo.threshold : 0
+        }`;
+      },
+    },
+    { key: 'nonce' },
+    {
+      key: 'actions',
+      process(operation) {
+        if (!isUserOwner || operation.status !== 'pending') {
+          return (
+            <BadgeOutline
+              variant={
+                // eslint-disable-next-line no-nested-ternary
+                operation.status === 'rejected'
+                  ? 'danger'
+                  : operation.status === 'pednibf'
+                  ? 'warning'
+                  : 'success'
+              }
+            >
+              {operation.status}
+            </BadgeOutline>
+          );
+        }
+
+        const signaturesCount =
+          operation.signatures && countSignatures(operation.signatures);
+        const signaturesSum =
+          signaturesCount && signaturesCount.approve + signaturesCount.reject;
+
+        if (
+          signaturesSum >= contractInfo.threshold &&
+          operation.nonce === contractInfo.counter
+        ) {
+          // TODO: Add balance check
+          if (!contractInfo.balance) {
+            return (
               <BadgeOutline variant="secondary">
                 Insufficient funds
               </BadgeOutline>
             );
-          } else {
-            acc.actions = (
-              <span>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  style={{ paddingTop: '1px', paddingBottom: '1px' }}
-                  disabled={
-                    isActionLoading ||
-                    op.signatures.some((signature) => {
-                      return (
-                        contractInfo.owners[signature.index] &&
-                        contractInfo.owners[signature.index].pub_key ===
-                          publicKey &&
-                        signature.type === 'approve'
-                      );
-                    }) ||
-                    op.nonce < contractInfo.counter
-                  }
-                  onClick={() => acceptOperation(op.operation_id)}
-                >
-                  APPROVE
-                </Button>
-
-                <Button
-                  variant="danger"
-                  size="sm"
-                  style={{
-                    paddingTop: '1px',
-                    paddingBottom: '1px',
-                    marginLeft: '5px',
-                  }}
-                  disabled={
-                    isActionLoading ||
-                    op.signatures.some((signature) => {
-                      return (
-                        contractInfo.owners[signature.index] &&
-                        contractInfo.owners[signature.index].pub_key ===
-                          publicKey &&
-                        signature.type === 'reject'
-                      );
-                    }) ||
-                    op.nonce < contractInfo.counter
-                  }
-                  onClick={() => rejectOperation(op.operation_id)}
-                >
-                  REJECT
-                </Button>
-              </span>
-            );
           }
-        } else {
-          acc.actions = (
-            <BadgeOutline variant="secondary">{op.status}</BadgeOutline>
+
+          const opDecision =
+            signaturesCount.approve >= signaturesCount.reject
+              ? 'approve'
+              : 'reject';
+
+          return (
+            <Button
+              variant="primary"
+              size="sm"
+              style={{ paddingTop: '1px', paddingBottom: '1px' }}
+              disabled={isActionLoading}
+              onClick={() =>
+                sendOperation(operation.operation_id, { type: opDecision })
+              }
+            >
+              SEND
+            </Button>
           );
         }
 
-        switch (key) {
-          // case 'operation_id':
-          //   acc[key] = (
-          //     <span
-          //       style={{
-          //         display: 'flex',
-          //         alignItems: 'center',
-          //         justifyContent: 'center',
-          //       }}
-          //     >
-          //       <Ellipsis>{op.operation_id}</Ellipsis>
-          //       <BtnCopy
-          //         textToCopy={op.operation_id}
-          //         style={{ paddingTop: 0, paddingBottom: 0 }}
-          //       />
-          //     </span>
-          //   );
-          //   return acc;
-          case 'type':
-            acc[key] = (
-              <span style={{ textTransform: 'capitalize' }}>{op.type}</span>
-            );
-            return acc;
-          case 'created_at':
-            acc[key] = (
-              <span style={{ fontSize: '14px' }}>
-                {dayjs.unix(op[key]).utc().format(dateFormat)}
-              </span>
-            );
-            return acc;
-          case 'amount':
-            acc[key] = (
-              <span style={{ fontSize: '14px' }}>
-                {`${convertMutezToXTZ(op[key])} ${op.asset || 'XTZ'}`}
-              </span>
-            );
-            return acc;
-          case 'to':
-            acc[key] = (
-              <span
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {op.to ? (
-                  <>
-                    <Ellipsis>{op.to}</Ellipsis>
-                    <BtnCopy
-                      textToCopy={op.to}
-                      style={{ paddingTop: 0, paddingBottom: 0 }}
-                    />
-                  </>
-                ) : (
-                  ''
-                )}
-              </span>
-            );
-            return acc;
-          case 'signatures_count':
-            acc[key] = `${op[key] ? op[key].approve + op[key].reject : 0}/${
-              contractInfo?.threshold
-            }`;
-            return acc;
-          case 'status':
-            acc[key] = <Status status={op[key]}>{op[key]}</Status>;
-            return acc;
+        return (
+          <span>
+            <Button
+              variant="primary"
+              size="sm"
+              style={{ padding: '0 4px' }}
+              disabled={
+                isActionLoading ||
+                checkOwnersIndices(
+                  operation.signatures,
+                  contractInfo.owners,
+                  'approve',
+                )
+              }
+              onClick={() => acceptOperation(operation.operation_id)}
+            >
+              APPROVE
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              style={{
+                padding: '0 4px',
+                marginLeft: '5px',
+              }}
+              disabled={
+                isActionLoading ||
+                checkOwnersIndices(
+                  operation.signatures,
+                  contractInfo.owners,
+                  'reject',
+                )
+              }
+              onClick={() => rejectOperation(operation.operation_id)}
+            >
+              REJECT
+            </Button>
+          </span>
+        );
+      },
+    },
+    {
+      key: 'status',
+      process(operation) {
+        return (
+          <Status status={operation[this.key]}>{operation[this.key]}</Status>
+        );
+      },
+    },
+  ];
+
+  const opsCountsByStatus = useMemo(() => {
+    if (!ops) return initialOpsCounts;
+
+    return ops.reduce(
+      (acc, op) => {
+        switch (op.status) {
+          case 'pending':
+            // eslint-disable-next-line no-unused-expressions
+            acc.pending += 1;
+            break;
+          case 'rejected':
+            // eslint-disable-next-line no-unused-expressions
+            acc.rejected += 1;
+            break;
           default:
-            acc[key] = op[key];
-            return acc;
+            // eslint-disable-next-line no-unused-expressions
+            acc.approved += 1;
+            break;
         }
-      }, {});
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+        return acc;
+      },
+      { ...initialOpsCounts },
+    );
   }, [ops]);
 
   return (
@@ -452,8 +451,8 @@ const Operations = () => {
 
       <Card style={{ overflow: 'hidden' }}>
         <Table
-          cols={fields}
-          rows={opsPrepared}
+          cols={cols}
+          rows={ops || []}
           maxHeight="600px"
           stickyHeader
           lastItem={lastItem}

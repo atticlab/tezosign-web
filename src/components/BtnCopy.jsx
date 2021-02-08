@@ -18,7 +18,7 @@ const copy = (msg) => toast.success(msg, options);
 const BtnCopy = ({ textToCopy, msg, style }) => (
   <div>
     <CopyToClipboard text={textToCopy}>
-      <BtnLink style={style} onClick={() => copy(msg)}>
+      <BtnLink style={{ ...style, lineHeight: '1' }} onClick={() => copy(msg)}>
         <FontAwesomeIcon icon="copy" />
       </BtnLink>
     </CopyToClipboard>
