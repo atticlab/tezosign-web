@@ -109,6 +109,23 @@ const countOpTypes = (status, setCount) => {
   }
 };
 
+const countSignatures = (signatures) =>
+  signatures.reduce(
+    (acc, signature) => {
+      if (signature.type === 'approve') {
+        acc.approve += 1;
+      }
+      if (signature.type === 'reject') {
+        acc.reject += 1;
+      }
+      return acc;
+    },
+    {
+      approve: 0,
+      reject: 0,
+    },
+  );
+
 const Operations = () => {
   // eslint-disable-next-line no-unused-vars
   const {
@@ -212,31 +229,13 @@ const Operations = () => {
     setOpsCountsByStatus((prev) => ({ ...prev, ...initialOpsCounts }));
 
     return ops.map((op) => {
-      if (op && op.status) {
-        countOpTypes(op.status, setOpsCountsByStatus);
-      }
+      countOpTypes(op.status, setOpsCountsByStatus);
+
+      // eslint-disable-next-line no-param-reassign
+      op.signatures_count = op.signatures && countSignatures(op.signatures);
 
       // eslint-disable-next-line no-param-reassign
       op = { ...op, ...op.operation_info };
-
-      // eslint-disable-next-line no-param-reassign
-      op.signatures_count =
-        op.signatures &&
-        op.signatures.reduce(
-          (acc, signature) => {
-            if (signature.type === 'approve') {
-              acc.approve += 1;
-            }
-            if (signature.type === 'reject') {
-              acc.reject += 1;
-            }
-            return acc;
-          },
-          {
-            approve: 0,
-            reject: 0,
-          },
-        );
 
       return Object.keys(op).reduce((acc, key) => {
         // eslint-disable-next-line no-param-reassign

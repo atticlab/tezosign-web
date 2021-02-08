@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Toastr = styled(ToastContainer)`
   .Toastify__toast {
     min-height: 65px;
-    padding: 5px 30px;
+    padding: 5px 20px;
     border-radius: 5px;
 
     font-family: Roboto, sans-serif;
