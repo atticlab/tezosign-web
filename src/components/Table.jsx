@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Table as BTable } from 'react-bootstrap';
 import styled, { css } from 'styled-components';
+import { v4 as uuidV4 } from 'uuid';
 
 const TblWrap = styled.div`
   .table-responsive {
@@ -86,9 +87,8 @@ const Table = ({
       <Tbl responsive>
         <thead>
           <tr>
-            {cols.map((col, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <Tbl.Th key={index} stickyHeader={stickyHeader}>
+            {cols.map((col) => (
+              <Tbl.Th key={uuidV4()} stickyHeader={stickyHeader}>
                 {col.label ? col.label : col.key}
               </Tbl.Th>
             ))}
@@ -104,21 +104,17 @@ const Table = ({
             rowsFiltered.map((row, index) => {
               if (rowsFiltered.length === index + 1) {
                 return (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <tr key={index} ref={lastItem}>
-                    {Object.keys(row).map((field, index2) => (
-                      // eslint-disable-next-line react/no-array-index-key
-                      <Tbl.Td key={index2}>{row[field]}</Tbl.Td>
+                  <tr key={uuidV4()} ref={lastItem}>
+                    {Object.keys(row).map((field) => (
+                      <Tbl.Td key={uuidV4()}>{row[field]}</Tbl.Td>
                     ))}
                   </tr>
                 );
               }
               return (
-                // eslint-disable-next-line react/no-array-index-key
-                <tr key={index}>
-                  {Object.keys(row).map((field, index2) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <Tbl.Td key={index2}>{row[field]}</Tbl.Td>
+                <tr key={uuidV4()}>
+                  {Object.keys(row).map((field) => (
+                    <Tbl.Td key={uuidV4()}>{row[field]}</Tbl.Td>
                   ))}
                 </tr>
               );
