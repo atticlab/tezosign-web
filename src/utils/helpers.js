@@ -23,4 +23,15 @@ const bs58Validation = (value) => {
   }
 };
 
-export { convertXTZToMutez, convertMutezToXTZ, formatXTZ, bs58Validation };
+const capitalize = (string) => {
+  if (!string) return '';
+  return `${string[0].toUpperCase()}${string.slice(1)}`;
+};
+
+export {
+  convertXTZToMutez,
+  convertMutezToXTZ,
+  formatXTZ,
+  bs58Validation,
+  capitalize,
+};

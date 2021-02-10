@@ -32,7 +32,7 @@ Tbl.Th = styled.th`
 `;
 
 Tbl.Td = styled.td`
-  font-weight: normal;
+  font-size: 14px;
   border-top: 1px solid ${({ theme }) => theme.lightGray} !important;
 `;
 
@@ -44,44 +44,18 @@ const Table = ({
   lastItem,
   isDataLoading,
 }) => {
-  const colKeys = useMemo(() => {
-    return cols.map((field) => field.key);
-  }, [cols]);
-
   const rowsFiltered = useMemo(() => {
-    return rows.map((tx) => {
-      return colKeys.reduce((acc, key) => {
-        acc[key] = tx[key];
+    return rows.map((row) => {
+      return cols.reduce((acc, col) => {
+        const hasProcessor = 'process' in col;
+        acc[col.key] = hasProcessor ? col.process(row) : row[col.key];
 
         return acc;
       }, {});
     });
-  }, [rows, colKeys]);
+  }, [rows, cols]);
 
   return (
-    // <Tbl responsive>
-    //   <thead>
-    //     <tr>
-    //       {cols.map((col, index) => (
-    //         // eslint-disable-next-line react/no-array-index-key
-    //         <Tbl.Th key={index}>{col.label ? col.label : col.key}</Tbl.Th>
-    //       ))}
-    //     </tr>
-    //   </thead>
-    //
-    //   <tbody>
-    //     {rowsFiltered.map((tx, index) => (
-    //       // eslint-disable-next-line react/no-array-index-key
-    //       <tr key={index}>
-    //         {Object.keys(tx).map((field, index2) => (
-    //           // eslint-disable-next-line react/no-array-index-key
-    //           <Tbl.Td key={index2}>{tx[field]}</Tbl.Td>
-    //         ))}
-    //       </tr>
-    //     ))}
-    //   </tbody>
-    // </Tbl>
-
     <TblWrap maxHeight={maxHeight}>
       <Tbl responsive>
         <thead>
@@ -140,8 +114,6 @@ Table.propTypes = {
 };
 
 Table.defaultProps = {
-  // cols: [{}],
-  // rows: [{}],
   maxHeight: '100%',
   stickyHeader: false,
   lastItem: () => null,
