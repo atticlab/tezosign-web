@@ -19,7 +19,7 @@ const BtnCopy = ({ textToCopy, msg, style }) => (
   <div>
     <CopyToClipboard text={textToCopy}>
       <BtnLink style={{ ...style, lineHeight: '1' }} onClick={() => copy(msg)}>
-        <FontAwesomeIcon icon="copy" />
+        <FontAwesomeIcon icon="copy" style={{ pointerEvents: 'none' }} />
       </BtnLink>
     </CopyToClipboard>
   </div>

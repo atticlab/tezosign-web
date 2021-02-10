@@ -348,6 +348,7 @@ const Operations = () => {
           return (
             <Button
               variant="primary"
+              block
               size="sm"
               style={{ paddingTop: '1px', paddingBottom: '1px' }}
               disabled={isActionLoading}
@@ -364,6 +365,7 @@ const Operations = () => {
           <span>
             <Button
               variant="primary"
+              block
               size="sm"
               style={{ padding: '0 4px' }}
               disabled={
@@ -380,10 +382,10 @@ const Operations = () => {
             </Button>
             <Button
               variant="danger"
+              block
               size="sm"
               style={{
                 padding: '0 4px',
-                marginLeft: '5px',
               }}
               disabled={
                 isActionLoading ||
