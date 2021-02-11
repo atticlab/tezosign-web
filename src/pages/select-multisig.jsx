@@ -4,10 +4,10 @@ import Helmet from 'react-helmet';
 import styled from 'styled-components';
 // eslint-disable-next-line no-unused-vars
 import { Form as BForm, InputGroup, Button } from 'react-bootstrap';
-import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
+import { Formik, Form as FForm, ErrorMessage } from 'formik';
 // TODO: Research import variants
 import * as Yup from 'yup';
-// import SelectCustom from '../components/SelectCustom';
+import SelectCustom from '../components/SelectCustom';
 import CardMultisigType from '../components/CardMultisigType';
 import { bs58Validation } from '../utils/helpers';
 
@@ -41,11 +41,11 @@ const schema = Yup.object({
     .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
 });
 
-// const availableContracts = [
-//   'KT1fffffffffffffffffffffffffffffffff',
-//   'KT1NtGnEjacAkBph7k9HWVrN38PoYjcXTxdY',
-//   'KT1cvvvvvvvvvvdvvfdDDvvvvvvvvvvvvvvd',
-// ];
+const availableContracts = [
+  'KT1fffffffffffffffffffffffffffffffff',
+  'KT1NtGnEjacAkBph7k9HWVrN38PoYjcXTxdY',
+  'KT1cvvvvvvvvvvdvvfdDDvvvvvvvvvvvvvvd',
+];
 
 const SelectMultisig = () => {
   const history = useHistory();
@@ -122,44 +122,25 @@ const SelectMultisig = () => {
             history.push(`/multisig/${values.address}`);
           }}
         >
-          {({
-            isSubmitting,
-            errors,
-            touched,
-            // setFieldValue,
-            // setFieldTouched,
-          }) => (
+          {/* setFieldValue */}
+          {({ setFieldValue, isSubmitting, errors, touched, values }) => (
             <FForm as={BForm} style={{ maxWidth: '380px', margin: '0 auto' }}>
               <BForm.Group style={{ marginBottom: '10px', textAlign: 'left' }}>
-                {/* <InputGroup style={{ textAlign: 'right' }}> */}
-                <Field
-                  as={BForm.Control}
-                  type="text"
-                  name="address"
-                  aria-label="address"
-                  placeholder="KT1..."
-                  size="sm"
-                  isInvalid={!!errors.address && touched.address}
-                  isValid={!errors.address && touched.address}
-                  style={{ height: 'auto' }}
-                />
-
-                {/* <InputGroup.Append> */}
-                {/* <SelectCustom */}
-                {/*  options={availableContracts} */}
-                {/*  isTouched={touched.address} */}
-                {/*  isValid={touched.address && !errors.address} */}
-                {/*  isInvalid={touched.address && !!errors.address} */}
-                {/*  menuWidth="100%" */}
-                {/*  onChange={(value) => { */}
-                {/*    setFieldValue('address', value.value); */}
-                {/*    setFieldTouched('address', true); */}
-                {/*  }} */}
-                {/*  onBlur={(value) => { */}
-                {/*    setFieldTouched('address', true); */}
-                {/*  }} */}
-                {/* /> */}
-                {/* </InputGroup.Append> */}
+                <InputGroup style={{ textAlign: 'right' }}>
+                  <SelectCustom
+                    options={availableContracts}
+                    onChange={(value) => {
+                      setFieldValue('address', value.value);
+                    }}
+                    isInvalid={!!errors.address && touched.address}
+                    isValid={!errors.address && touched.address}
+                    isTouched={touched.address}
+                    placeholder="KT1..."
+                    value={{
+                      label: values.address,
+                      value: values.address,
+                    }}
+                  />
 
                 <ErrorMessage
                   component={BForm.Control.Feedback}
@@ -167,7 +148,12 @@ const SelectMultisig = () => {
                   name="address"
                   type="invalid"
                 />
-                {/* </InputGroup> */}
+                  {!!errors.address && touched.address && (
+                    <div style={{ color: 'red', fontSize: '12px' }}>
+                      {errors.address}
+                    </div>
+                  )}
+                </InputGroup>
               </BForm.Group>
               <Button type="submit" size="lg" disabled={isSubmitting}>
                 Manage

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Select from 'react-select/creatable';
 import PropTypes from 'prop-types';
 import selectStyle from '../utils/theme/selectStyle';
@@ -26,22 +26,44 @@ const SelectCustom = ({
   isTouched,
   disabled,
   menuWidth,
+  placeholder,
   height,
   onChange,
   onBlur,
+  value,
 }) => {
   const option = options.map((el) => ({
     label: el.label ? el.label : el,
     value: el.value ? el.value : el,
   }));
+
+  const [inputValue, setInputValue] = useState('');
+
   const handleChange = (opt) => {
+    setInputValue('');
     onChange(opt);
+  };
+
+  const inputChange = (inputVal, { action }) => {
+    if (inputVal && action === 'input-change') {
+      setInputValue(inputVal);
+      onChange({
+        label: inputVal,
+        value: inputVal,
+      });
+    }
+
+    if (!inputVal && action === 'input-change') {
+      setInputValue('');
+      onChange({});
+    }
   };
 
   return (
     <Select
       options={option}
       defaultValue={defaultValue}
+      onInputChange={inputChange}
       isSearchable={isSearchable}
       isTouched={isTouched}
       isValid={isValid}
@@ -50,6 +72,9 @@ const SelectCustom = ({
       displayValue={displayValue}
       className={isInvalid ? 'is-invalid' : ''}
       styles={selectStyle}
+      value={value.value ? value : null}
+      inputValue={inputValue}
+      placeholder={placeholder}
       theme={(theme) => ({
         ...theme,
         colors: {
@@ -77,24 +102,28 @@ SelectCustom.propTypes = {
   isTouched: PropTypes.bool,
   isValid: PropTypes.bool,
   isInvalid: PropTypes.bool,
+  value: PropTypes.objectOf(PropTypes.any),
   menuWidth: PropTypes.string,
   height: PropTypes.string,
   disabled: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onBlur: PropTypes.func,
+  placeholder: PropTypes.string,
 };
 
 SelectCustom.defaultProps = {
   defaultValue: {},
   isSearchable: true,
   displayValue: true,
+  onBlur: () => null,
   isTouched: false,
   isValid: false,
   isInvalid: false,
   menuWidth: '',
   height: '',
   disabled: false,
-  onBlur: () => null,
+  value: {},
+  placeholder: '',
 };
 
 export default SelectCustom;
