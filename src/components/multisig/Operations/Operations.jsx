@@ -9,20 +9,21 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Badge, Button } from 'react-bootstrap';
-import Card from '../styled/Card';
-import Table from '../Table';
-import BtnCopy from '../BtnCopy';
-import Spinner from '../Spinner';
-import useAPI from '../../hooks/useApi';
-import { requestSignPayload, sendTx } from '../../plugins/beacon';
-import { useUserStateContext } from '../../store/userContext';
-import { useContractStateContext } from '../../store/contractContext';
+import Card from '../../styled/Card';
+import Table from '../../Table';
+import BtnCopy from '../../BtnCopy';
+import Spinner from '../../Spinner';
+import OperationDetails from './OperationDetails';
+import useAPI from '../../../hooks/useApi';
+import { requestSignPayload, sendTx } from '../../../plugins/beacon';
+import { useUserStateContext } from '../../../store/userContext';
+import { useContractStateContext } from '../../../store/contractContext';
 import {
   useOperationsDispatchContext,
   useOperationsStateContext,
-} from '../../store/operationsContext';
-import { convertMutezToXTZ, capitalize } from '../../utils/helpers';
-import { dateFormat } from '../../utils/constants';
+} from '../../../store/operationsContext';
+import { convertMutezToXTZ, capitalize } from '../../../utils/helpers';
+import { dateFormat } from '../../../utils/constants';
 
 dayjs.extend(utc);
 
@@ -455,10 +456,16 @@ const Operations = () => {
         <Table
           cols={cols}
           rows={ops || []}
+          rowKey="operation_id"
           maxHeight="600px"
           stickyHeader
           lastItem={lastItem}
           isDataLoading={isOpsLoading}
+          isCollapsible
+          collapseContent={(row) => {
+            console.log(row);
+            return <OperationDetails row={row} />;
+          }}
         />
 
         {isOpsLoading && (

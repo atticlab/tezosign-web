@@ -6,11 +6,13 @@ import Row from './Row';
 const Table = ({
   cols,
   rows,
+  rowKey,
   maxHeight,
   stickyHeader,
   lastItem,
   isDataLoading,
   isCollapsible,
+  collapseContent,
 }) => {
   return (
     <TblWrap maxHeight={maxHeight}>
@@ -37,19 +39,21 @@ const Table = ({
                 return (
                   <Row
                     ref={lastItem}
-                    key={row.operation_id}
+                    key={row[rowKey]}
                     cols={cols}
                     row={row}
                     isCollapsible={isCollapsible}
+                    collapseContent={collapseContent(row)}
                   />
                 );
               }
               return (
                 <Row
-                  key={row.operation_id}
+                  key={row[rowKey]}
                   cols={cols}
                   row={row}
                   isCollapsible={isCollapsible}
+                  collapseContent={collapseContent(row)}
                 />
               );
             })
@@ -63,11 +67,13 @@ const Table = ({
 Table.propTypes = {
   cols: PropTypes.arrayOf(PropTypes.object).isRequired,
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rowKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   maxHeight: PropTypes.string,
   stickyHeader: PropTypes.bool,
   lastItem: PropTypes.func,
   isDataLoading: PropTypes.bool,
   isCollapsible: PropTypes.bool,
+  collapseContent: PropTypes.func,
 };
 
 Table.defaultProps = {
@@ -76,6 +82,7 @@ Table.defaultProps = {
   lastItem: () => null,
   isDataLoading: false,
   isCollapsible: false,
+  collapseContent: () => null,
 };
 
 export default Table;
