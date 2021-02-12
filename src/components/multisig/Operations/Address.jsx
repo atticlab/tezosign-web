@@ -29,7 +29,7 @@ const Address = ({ address }) => (
       <IdentIcon address={address} />
     </div>
     <Flex>
-      <Ellipsis>{address}</Ellipsis>
+      <Ellipsis style={{ fontSize: '14px' }}>{address}</Ellipsis>
       <BtnCopy textToCopy={address} style={{ padding: 0 }} />
     </Flex>
   </AddressStyled>

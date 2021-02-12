@@ -1,30 +1,25 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
-
-// eslint-disable-next-line react/prop-types
-// const Step = ({ content }) => (
-//   <li>
-//     <Point status/>
-//     <div>{content}</div>
-//   </li>
-// );
 
 const StepperStyled = styled.ul`
   padding: 0;
   list-style-type: none;
   display: flex;
-  //justify-content: space-between;
+  margin-bottom: 0;
+  flex-direction: ${({ isVertical }) => (isVertical ? 'column' : 'row')};
+  flex-wrap: wrap;
 `;
 
 StepperStyled.Step = styled.li`
   display: flex;
-  flex-direction: column;
   align-items: center;
   position: relative;
-  padding: 0 20px;
 
   &:before {
+    display: block;
+    content: '';
+    position: absolute;
     background-color: ${({ variant, theme }) => {
       switch (variant) {
         case 'success':
@@ -35,13 +30,30 @@ StepperStyled.Step = styled.li`
           return theme.lightGray2;
       }
     }};
-    display: block;
-    content: '';
-    height: 3px;
-    width: 100%;
-    position: absolute;
-    top: 5px;
   }
+
+  ${({ isVertical }) =>
+    isVertical
+      ? css`
+          flex-direction: row;
+          height: 100px;
+
+          &:before {
+            height: 100%;
+            width: 3px;
+            left: 5px;
+          }
+        `
+      : css`
+          flex-direction: column;
+          padding: 0 20px;
+
+          &:before {
+            height: 3px;
+            width: 100%;
+            top: 5px;
+          }
+        `}
 `;
 
 StepperStyled.Point = styled.div`
@@ -58,26 +70,39 @@ StepperStyled.Point = styled.div`
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  margin-bottom: 20px;
+  margin: ${({ isVertical }) => (isVertical ? '0 20px 0 0 ' : '0 0 20px 0 ')};
 `;
 
-const Stepper = ({ steps }) => (
-  <StepperStyled>
-    {steps.map((step, index) => (
-      <StepperStyled.Step
-        key={step.id}
-        variant={step.variant}
-        isLast={index === steps.length - 1}
-      >
-        <StepperStyled.Point variant={step.variant} />
-        <div>{step.content}</div>
-      </StepperStyled.Step>
-    ))}
-  </StepperStyled>
-);
+const Stepper = ({ steps, isVertical }) => {
+  const [isVerticalLocal] = useState(isVertical);
+
+  return (
+    <StepperStyled isVertical={isVertical}>
+      {steps.map((step, index) => (
+        <StepperStyled.Step
+          key={step.id}
+          variant={step.variant}
+          isLast={index === steps.length - 1}
+          isVertical={isVerticalLocal}
+        >
+          <StepperStyled.Point
+            variant={step.variant}
+            isVertical={isVerticalLocal}
+          />
+          <div>{step.content}</div>
+        </StepperStyled.Step>
+      ))}
+    </StepperStyled>
+  );
+};
 
 Stepper.propTypes = {
   steps: PropTypes.arrayOf(PropTypes.any).isRequired,
+  isVertical: PropTypes.bool,
+};
+
+Stepper.defaultProps = {
+  isVertical: false,
 };
 
 export default Stepper;
