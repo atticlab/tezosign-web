@@ -462,9 +462,8 @@ const Operations = () => {
           lastItem={lastItem}
           isDataLoading={isOpsLoading}
           isCollapsible
-          collapseContent={(row) => {
-            console.log(row);
-            return <OperationDetails row={row} />;
+          collapseContent={(operation) => {
+            return <OperationDetails operation={operation} />;
           }}
         />
 
