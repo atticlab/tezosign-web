@@ -53,7 +53,14 @@ const App = () => {
             }
           </UserStateConsumer>
         </UserProvider>
-        <Toastr />
+        <Toastr
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar
+          closeOnClick
+          pauseOnHover={false}
+          draggable={false}
+        />
       </ThemeProvider>
     </Router>
   );

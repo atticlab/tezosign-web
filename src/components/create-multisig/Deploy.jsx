@@ -8,6 +8,7 @@ import BreakTxt from '../styled/BreakTxt';
 import AccentText from '../styled/AccentText';
 import useAPI from '../../hooks/useApi';
 import { sendOrigination } from '../../plugins/beacon';
+import { handleError } from '../../utils/errorsHandler';
 
 const onSubmit = async (
   getContractCode,
@@ -36,7 +37,7 @@ const onSubmit = async (
       state: resContract,
     });
   } catch (e) {
-    console.error();
+    handleError(e);
   }
 };
 

@@ -16,6 +16,7 @@ import {
   requestSignPayload,
   clearActiveAccount,
 } from '../plugins/beacon';
+import { handleError } from '../utils/errorsHandler';
 import { convertHexToPrefixedBase58, isHex } from '../utils/helpers';
 
 // Default values
@@ -102,7 +103,7 @@ const UserProvider = ({ children }) => {
       setPermissions(res);
       return res;
     } catch (e) {
-      console.error(e);
+      handleError(e);
       return Promise.reject(e);
     }
   };
@@ -115,7 +116,7 @@ const UserProvider = ({ children }) => {
       await setTokens(() => null);
       history.push('/');
     } catch (e) {
-      console.error(e);
+      handleError(e);
     }
   };
 
@@ -132,7 +133,7 @@ const UserProvider = ({ children }) => {
         await disconnect();
       }
     } catch (e) {
-      console.error(e);
+      handleError(e);
       await disconnect();
     } finally {
       setIsRestoreLoading(false);
@@ -161,7 +162,7 @@ const UserProvider = ({ children }) => {
 
       setRedirectToReferrer(true);
     } catch (e) {
-      console.error(e);
+      handleError(e);
       await disconnect();
     } finally {
       setIsPermissionsLoading(false);
@@ -176,7 +177,7 @@ const UserProvider = ({ children }) => {
       setTokens(() => resTokens.data);
       return resTokens.data;
     } catch (e) {
-      console.error(e);
+      handleError(e);
       await disconnect();
       return Promise.reject(e);
     }
