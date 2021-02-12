@@ -73,11 +73,11 @@ StepperStyled.Point = styled.div`
   margin: ${({ isVertical }) => (isVertical ? '0 20px 0 0 ' : '0 0 20px 0 ')};
 `;
 
-const Stepper = ({ steps, isVertical }) => {
+const Stepper = ({ steps, isVertical, style }) => {
   const [isVerticalLocal] = useState(isVertical);
 
   return (
-    <StepperStyled isVertical={isVertical}>
+    <StepperStyled isVertical={isVertical} style={style}>
       {steps.map((step, index) => (
         <StepperStyled.Step
           key={step.id}
@@ -99,10 +99,12 @@ const Stepper = ({ steps, isVertical }) => {
 Stepper.propTypes = {
   steps: PropTypes.arrayOf(PropTypes.any).isRequired,
   isVertical: PropTypes.bool,
+  style: PropTypes.objectOf(PropTypes.any),
 };
 
 Stepper.defaultProps = {
   isVertical: false,
+  style: {},
 };
 
 export default Stepper;

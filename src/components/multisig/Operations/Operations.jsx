@@ -285,23 +285,6 @@ const Operations = () => {
         );
       },
     },
-    {
-      key: 'signatures_count',
-      label: 'Signatures',
-      process(operation) {
-        const signaturesCount = operation.signatures
-          ? [
-              ...new Set(
-                operation.signatures.map((signature) => signature.index),
-              ),
-            ].length
-          : 0;
-
-        return `${signaturesCount}/${
-          contractInfo ? contractInfo.threshold : 0
-        }`;
-      },
-    },
     { key: 'nonce' },
     {
       key: 'actions',
