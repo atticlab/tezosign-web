@@ -2,13 +2,6 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 
-// ${({ variant }) =>
-//   variant === 'halved'
-//     ? css`
-//         background-size: 21px 2px, 100% 2px;
-//       `
-//     : ''}
-
 const StepperStyled = styled.ul`
   padding: 0;
   list-style-type: none;
@@ -27,16 +20,16 @@ StepperStyled.Step = styled.li`
     display: block;
     content: '';
     position: absolute;
-    background: ${({ variant, theme }) => {
+    background: ${({ variant, theme, isVertical }) => {
       switch (variant) {
         case 'success':
           return theme.lightGreen;
         case 'danger':
           return theme.red;
         case 'halved':
-          return `linear-gradient(90deg, ${theme.lightGreen} 50%, ${theme.red} 50%)`;
-        // return `linear-gradient(to left, ${theme.lightGreen}, ${theme.lightGreen} 50%, ${theme.red} 50%, ${theme.red});`;
-        // return `linear-gradient(180deg, ${theme.lightGreen} 50%, ${theme.red} 50%);`;
+          return isVertical
+            ? `linear-gradient(180deg, ${theme.lightGreen} 50%, ${theme.red} 50%)`
+            : `linear-gradient(90deg, ${theme.lightGreen} 50%, ${theme.red} 50%)`;
         default:
           return theme.lightGray2;
       }
@@ -46,11 +39,20 @@ StepperStyled.Step = styled.li`
   &:after {
     content: '';
     display: block;
-    height: 15%;
+    height: 14px;
     position: absolute;
     background-color: ${({ theme }) => theme.lightGray2};
     width: 2px;
     right: 0;
+    ${({ isVertical }) =>
+      isVertical
+        ? css`
+            left: 0;
+            bottom: 0;
+            width: 14px;
+            height: 2px;
+          `
+        : ''}
   }
 
   ${({ isVertical }) =>
@@ -78,14 +80,16 @@ StepperStyled.Step = styled.li`
 `;
 
 StepperStyled.Point = styled.div`
-  background: ${({ variant, theme }) => {
+  background: ${({ variant, theme, isVertical }) => {
     switch (variant) {
       case 'success':
         return theme.lightGreen;
       case 'danger':
         return theme.red;
       case 'halved':
-        return `linear-gradient(90deg, ${theme.lightGreen} 50%, ${theme.red} 50%)`;
+        return isVertical
+          ? `linear-gradient(180deg, ${theme.lightGreen} 50%, ${theme.red} 50%)`
+          : `linear-gradient(90deg, ${theme.lightGreen} 50%, ${theme.red} 50%)`;
       default:
         return theme.lightGray2;
     }

@@ -64,6 +64,7 @@ const initialOpsCounts = {
   pending: 0,
   rejected: 0,
   approved: 0,
+  success: 0,
 };
 
 const Operations = () => {
@@ -183,9 +184,13 @@ const Operations = () => {
             // eslint-disable-next-line no-unused-expressions
             acc.rejected += 1;
             break;
-          default:
+          case 'approved':
             // eslint-disable-next-line no-unused-expressions
             acc.approved += 1;
+            break;
+          default:
+            // eslint-disable-next-line no-unused-expressions
+            acc.success += 1;
             break;
         }
 
@@ -205,6 +210,7 @@ const Operations = () => {
         <TblGenInfo.Item>
           Rejected: {opsCountsByStatus?.rejected}
         </TblGenInfo.Item>
+        <TblGenInfo.Item>Success: {opsCountsByStatus?.success}</TblGenInfo.Item>
       </TblGenInfo>
 
       <Card style={{ overflow: 'hidden' }}>

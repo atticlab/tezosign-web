@@ -176,31 +176,6 @@ const OperationDetails = ({ operation }) => {
     if (!operation.signatures) return [];
     setSignaturesCount(initialSignaturesCount);
 
-    // return operation.signatures.map((signature, index) => {
-    //   const owner = contractInfo.owners[signature.index];
-    //
-    //   switch (signature.type) {
-    //     case 'approve':
-    //       setSignaturesCount((prev) => ({
-    //         ...prev,
-    //         approved: prev.approved + 1,
-    //       }));
-    //       break;
-    //     default:
-    //       setSignaturesCount((prev) => ({
-    //         ...prev,
-    //         rejected: prev.rejected + 1,
-    //       }));
-    //       break;
-    //   }
-    //
-    //   return {
-    //     id: index,
-    //     variant: defineOperationStepVariant(signature.type),
-    //     content: owner && <Address address={owner.address} />,
-    //   };
-    // });
-
     return operation.signatures.reduce((acc, signature) => {
       const owner = contractInfo.owners[signature.index];
 
