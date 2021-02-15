@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 
+// ${({ variant }) =>
+//   variant === 'halved'
+//     ? css`
+//         background-size: 21px 2px, 100% 2px;
+//       `
+//     : ''}
+
 const StepperStyled = styled.ul`
   padding: 0;
   list-style-type: none;
@@ -20,16 +27,30 @@ StepperStyled.Step = styled.li`
     display: block;
     content: '';
     position: absolute;
-    background-color: ${({ variant, theme }) => {
+    background: ${({ variant, theme }) => {
       switch (variant) {
         case 'success':
           return theme.lightGreen;
         case 'danger':
           return theme.red;
+        case 'halved':
+          return `linear-gradient(90deg, ${theme.lightGreen} 50%, ${theme.red} 50%)`;
+        // return `linear-gradient(to left, ${theme.lightGreen}, ${theme.lightGreen} 50%, ${theme.red} 50%, ${theme.red});`;
+        // return `linear-gradient(180deg, ${theme.lightGreen} 50%, ${theme.red} 50%);`;
         default:
           return theme.lightGray2;
       }
     }};
+  }
+
+  &:after {
+    content: '';
+    display: block;
+    height: 15%;
+    position: absolute;
+    background-color: ${({ theme }) => theme.lightGray2};
+    width: 2px;
+    right: 0;
   }
 
   ${({ isVertical }) =>
@@ -40,7 +61,7 @@ StepperStyled.Step = styled.li`
 
           &:before {
             height: 100%;
-            width: 3px;
+            width: 4px;
             left: 5px;
           }
         `
@@ -49,7 +70,7 @@ StepperStyled.Step = styled.li`
           padding: 0 20px;
 
           &:before {
-            height: 3px;
+            height: 4px;
             width: 100%;
             top: 5px;
           }
@@ -57,19 +78,23 @@ StepperStyled.Step = styled.li`
 `;
 
 StepperStyled.Point = styled.div`
-  background-color: ${({ variant, theme }) => {
+  background: ${({ variant, theme }) => {
     switch (variant) {
       case 'success':
         return theme.lightGreen;
       case 'danger':
         return theme.red;
+      case 'halved':
+        return `linear-gradient(90deg, ${theme.lightGreen} 50%, ${theme.red} 50%)`;
       default:
         return theme.lightGray2;
     }
   }};
-  width: 12px;
-  height: 12px;
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
+  position: relative;
+  z-index: 1;
   margin: ${({ isVertical }) => (isVertical ? '0 20px 0 0 ' : '0 0 20px 0 ')};
 `;
 
