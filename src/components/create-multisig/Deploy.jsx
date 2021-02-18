@@ -22,7 +22,7 @@ const onSubmit = async (
     const code = resCode.data;
 
     const payload = {
-      addresses,
+      entities: addresses,
       threshold: Number(threshold),
     };
     const resStorage = await initStorage(payload);
