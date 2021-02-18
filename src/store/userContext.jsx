@@ -16,6 +16,7 @@ import {
   requestSignPayload,
   clearActiveAccount,
 } from '../plugins/beacon';
+import { convertHexToPrefixedBase58, isHex } from '../utils/helpers';
 
 // Default values
 const initialState = {
@@ -148,9 +149,12 @@ const UserProvider = ({ children }) => {
 
       const signature = await requestSignPayload(payload.data.token);
 
+      const { publicKey } = perms;
       const resTokens = await login({
         payload: payload.data.token,
-        pub_key: perms.publicKey,
+        pub_key: isHex(publicKey)
+          ? convertHexToPrefixedBase58(publicKey)
+          : publicKey,
         signature: signature.signature,
       });
       setTokens(() => resTokens.data);
