@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form as BForm, InputGroup, Button } from 'react-bootstrap';
@@ -21,17 +22,23 @@ const schema = Yup.object().shape({
     .of(
       Yup.object().shape({
         id: Yup.number(),
-        value: Yup.string()
-          .trim()
-          .required('Required')
-          .matches(
-            'tz1|tz2|tz3',
-            'Tezos address must start with tz1, tz2 or tz3',
-          )
-          .matches(/^\S+$/, 'No spaces are allowed')
-          .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
-          .length(36, 'Tezos address must be 36 characters long')
-          .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
+        value: Yup.string().when('isPubKey', {
+          is: false,
+          then: Yup.string()
+            .trim()
+            .required('Required')
+            .matches(
+              'tz1|tz2|tz3',
+              'Tezos address must start with tz1, tz2 or tz3',
+            )
+            .matches(/^\S+$/, 'No spaces are allowed')
+            .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
+            .length(36, 'Tezos address must be 36 characters long')
+            .test('bs58check', 'Invalid checksum', (val) =>
+              bs58Validation(val),
+            ),
+          otherwise: Yup.string().matches('edpk', 'New valids'),
+        }),
         isPubKey: Yup.boolean(),
       }),
     )
@@ -62,7 +69,14 @@ const Owners = ({ onSubmit }) => (
         setSubmitting(false);
       }}
     >
-      {({ isSubmitting, values, errors, touched, validateForm }) => (
+      {({
+        setFieldValue,
+        isSubmitting,
+        values,
+        errors,
+        touched,
+        validateForm,
+      }) => (
         <Form>
           {typeof errors.entities === 'string' ? (
             <BForm.Control.Feedback style={{ display: 'block' }} type="invalid">
@@ -107,8 +121,10 @@ const Owners = ({ onSubmit }) => (
                           style={{ paddingTop: 0, paddingBottom: 0 }}
                           onClick={() => {
                             console.log('change input type');
-                            // eslint-disable-next-line no-param-reassign
-                            entity.isPubKey = !entity.isPubKey;
+                            setFieldValue(
+                              `entities[${index}].isPubKey`,
+                              !values.entities[index].isPubKey,
+                            );
                           }}
                         >
                           <FontAwesomeIcon icon="retweet" />
