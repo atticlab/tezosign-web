@@ -29,9 +29,12 @@ const onSubmit = async (
     const storage = resStorage.data;
     const script = { code, storage };
 
-    await sendOrigination('0', script);
+    const resContract = await sendOrigination('0', script);
 
-    history.replace('/deployed');
+    history.replace({
+      pathname: '/deployed',
+      state: resContract,
+    });
   } catch (e) {
     console.error();
   }
