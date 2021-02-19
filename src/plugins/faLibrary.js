@@ -13,6 +13,7 @@ import {
   faLayerGroup,
   faUserFriends,
   faTimes,
+  faRetweet,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -29,4 +30,5 @@ library.add(
   faLayerGroup,
   faUserFriends,
   faTimes,
+  faRetweet,
 );

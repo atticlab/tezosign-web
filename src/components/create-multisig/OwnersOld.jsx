@@ -17,23 +17,16 @@ Yup.addMethod(Yup.array, 'unique', function (message, mapper = (a) => a) {
 });
 
 const schema = Yup.object().shape({
-  entities: Yup.array()
+  addresses: Yup.array()
     .of(
-      Yup.object().shape({
-        id: Yup.number(),
-        value: Yup.string()
-          .trim()
-          .required('Required')
-          .matches(
-            'tz1|tz2|tz3',
-            'Tezos address must start with tz1, tz2 or tz3',
-          )
-          .matches(/^\S+$/, 'No spaces are allowed')
-          .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
-          .length(36, 'Tezos address must be 36 characters long')
-          .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
-        isPubKey: Yup.boolean(),
-      }),
+      Yup.string()
+        .trim()
+        .required('Required')
+        .matches('tz1|tz2|tz3', 'Tezos address must start with tz1, tz2 or tz3')
+        .matches(/^\S+$/, 'No spaces are allowed')
+        .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
+        .length(36, 'Tezos address must be 36 characters long')
+        .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
     )
     .ensure()
     .required('Must have addresses')
@@ -50,70 +43,51 @@ const Owners = ({ onSubmit }) => (
     </Text>
 
     <Formik
-      initialValues={{
-        entities: [
-          { id: 0, value: '', isPubKey: false },
-          { id: 1, value: '', isPubKey: false },
-        ],
-      }}
+      // initialValues={{ addresses: ['', ''] }}
+      initialValues={{ addresses: ['', ''] }}
       validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {
-        onSubmit(values.entities.map((entity) => entity.value));
+        onSubmit(values.addresses);
         setSubmitting(false);
       }}
     >
       {({ isSubmitting, values, errors, touched, validateForm }) => (
         <Form>
-          {typeof errors.entities === 'string' ? (
+          {typeof errors.addresses === 'string' ? (
             <BForm.Control.Feedback style={{ display: 'block' }} type="invalid">
-              {errors.entities}
+              {errors.addresses}
             </BForm.Control.Feedback>
           ) : null}
-          <FieldArray name="entities">
+          <FieldArray name="addresses">
             {(arrayHelpers) => (
               <div>
-                {values.entities.map((entity, index) => (
-                  <BForm.Group key={entity.id} style={{ marginBottom: '10px' }}>
+                {values.addresses.map((address, index) => (
+                  /* eslint-disable react/no-array-index-key */
+                  <BForm.Group key={index} style={{ marginBottom: '10px' }}>
                     <InputGroup>
                       <Field
                         type="text"
-                        name={`entities[${index}].value`}
-                        id={`entities[${index}].value`}
-                        aria-label={`entities[${index}].value`}
-                        placeholder={entity.isPubKey ? 'Public key' : 'tz1...'}
+                        name={`addresses[${index}]`}
+                        id={`addresses[${index}]`}
+                        aria-label={`addresses[${index}]`}
+                        placeholder="tz1..."
                         as={BForm.Control}
                         size="sm"
                         isInvalid={
-                          errors.entities &&
-                          touched.entities &&
-                          errors.entities[index] &&
-                          touched.entities[index] &&
-                          !!errors.entities[index].value &&
-                          touched.entities[index].value
+                          errors.addresses &&
+                          touched.addresses &&
+                          !!errors.addresses[index] &&
+                          touched.addresses[index]
                         }
                         isValid={
-                          errors.entities &&
-                          touched.entities &&
-                          errors.entities[index] &&
-                          touched.entities[index] &&
-                          !errors.entities[index].value &&
-                          touched.entities[index].value
+                          errors.addresses &&
+                          touched.addresses &&
+                          !errors.addresses[index] &&
+                          touched.addresses[index]
                         }
                         style={{ maxWidth: '500px' }}
                       />
                       <InputGroup.Append>
-                        <Button
-                          variant="link"
-                          style={{ paddingTop: 0, paddingBottom: 0 }}
-                          onClick={() => {
-                            console.log('change input type');
-                            // eslint-disable-next-line no-param-reassign
-                            entity.isPubKey = !entity.isPubKey;
-                          }}
-                        >
-                          <FontAwesomeIcon icon="retweet" />
-                        </Button>
-
                         {index > 1 ? (
                           <Button
                             variant="link"
@@ -130,10 +104,17 @@ const Owners = ({ onSubmit }) => (
                         ) : (
                           ''
                         )}
+                        <Button
+                          variant="link"
+                          style={{ paddingTop: 0, paddingBottom: 0 }}
+                          onClick={() => console.log('change input type')}
+                        >
+                          <FontAwesomeIcon icon="retweet" />
+                        </Button>
                       </InputGroup.Append>
-                      {typeof errors.entities !== 'string' ? (
+                      {typeof errors.addresses !== 'string' ? (
                         <ErrorMessage
-                          name={`entities[${index}].value`}
+                          name={`addresses[${index}]`}
                           component={BForm.Control.Feedback}
                           type="invalid"
                         />
@@ -145,13 +126,7 @@ const Owners = ({ onSubmit }) => (
                   <Button
                     variant="link"
                     block
-                    onClick={() =>
-                      arrayHelpers.push({
-                        id: values.entities.length,
-                        value: '',
-                        isPubKey: false,
-                      })
-                    }
+                    onClick={() => arrayHelpers.push('')}
                   >
                     <FontAwesomeIcon icon="plus" />
                   </Button>
