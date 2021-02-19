@@ -196,13 +196,17 @@ const UserProvider = ({ children }) => {
   }, [redirectToReferrer]);
 
   const stateValue = useMemo(() => {
+    const { publicKey, address } = isLoggedIn ? permissions : {};
+
     return {
       permissions,
       isPermissionsLoading,
       isLoggedIn,
       isRestoreLoading,
-      address: isLoggedIn && permissions.address,
-      publicKey: isLoggedIn && permissions.publicKey,
+      address,
+      publicKey: isHex(publicKey)
+        ? convertHexToPrefixedBase58(publicKey)
+        : publicKey,
       tokens,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
