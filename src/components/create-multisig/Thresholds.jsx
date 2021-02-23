@@ -10,7 +10,7 @@ import SelectCustom from '../SelectCustom';
 
 const schema = Yup.object({
   signatures: Yup.number()
-    .moreThan(1, 'The number of signatures must be greater than 1')
+    .moreThan(0, 'The number of signatures must be greater than 0')
     .required('Required'),
 });
 

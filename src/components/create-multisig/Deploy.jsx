@@ -9,11 +9,12 @@ import AccentText from '../styled/AccentText';
 import useAPI from '../../hooks/useApi';
 import { sendOrigination } from '../../plugins/beacon';
 import { handleError } from '../../utils/errorsHandler';
+import { isHex, convertHexToPrefixedBase58 } from '../../utils/helpers';
 
 const onSubmit = async (
   getContractCode,
   initStorage,
-  addresses,
+  entities,
   threshold,
   history,
 ) => {
@@ -23,7 +24,9 @@ const onSubmit = async (
     const code = resCode.data;
 
     const payload = {
-      entities: addresses,
+      entities: entities.map((entity) =>
+        isHex(entity) ? convertHexToPrefixedBase58(entity) : entity,
+      ),
       threshold: Number(threshold),
     };
     const resStorage = await initStorage(payload);
@@ -41,7 +44,7 @@ const onSubmit = async (
   }
 };
 
-const Deploy = ({ addresses, signatures, onBack }) => {
+const Deploy = ({ entities, signatures, onBack }) => {
   const { getContractCode, initStorage } = useAPI();
   const history = useHistory();
 
@@ -60,11 +63,11 @@ const Deploy = ({ addresses, signatures, onBack }) => {
       <div>
         <Text modifier="md">
           Owners: <br />
-          {addresses.map((address, index) => (
-            <AccentText key={address}>
+          {entities.map((entity, index) => (
+            <AccentText key={entity}>
               <BreakTxt>
-                {address}
-                {index !== addresses.length - 1 ? ', ' : ''}
+                {entity}
+                {index !== entities.length - 1 ? ', ' : ''}
               </BreakTxt>
               <br />
             </AccentText>
@@ -94,7 +97,7 @@ const Deploy = ({ addresses, signatures, onBack }) => {
             onSubmit(
               getContractCode,
               initStorage,
-              addresses,
+              entities,
               signatures,
               history,
             );
@@ -108,7 +111,7 @@ const Deploy = ({ addresses, signatures, onBack }) => {
 };
 
 Deploy.propTypes = {
-  addresses: PropTypes.arrayOf(PropTypes.string).isRequired,
+  entities: PropTypes.arrayOf(PropTypes.string).isRequired,
   signatures: PropTypes.number.isRequired,
   onBack: PropTypes.func.isRequired,
 };
