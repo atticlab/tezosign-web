@@ -14,7 +14,6 @@ import Card from '../styled/Card';
 import Text from '../styled/Text';
 import { bs58Validation, isHex } from '../../utils/helpers';
 import useAPI from '../../hooks/useApi';
-// import useRequest from '../../hooks/useRequest';
 
 // eslint-disable-next-line func-names
 Yup.addMethod(Yup.array, 'unique', function (message, mapper = (a) => a) {
@@ -36,101 +35,46 @@ Yup.addMethod(Yup.string, 'bs58OrHexCheck', function (message) {
   });
 });
 
-// const schema = Yup.object().shape({
-//   entities: Yup.array()
-//     .of(
-//       Yup.object().shape({
-//         id: Yup.number(),
-//         value: Yup.string().when('isPubKey', {
-//           is: false,
-//           then: Yup.string()
-//             .trim()
-//             .required('Required')
-//             .matches(
-//               'tz1|tz2|tz3',
-//               'Tezos address must start with tz1, tz2 or tz3',
-//             )
-//             .matches(/^\S+$/, 'No spaces are allowed')
-//             .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
-//             .length(36, 'Tezos address must be 36 characters long')
-//             .test('bs58check', 'Invalid checksum', (val) =>
-//               bs58Validation(val),
-//             ),
-//           otherwise: Yup.string()
-//             .required('Required')
-//             .matches(/^\S+$/, 'No spaces are allowed')
-//             .specificLength(
-//               'The string must be either 54-55 (base58) or 64(hex) characters long',
-//             )
-//             .bs58OrHexCheck('The string must be base58 or hex format'),
-//         }),
-//         isPubKey: Yup.boolean(),
-//       }),
-//     )
-//     .ensure()
-//     .required('Must have addresses')
-//     .min(1, 'Minimum of 1 addresses')
-//     .max(3, 'Maximum of 20 addresses')
-//     .unique('Addresses must be unique', (entity) => entity.value),
-// });
+let revealed = true;
+const schema = Yup.object().shape({
+  entities: Yup.array()
+    .of(
+      Yup.object().shape({
+        id: Yup.number(),
+        value: Yup.string().when('isPubKey', {
+          is: false,
+          then: Yup.string()
+            .trim()
+            .required('Required')
+            .matches(
+              'tz1|tz2|tz3',
+              'Tezos address must start with tz1, tz2 or tz3',
+            )
+            .matches(/^\S+$/, 'No spaces are allowed')
+            .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
+            .length(36, 'Tezos address must be 36 characters long')
+            .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val))
+            .test('sad', 'Address is unrevealed', async () => revealed),
+          otherwise: Yup.string()
+            .required('Required')
+            .matches(/^\S+$/, 'No spaces are allowed')
+            .specificLength(
+              'The string must be either 54-55 (base58) or 64(hex) characters long',
+            )
+            .bs58OrHexCheck('The string must be base58 or hex format'),
+        }),
+        isPubKey: Yup.boolean(),
+      }),
+    )
+    .ensure()
+    .required('Must have addresses')
+    .min(1, 'Minimum of 1 addresses')
+    .max(20, 'Maximum of 20 addresses')
+    .unique('Addresses must be unique', (entity) => entity.value),
+});
 
 const Owners = ({ onSubmit }) => {
   const { isAddressRevealed } = useAPI();
-
-  const schema = Yup.object().shape({
-    entities: Yup.array()
-      .of(
-        Yup.object().shape({
-          id: Yup.number(),
-          value: Yup.string().when('isPubKey', {
-            is: false,
-            then: Yup.string()
-              .trim()
-              .required('Required')
-              .matches(
-                'tz1|tz2|tz3',
-                'Tezos address must start with tz1, tz2 or tz3',
-              )
-              .matches(/^\S+$/, 'No spaces are allowed')
-              .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
-              .length(36, 'Tezos address must be 36 characters long')
-              .test('bs58check', 'Invalid checksum', (val) =>
-                bs58Validation(val),
-              )
-              .test(
-                'isAddressRevealed',
-                'The address is unrevealed',
-                function (val) {
-                  console.log('test');
-                  if (!val) {
-                    (async () => {
-                      try {
-                        const res = isAddressRevealed(val);
-                        console.log(res);
-                      } catch (e) {
-                        console.error(e);
-                      }
-                    })();
-                  }
-                },
-              ),
-            otherwise: Yup.string()
-              .required('Required')
-              .matches(/^\S+$/, 'No spaces are allowed')
-              .specificLength(
-                'The string must be either 54-55 (base58) or 64(hex) characters long',
-              )
-              .bs58OrHexCheck('The string must be base58 or hex format'),
-          }),
-          isPubKey: Yup.boolean(),
-        }),
-      )
-      .ensure()
-      .required('Must have addresses')
-      .min(1, 'Minimum of 1 addresses')
-      .max(3, 'Maximum of 20 addresses')
-      .unique('Addresses must be unique', (entity) => entity.value),
-  });
 
   return (
     <Card.Body>
@@ -147,7 +91,6 @@ const Owners = ({ onSubmit }) => {
           entities: [{ id: 0, value: '', isPubKey: false }],
         }}
         validationSchema={schema}
-        // validationSchema={Yup.lazy(() => schema(isAddressRevealed))}
         onSubmit={(values, { setSubmitting }) => {
           onSubmit(values.entities.map((entity) => entity.value));
           setSubmitting(false);
@@ -155,6 +98,7 @@ const Owners = ({ onSubmit }) => {
       >
         {({
           setFieldValue,
+          handleBlur,
           isSubmitting,
           values,
           errors,
@@ -170,7 +114,7 @@ const Owners = ({ onSubmit }) => {
                 {errors.entities}
               </BForm.Control.Feedback>
             ) : null}
-            <FieldArray name="entities">
+            <FieldArray name="entities" validateOnChange={false}>
               {(arrayHelpers) => (
                 <div>
                   {values.entities.map((entity, index) => (
@@ -208,6 +152,21 @@ const Owners = ({ onSubmit }) => {
                             touched.entities[index].value
                           }
                           style={{ maxWidth: '500px' }}
+                          onBlur={(e) => {
+                            handleBlur(e);
+                            if (
+                              e.target.value &&
+                              e.target.value.length === 36 &&
+                              bs58Validation(e.target.value) &&
+                              !entity.isPubKey
+                            )
+                              isAddressRevealed(e.target.value).then(
+                                (response) => {
+                                  revealed = response.data.revealed;
+                                  validateForm();
+                                },
+                              );
+                          }}
                         />
                         <InputGroup.Append>
                           <OverlayTrigger
