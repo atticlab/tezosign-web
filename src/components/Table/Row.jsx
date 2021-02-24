@@ -28,14 +28,19 @@ const Row = forwardRef(({ cols, row, isCollapsible, collapseContent }, ref) => {
             <FontAwesomeIcon
               icon="chevron-down"
               color="#cacaca"
-              flip={isCollapsed ? 'vertical' : 'horizontal'}
+              rotation={isCollapsed ? 180 : 0}
+              style={{ transition: 'all 0.3s ease' }}
             />
           </Tbl.Td>
         )}
       </Tbl.Tr>
       {isCollapsible && (
         <Tbl.TrCollapsible isCollapsed={isCollapsed}>
-          <td colSpan="100%">{collapseContent}</td>
+          <td colSpan="100%" style={{ overflow: 'hidden' }}>
+            <Tbl.CollapseContent isCollapsed={isCollapsed}>
+              {collapseContent}
+            </Tbl.CollapseContent>
+          </td>
         </Tbl.TrCollapsible>
       )}
     </>

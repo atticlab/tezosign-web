@@ -58,7 +58,14 @@ Tbl.Tr = styled.tr`
 
 Tbl.TrCollapsible = styled.tr`
   box-shadow: inset 0 3px 6px -3px rgb(0 0 0 / 20%);
-  display: ${({ isCollapsed }) => (isCollapsed ? 'table-row' : 'none')};
+  visibility: ${({ isCollapsed }) => (isCollapsed ? 'visible' : 'collapse')};
+  transition: visibility 0.2s ease;
+`;
+
+Tbl.CollapseContent = styled.div`
+  transform: ${({ isCollapsed }) =>
+    isCollapsed ? 'translateY(0)' : 'translateY(-150%)'};
+  transition: transform 0.3s ease;
 `;
 
 export { TblGenInfo, TblWrap, Tbl };
