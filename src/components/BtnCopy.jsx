@@ -5,15 +5,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import BtnLink from './styled/BtnLink';
 
-const options = {
-  position: 'top-right',
-  autoClose: 3000,
-  hideProgressBar: true,
-  closeOnClick: true,
-  pauseOnHover: false,
-  draggable: false,
-};
-const copy = (msg) => toast.success(msg, options);
+const copy = (msg) => toast.success(msg);
 // eslint-disable-next-line no-unused-vars,react/prop-types
 const BtnCopy = ({ textToCopy, msg, style }) => (
   <div>

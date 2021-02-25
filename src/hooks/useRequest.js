@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { handleError } from '../utils/errorsHandler';
 
 const useRequest = (
   requestFunc,
@@ -16,7 +17,7 @@ const useRequest = (
       const data = await requestFunc(opts);
       setResp(() => data.data);
     } catch (e) {
-      console.error(e);
+      handleError(e);
       setErr(e);
     } finally {
       setIsLoading(false);

@@ -15,6 +15,7 @@ import {
 import XTZ from '../../../assets/img/assets/xtz.png';
 import { useContractStateContext } from '../../../store/contractContext';
 import { useOperationsDispatchContext } from '../../../store/operationsContext';
+import { handleError } from '../../../utils/errorsHandler';
 
 const Check = styled(BForm.Check)`
   padding-left: 0;
@@ -108,7 +109,7 @@ const CreateTx = ({ onCreate }) => {
       });
       onCreate();
     } catch (e) {
-      console.error(e);
+      handleError(e);
     } finally {
       setSubmitting(false);
     }

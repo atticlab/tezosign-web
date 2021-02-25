@@ -12,6 +12,7 @@ import { bs58Validation } from '../../../utils/helpers';
 import useAPI from '../../../hooks/useApi';
 import { useOperationsDispatchContext } from '../../../store/operationsContext';
 import { useContractStateContext } from '../../../store/contractContext';
+import { handleError } from '../../../utils/errorsHandler';
 
 const schema = Yup.object({
   baker: Yup.string()
@@ -56,7 +57,7 @@ const CreateDelegation = ({ onCreate }) => {
       });
       onCreate();
     } catch (e) {
-      console.error(e);
+      handleError(e);
     } finally {
       setSubmitting(false);
     }
