@@ -1,5 +1,3 @@
-//@import '~bootstrap/scss/bootstrap';
-
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
@@ -16,6 +14,4 @@
 @import '~bootstrap/scss/close';
 @import '~bootstrap/scss/toasts';
 @import '~bootstrap/scss/modal';
-
-// Bootstrap utils
-//@import '~bootstrap/scss/utilities/spacing';
+@import '~bootstrap/scss/tooltip';

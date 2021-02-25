@@ -122,6 +122,9 @@ const useAPI = () => {
   const getContractInfo = (contractID) => {
     return API.get(`/${network}/contract/${contractID}/info`);
   };
+  const isAddressRevealed = (address) => {
+    return API.get(`/${network}/${address}/revealed`);
+  };
 
   currentTokens = { ...tokens };
 
@@ -192,6 +195,7 @@ const useAPI = () => {
     sendSignature,
     buildOperation,
     getOperations,
+    isAddressRevealed,
   };
 };
 

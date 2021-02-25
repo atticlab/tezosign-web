@@ -81,7 +81,7 @@ const CreateMultisig = () => {
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="2">
               <Deploy
-                addresses={addresses}
+                entities={addresses}
                 signatures={signatures}
                 onBack={() => setSignatures(0)}
               />
