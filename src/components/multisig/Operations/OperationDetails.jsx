@@ -83,12 +83,18 @@ const defineOperationStepVariant = (operationType) => {
   }
 };
 
-const checkOwnersIndices = (signatures, owners, signatureType = 'approve') => {
+const checkOwnersIndices = (
+  userAddress,
+  signatures,
+  owners,
+  signatureType = 'approve',
+) => {
   if (!signatures) return null;
 
-  return signatures.some(
-    (signature) => owners[signature.index] && signature.type === signatureType,
-  );
+  return signatures.some((signature) => {
+    const owner = owners[signature.index];
+    return owner.address === userAddress && signature.type === signatureType;
+  });
 };
 
 const initialSignaturesCount = {
@@ -102,7 +108,7 @@ const OperationDetails = ({ operation }) => {
     isUserOwner,
     contractAddress,
   } = useContractStateContext();
-  const { publicKey } = useUserStateContext();
+  const { publicKey, address } = useUserStateContext();
   const [signaturesCount, setSignaturesCount] = useState(
     initialSignaturesCount,
   );
@@ -253,6 +259,7 @@ const OperationDetails = ({ operation }) => {
               disabled={
                 isActionLoading ||
                 checkOwnersIndices(
+                  address,
                   operation.signatures,
                   contractInfo.owners,
                   'approve',
@@ -268,6 +275,7 @@ const OperationDetails = ({ operation }) => {
               disabled={
                 isActionLoading ||
                 checkOwnersIndices(
+                  address,
                   operation.signatures,
                   contractInfo.owners,
                   'reject',
