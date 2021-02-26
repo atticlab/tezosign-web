@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BtnBack from '../components/BtnBack';
 import MultisigInfo from '../components/multisig/MultisigInfo';
 import Operations from '../components/multisig/Operations';
+import Assets from '../components/multisig/Assets';
 import Spinner from '../components/Spinner';
 import { bs58Validation } from '../utils/helpers';
 import {
@@ -112,11 +113,24 @@ const Multisig = () => {
                 OPERATIONS
               </NavTabs.Link>
             </NavTabs.Item>
+
+            <NavTabs.Item>
+              <NavTabs.Link eventKey="assets">
+                <FontAwesomeIcon
+                  icon="dollar-sign"
+                  style={{ marginRight: '5px' }}
+                />
+                ASSETS
+              </NavTabs.Link>
+            </NavTabs.Item>
           </NavTabs>
 
           <Tab.Content style={{ paddingTop: '20px' }}>
             <Tab.Pane eventKey="ops">
               <Operations />
+            </Tab.Pane>
+            <Tab.Pane eventKey="assets">
+              <Assets />
             </Tab.Pane>
           </Tab.Content>
         </Tab.Container>

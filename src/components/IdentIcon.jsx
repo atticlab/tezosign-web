@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { ThemeContext } from 'styled-components';
+import styled, { ThemeContext } from 'styled-components';
 import PropTypes from 'prop-types';
 import { createIcon } from '@download/blockies';
+
+const ImgIcon = styled.img`
+  display: inline-block;
+  border-radius: 5px;
+`;
 
 const IdentIcon = ({ address, scale }) => {
   const theme = useContext(ThemeContext);
@@ -24,7 +29,7 @@ const IdentIcon = ({ address, scale }) => {
     }
   }, [address, theme, scale]);
 
-  return <img src={icon} alt={address} />;
+  return <ImgIcon src={icon} alt={address} />;
 };
 
 IdentIcon.propTypes = {

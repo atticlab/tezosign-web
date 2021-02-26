@@ -14,6 +14,7 @@ import {
   faUserFriends,
   faTimes,
   faRetweet,
+  faDollarSign,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -31,4 +32,5 @@ library.add(
   faUserFriends,
   faTimes,
   faRetweet,
+  faDollarSign,
 );
