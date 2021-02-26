@@ -15,6 +15,7 @@ import {
   faTimes,
   faRetweet,
   faDollarSign,
+  faKey,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -33,4 +34,5 @@ library.add(
   faTimes,
   faRetweet,
   faDollarSign,
+  faKey,
 );

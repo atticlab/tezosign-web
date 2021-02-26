@@ -16,6 +16,7 @@ import {
 } from '../store/contractContext';
 import { OperationsProvider } from '../store/operationsContext';
 import { AssetsProvider } from '../store/assetsContext';
+import OwnersTable from '../components/multisig/OwnersTable';
 
 const NavTabs = styled(Nav).attrs({ variant: 'pills' })`
   border-bottom: ${({ theme }) => theme.borderGrey};
@@ -125,6 +126,13 @@ const Multisig = () => {
                   ASSETS
                 </NavTabs.Link>
               </NavTabs.Item>
+  
+              <NavTabs.Item>
+                <NavTabs.Link eventKey="owr">
+                  <FontAwesomeIcon icon="key" style={{ marginRight: '5px' }} />
+                  OWNERS
+                </NavTabs.Link>
+              </NavTabs.Item>
             </NavTabs>
 
             <Tab.Content style={{ paddingTop: '20px' }}>
@@ -133,6 +141,9 @@ const Multisig = () => {
               </Tab.Pane>
               <Tab.Pane eventKey="assets">
                 <Assets />
+              </Tab.Pane>
+              <Tab.Pane eventKey="owr">
+                <OwnersTable />
               </Tab.Pane>
             </Tab.Content>
           </Tab.Container>
