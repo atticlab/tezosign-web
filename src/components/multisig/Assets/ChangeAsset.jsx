@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
 import Modal from '../../styled/Modal';
 import Title from '../../styled/Title';
 import AssetEditor from './AssetEditor';
 
-const NewAsset = () => {
+const Edit = styled(Button).attrs({ variant: 'link' })`
+  color: ${({ theme }) => theme.lightGray};
+  &:hover {
+    color: ${({ theme }) => theme.lightGreen};
+  }
+`;
+
+const ChangeAsset = ({ asset }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => {
     setShow(false);
@@ -31,7 +40,7 @@ const NewAsset = () => {
 
             <div style={{ textAlign: 'center' }}>
               <Title as="h3" modifier="sm" fw={400} style={{ marginBottom: 0 }}>
-                New Asset
+                Edit Asset
               </Title>
             </div>
           </div>
@@ -39,14 +48,28 @@ const NewAsset = () => {
 
         <Modal.Body>
           <Modal.Content>
-            <AssetEditor onAdd={handleClose} />
+            <AssetEditor
+              isEdit
+              name={asset.name}
+              address={asset.address}
+              contractType={asset.contract_type}
+              scale={asset.scale}
+              ticker={asset.ticker}
+              onAdd={handleClose}
+            />
           </Modal.Content>
         </Modal.Body>
       </Modal>
 
-      <Button onClick={handleShow}>New Asset</Button>
+      <Edit onClick={handleShow}>
+        <FontAwesomeIcon icon="pen" />
+      </Edit>
     </>
   );
 };
 
-export default NewAsset;
+ChangeAsset.propTypes = {
+  asset: PropTypes.objectOf(PropTypes.any).isRequired,
+};
+
+export default ChangeAsset;

@@ -14,6 +14,8 @@ const SelectCustom = ({
   isTouched,
   value,
   menuWidth,
+  height,
+  disabled,
 }) => {
   const option = options.map((el) => ({
     label: el.label ? el.label : el,
@@ -36,6 +38,8 @@ const SelectCustom = ({
       value={value}
       onBlur={onBlur}
       menuWidth={menuWidth}
+      height={height}
+      isDisabled={disabled}
       theme={(theme) => ({
         ...theme,
         colors: {
@@ -65,6 +69,8 @@ SelectCustom.propTypes = {
   isInvalid: PropTypes.bool,
   value: PropTypes.objectOf(PropTypes.any),
   menuWidth: PropTypes.string,
+  height: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 SelectCustom.defaultProps = {
@@ -75,7 +81,9 @@ SelectCustom.defaultProps = {
   isValid: false,
   isInvalid: false,
   menuWidth: '',
+  height: '',
   value: {},
+  disabled: false,
 };
 
 export default SelectCustom;

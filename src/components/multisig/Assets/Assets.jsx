@@ -8,29 +8,20 @@ import IdentIcon from '../../IdentIcon';
 import Table from '../../Table';
 import Spinner from '../../Spinner';
 import BtnCopy from '../../BtnCopy';
-import useAPI from '../../../hooks/useApi';
-import useRequest from '../../../hooks/useRequest';
-import { useContractStateContext } from '../../../store/contractContext';
+import ChangeAsset from './ChangeAsset';
+import DeleteAsset from './DeleteAsset';
+import {
+  useAssetsDispatchContext,
+  useAssetsStateContext,
+} from '../../../store/assetsContext';
 
 const Assets = () => {
-  // getAssetsRates
-  const { getAssets } = useAPI();
-  const { contractAddress } = useContractStateContext();
-  const {
-    request: getAssetsLocal,
-    resp: assets,
-    isLoading: isAssetsLoading,
-  } = useRequest(getAssets, contractAddress);
-  // const {
-  //   request: getAssetsRatesLocal,
-  //   resp: assetsRates,
-  //   isLoading: isAssetsRatesLoading,
-  // } = useRequest(getAssetsRates, contractAddress);
+  const { assets, isAssetsLoading } = useAssetsStateContext();
+  const { getAssetsReq } = useAssetsDispatchContext();
 
   useEffect(() => {
     (async () => {
-      await getAssetsLocal();
-      // await getAssetsRatesLocal();
+      await getAssetsReq();
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -58,6 +49,17 @@ const Assets = () => {
       },
     },
     { key: 'contract_type', label: 'contract type' },
+    {
+      key: 'Actions',
+      process(asset) {
+        return (
+          <div>
+            <ChangeAsset asset={asset} />
+            <DeleteAsset asset={asset} />
+          </div>
+        );
+      },
+    },
   ];
   return (
     <section>

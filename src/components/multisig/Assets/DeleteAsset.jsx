@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
 import Modal from '../../styled/Modal';
 import Title from '../../styled/Title';
-import AssetEditor from './AssetEditor';
 
-const NewAsset = () => {
+const Close = styled(Button).attrs({ variant: 'link' })`
+  color: ${({ theme }) => theme.lightGray};
+  &:hover {
+    color: ${({ theme }) => theme.red};
+  }
+`;
+
+const DeleteAsset = ({ asset }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => {
     setShow(false);
@@ -13,6 +21,7 @@ const NewAsset = () => {
   const handleShow = () => {
     setShow(true);
   };
+  console.log(asset);
 
   return (
     <>
@@ -31,7 +40,7 @@ const NewAsset = () => {
 
             <div style={{ textAlign: 'center' }}>
               <Title as="h3" modifier="sm" fw={400} style={{ marginBottom: 0 }}>
-                New Asset
+                Delete Asset
               </Title>
             </div>
           </div>
@@ -39,14 +48,20 @@ const NewAsset = () => {
 
         <Modal.Body>
           <Modal.Content>
-            <AssetEditor onAdd={handleClose} />
+            Are you sure you would like to delete the asset?
           </Modal.Content>
         </Modal.Body>
       </Modal>
 
-      <Button onClick={handleShow}>New Asset</Button>
+      <Close onClick={handleShow}>
+        <FontAwesomeIcon icon="times" />
+      </Close>
     </>
   );
 };
 
-export default NewAsset;
+DeleteAsset.propTypes = {
+  asset: PropTypes.objectOf(PropTypes.any).isRequired,
+};
+
+export default DeleteAsset;

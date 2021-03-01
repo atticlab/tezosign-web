@@ -15,6 +15,7 @@ import {
   useContractDispatchContext,
 } from '../store/contractContext';
 import { OperationsProvider } from '../store/operationsContext';
+import { AssetsProvider } from '../store/assetsContext';
 
 const NavTabs = styled(Nav).attrs({ variant: 'pills' })`
   border-bottom: ${({ theme }) => theme.borderGrey};
@@ -97,44 +98,46 @@ const Multisig = () => {
     </div>
   ) : (
     <OperationsProvider>
-      <BtnBack pageName="Manage Multisig" />
+      <AssetsProvider>
+        <BtnBack pageName="Manage Multisig" />
 
-      <MultisigInfo />
+        <MultisigInfo />
 
-      <section>
-        <Tab.Container defaultActiveKey="ops">
-          <NavTabs>
-            <NavTabs.Item>
-              <NavTabs.Link eventKey="ops">
-                <FontAwesomeIcon
-                  icon="layer-group"
-                  style={{ marginRight: '5px' }}
-                />
-                OPERATIONS
-              </NavTabs.Link>
-            </NavTabs.Item>
+        <section>
+          <Tab.Container defaultActiveKey="ops">
+            <NavTabs>
+              <NavTabs.Item>
+                <NavTabs.Link eventKey="ops">
+                  <FontAwesomeIcon
+                    icon="layer-group"
+                    style={{ marginRight: '5px' }}
+                  />
+                  OPERATIONS
+                </NavTabs.Link>
+              </NavTabs.Item>
 
-            <NavTabs.Item>
-              <NavTabs.Link eventKey="assets">
-                <FontAwesomeIcon
-                  icon="dollar-sign"
-                  style={{ marginRight: '5px' }}
-                />
-                ASSETS
-              </NavTabs.Link>
-            </NavTabs.Item>
-          </NavTabs>
+              <NavTabs.Item>
+                <NavTabs.Link eventKey="assets">
+                  <FontAwesomeIcon
+                    icon="dollar-sign"
+                    style={{ marginRight: '5px' }}
+                  />
+                  ASSETS
+                </NavTabs.Link>
+              </NavTabs.Item>
+            </NavTabs>
 
-          <Tab.Content style={{ paddingTop: '20px' }}>
-            <Tab.Pane eventKey="ops">
-              <Operations />
-            </Tab.Pane>
-            <Tab.Pane eventKey="assets">
-              <Assets />
-            </Tab.Pane>
-          </Tab.Content>
-        </Tab.Container>
-      </section>
+            <Tab.Content style={{ paddingTop: '20px' }}>
+              <Tab.Pane eventKey="ops">
+                <Operations />
+              </Tab.Pane>
+              <Tab.Pane eventKey="assets">
+                <Assets />
+              </Tab.Pane>
+            </Tab.Content>
+          </Tab.Container>
+        </section>
+      </AssetsProvider>
     </OperationsProvider>
   );
 };

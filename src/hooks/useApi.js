@@ -131,6 +131,16 @@ const useAPI = () => {
   const getAssetsRates = (contractID) => {
     return API.get(`/${network}/contract/${contractID}/assets_rates`);
   };
+  // {
+  //   name: 'asdas';
+  //   contract_type: 'FA1.2' || 'FA2';
+  //   address: 'contract address';
+  //   scale: 0;
+  //   ticker: 'asd';
+  // }
+  const editAsset = (contractID, payload) => {
+    return API.post(`/${network}/contract/${contractID}/asset`, payload);
+  };
 
   currentTokens = { ...tokens };
 
@@ -204,6 +214,7 @@ const useAPI = () => {
     isAddressRevealed,
     getAssets,
     getAssetsRates,
+    editAsset,
   };
 };
 
