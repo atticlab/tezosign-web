@@ -3,7 +3,7 @@ export default {
     ...base,
     cursor: 'pointer',
     minHeight: 'auto',
-    height: '100%',
+    height: state.selectProps.height || '100%',
     borderColor:
       // eslint-disable-next-line no-nested-ternary
       state.selectProps.isTouched && state.selectProps.isInvalid

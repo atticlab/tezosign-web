@@ -5,7 +5,11 @@ const errorNotifications = {
   ERR_BAD_REQUEST: 'Bad request.',
   ERR_BAD_PARAM: 'Invalid param.',
   'ERR_BAD_PARAM:address': 'Invalid address. Try another one.',
+  'ERR_BAD_PARAM:not FA asset':
+    'Contract address is not an FA asset. Try another one.',
   'ERR_BAD_REQUEST:wrong pubKey format': 'Wrong public key format.',
+  'ERR_ALREADY_EXISTS:asset': 'Asset with the same address already exists.',
+  'ERR_NOT_ALLOWED:global asset': 'Global assets cannot be edited.',
   ERR_NOT_FOUND: 'Not found.',
   ERR_NOT_ALLOWED: 'Not allowed.',
   ERR_BAD_AUTH: 'Login failed.',
@@ -40,7 +44,6 @@ const handleError = (error) => {
     errorNotifications[
       availableCodes.includes(msgKey) ? msgKey : 'ERR_SERVICE'
     ];
-  console.log(errorText);
 
   return toast.error(errorText);
 };

@@ -1,23 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Button, Modal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CreateTx from './CreateTx';
 import CreateDelegation from './CreateDelegation';
 import Title from '../../styled/Title';
-
-const ModalHeader = styled(Modal.Header)`
-  border-bottom: none;
-`;
-
-const ModalBody = styled(Modal.Body)`
-  padding: 1rem 1rem 36px;
-`;
-
-const ModalContent = styled.div`
-  max-width: 383px;
-  margin: 0 auto;
-`;
+import Modal from '../../styled/Modal';
 
 const LinkBtn = styled(Button).attrs({ variant: 'link' })`
   color: ${({ theme }) => theme.black};
@@ -28,19 +16,6 @@ const LinkBtn = styled(Button).attrs({ variant: 'link' })`
   }
   &:focus {
     text-decoration: none;
-  }
-`;
-
-const ModalClose = styled(Button).attrs({ variant: 'link' })`
-  color: ${({ theme }) => theme.lightGray};
-  font-size: 24px;
-  padding-top: 0;
-  padding-bottom: 0;
-  display: block;
-  margin-left: auto;
-
-  &:hover {
-    color: ${({ theme }) => theme.red};
   }
 `;
 
@@ -64,11 +39,11 @@ const NewOperation = () => {
         backdrop="static"
         keyboard={false}
       >
-        <ModalHeader>
+        <Modal.Header>
           <div style={{ width: '100%' }}>
-            <ModalClose onClick={handleClose}>
+            <Modal.Close onClick={handleClose}>
               <FontAwesomeIcon icon="times" />
-            </ModalClose>
+            </Modal.Close>
 
             <div style={{ textAlign: 'center' }}>
               <Title as="h3" modifier="sm" fw={400} style={{ marginBottom: 0 }}>
@@ -85,10 +60,10 @@ const NewOperation = () => {
               )}
             </div>
           </div>
-        </ModalHeader>
+        </Modal.Header>
 
-        <ModalBody>
-          <ModalContent>
+        <Modal.Body>
+          <Modal.Content>
             {(() => {
               if (opType === 'transaction') {
                 return <CreateTx onCreate={handleClose} />;
@@ -119,13 +94,11 @@ const NewOperation = () => {
                 </div>
               );
             })()}
-          </ModalContent>
-        </ModalBody>
+          </Modal.Content>
+        </Modal.Body>
       </Modal>
 
-      <Button size="lg" onClick={handleShow}>
-        New Operation
-      </Button>
+      <Button onClick={handleShow}>New Operation</Button>
     </>
   );
 };

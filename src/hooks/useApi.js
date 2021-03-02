@@ -125,6 +125,38 @@ const useAPI = () => {
   const isAddressRevealed = (address) => {
     return API.get(`/${network}/${address}/revealed`);
   };
+  const getAssets = (contractID) => {
+    return API.get(`/${network}/contract/${contractID}/assets`);
+  };
+  const getAssetsRates = (contractID) => {
+    return API.get(`/${network}/contract/${contractID}/assets_rates`);
+  };
+  // {
+  //   name: 'asdas';
+  //   contract_type: 'FA1.2' || 'FA2';
+  //   address: 'contract address';
+  //   scale: 0;
+  //   ticker: 'asd';
+  // }
+  const createAsset = (contractID, payload) => {
+    return API.post(`/${network}/contract/${contractID}/asset`, payload);
+  };
+  // {
+  //   name: 'asdas';
+  //   contract_type: 'FA1.2' || 'FA2';
+  //   address: 'contract address';
+  //   scale: 0;
+  //   ticker: 'asd';
+  // }
+  const editAsset = (contractID, payload) => {
+    return API.post(`/${network}/contract/${contractID}/asset/edit`, payload);
+  };
+  // {
+  //   address: 'contract address';
+  // }
+  const deleteAsset = (contractID, payload) => {
+    return API.post(`/${network}/contract/${contractID}/asset/delete`, payload);
+  };
 
   currentTokens = { ...tokens };
 
@@ -196,6 +228,11 @@ const useAPI = () => {
     buildOperation,
     getOperations,
     isAddressRevealed,
+    getAssets,
+    getAssetsRates,
+    createAsset,
+    editAsset,
+    deleteAsset,
   };
 };
 

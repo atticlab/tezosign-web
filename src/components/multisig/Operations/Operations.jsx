@@ -9,6 +9,9 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import Card from '../../styled/Card';
+import { FlexCenter } from '../../styled/Flex';
+import Ellipsis from '../../styled/Ellipsis';
+import { TblGenInfo } from '../../styled/Tbl';
 import Table from '../../Table';
 import BtnCopy from '../../BtnCopy';
 import Spinner from '../../Spinner';
@@ -22,17 +25,6 @@ import { dateFormat } from '../../../utils/constants';
 
 dayjs.extend(utc);
 
-const TblGenInfo = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-TblGenInfo.Item = styled.span`
-  margin: 0 30px 20px;
-  text-transform: capitalize;
-  font-size: 16px;
-`;
-
 const Status = styled.span`
   text-transform: uppercase;
   color: ${({ status, theme }) => {
@@ -45,19 +37,6 @@ const Status = styled.span`
         return theme.lightGreen;
     }
   }};
-`;
-
-const Ellipsis = styled.span`
-  display: inline-block;
-  max-width: 100px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const FlexCenter = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 const initialOpsCounts = {
@@ -102,7 +81,7 @@ const Operations = () => {
 
         return (
           <FlexCenter>
-            <Ellipsis style={{ maxWidth: '70px' }}>{id}</Ellipsis>
+            <Ellipsis maxWidth="70px">{id}</Ellipsis>
             <BtnCopy
               textToCopy={id}
               style={{ paddingTop: 0, paddingBottom: 0 }}

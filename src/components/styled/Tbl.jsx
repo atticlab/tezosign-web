@@ -1,6 +1,17 @@
 import styled, { css } from 'styled-components';
 import { Table as BTable } from 'react-bootstrap';
 
+const TblGenInfo = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+TblGenInfo.Item = styled.span`
+  margin: 0 30px 20px;
+  text-transform: capitalize;
+  font-size: 16px;
+`;
+
 const TblWrap = styled.div`
   .table-responsive {
     max-height: ${({ maxHeight }) => maxHeight};
@@ -32,6 +43,8 @@ Tbl.Th = styled.th`
 Tbl.Td = styled.td`
   font-size: 14px;
   border-top: 1px solid ${({ theme }) => theme.lightGray} !important;
+  vertical-align: middle !important;
+  padding: 0.55rem !important;
 `;
 
 Tbl.Tr = styled.tr`
@@ -48,4 +61,4 @@ Tbl.TrCollapsible = styled.tr`
   display: ${({ isCollapsed }) => (isCollapsed ? 'table-row' : 'none')};
 `;
 
-export { TblWrap, Tbl };
+export { TblGenInfo, TblWrap, Tbl };
