@@ -1,55 +1,33 @@
 import React from 'react';
-import styled from 'styled-components';
-import Table from '../../Table';
-import Spinner from '../../Spinner';
-import Card from '../../styled/Card';
-import { useContractStateContext } from '../../../store/contractContext';
-import BtnCopy from '../../BtnCopy';
-import IndentIcon from '../../IdentIcon';
+import Card from '../styled/Card';
+import { FlexCenter } from '../styled/Flex';
+import Ellipsis from '../styled/Ellipsis';
+import { TblGenInfo } from '../styled/Tbl';
+import Table from '../Table';
+import Spinner from '../Spinner';
+import BtnCopy from '../BtnCopy';
+import IndentIcon from '../IdentIcon';
+import { useContractStateContext } from '../../store/contractContext';
 
-const TblGenInfo = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-TblGenInfo.Item = styled.span`
-  margin: 0 30px 20px;
-  text-transform: capitalize;
-  font-size: 16px;
-`;
-
-const FlexCenter = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Ellipsis = styled.span`
-  display: inline-block;
-  max-width: 100px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const OwnersTable = () => {
+const Owners = () => {
   const { contractInfo, isContractInfoLoading } = useContractStateContext();
   const cols = [
     {
       key: 'address',
       label: 'Account',
       process(operation) {
-        const adr = operation.address;
+        const { address } = operation;
 
         return (
           <FlexCenter>
             <div style={{ marginRight: '5px' }}>
-              <IndentIcon address={adr} scale={3} />
+              <IndentIcon address={address} scale={4} />
             </div>
 
-            <Ellipsis style={{ maxWidth: '70px' }}>{adr}</Ellipsis>
+            <Ellipsis maxWidth="200px">{address}</Ellipsis>
 
             <BtnCopy
-              textToCopy={adr}
+              textToCopy={address}
               style={{ paddingTop: 0, paddingBottom: 0 }}
             />
           </FlexCenter>
@@ -64,7 +42,7 @@ const OwnersTable = () => {
 
         return (
           <FlexCenter>
-            <Ellipsis style={{ maxWidth: '70px' }}>{pubKey}</Ellipsis>
+            <Ellipsis maxWidth="200px">{pubKey}</Ellipsis>
 
             <BtnCopy
               textToCopy={pubKey}
@@ -79,7 +57,9 @@ const OwnersTable = () => {
   return (
     <section>
       <TblGenInfo>
-        <TblGenInfo.Item>Total Owners:{contractInfo.threshold}</TblGenInfo.Item>
+        <TblGenInfo.Item>
+          Total Owners: {contractInfo.threshold}
+        </TblGenInfo.Item>
       </TblGenInfo>
 
       <Card style={{ overflow: 'hidden' }}>
@@ -102,4 +82,4 @@ const OwnersTable = () => {
   );
 };
 
-export default OwnersTable;
+export default Owners;
