@@ -37,7 +37,7 @@ const Assets = () => {
         return (
           <FlexCenter>
             <div style={{ marginRight: '10px' }}>
-              <IdentIcon address={assetContractAddress} />
+              <IdentIcon address={assetContractAddress} scale={4} />
             </div>
             <Ellipsis maxWidth="100px">{assetContractAddress}</Ellipsis>
             <BtnCopy
