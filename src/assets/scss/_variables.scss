@@ -1,4 +1,4 @@
-$green: #27f190;
+$green: #22d369;
 $light-grey: #c4c4c4;
 $black: #000;
 $red: #f9452d;
@@ -11,6 +11,7 @@ $input-font-weight: 300;
 $input-color: $black;
 $input-border-radius: 5px;
 $form-feedback-font-size: 12px;
+$input-disabled-bg: hsl(0, 0%, 95%);
 $container-max-widths: (
   sm: 540px,
   md: 720px,

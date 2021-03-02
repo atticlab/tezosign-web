@@ -98,9 +98,7 @@ const NewOperation = () => {
         </Modal.Body>
       </Modal>
 
-      <Button size="lg" onClick={handleShow}>
-        New Operation
-      </Button>
+      <Button onClick={handleShow}>New Operation</Button>
     </>
   );
 };

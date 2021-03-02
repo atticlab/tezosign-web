@@ -55,7 +55,7 @@ const ChangeAsset = ({ asset }) => {
               contractType={asset.contract_type}
               scale={asset.scale}
               ticker={asset.ticker}
-              onAdd={handleClose}
+              onSubmit={handleClose}
             />
           </Modal.Content>
         </Modal.Body>

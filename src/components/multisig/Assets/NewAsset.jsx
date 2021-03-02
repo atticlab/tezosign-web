@@ -39,7 +39,7 @@ const NewAsset = () => {
 
         <Modal.Body>
           <Modal.Content>
-            <AssetEditor onAdd={handleClose} />
+            <AssetEditor onSubmit={handleClose} />
           </Modal.Content>
         </Modal.Body>
       </Modal>

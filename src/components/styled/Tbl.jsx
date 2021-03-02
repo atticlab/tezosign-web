@@ -44,6 +44,7 @@ Tbl.Td = styled.td`
   font-size: 14px;
   border-top: 1px solid ${({ theme }) => theme.lightGray} !important;
   vertical-align: middle !important;
+  padding: 0.55rem !important;
 `;
 
 Tbl.Tr = styled.tr`

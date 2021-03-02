@@ -5,6 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
 import Modal from '../../styled/Modal';
 import Title from '../../styled/Title';
+import useAPI from '../../../hooks/useApi';
+import { useContractStateContext } from '../../../store/contractContext';
+import { handleError } from '../../../utils/errorsHandler';
+import { useAssetsDispatchContext } from '../../../store/assetsContext';
 
 const Close = styled(Button).attrs({ variant: 'link' })`
   color: ${({ theme }) => theme.lightGray};
@@ -14,6 +18,10 @@ const Close = styled(Button).attrs({ variant: 'link' })`
 `;
 
 const DeleteAsset = ({ asset }) => {
+  const { contractAddress } = useContractStateContext();
+  const { deleteAsset } = useAPI();
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const { setAssets } = useAssetsDispatchContext();
   const [show, setShow] = useState(false);
   const handleClose = () => {
     setShow(false);
@@ -21,7 +29,28 @@ const DeleteAsset = ({ asset }) => {
   const handleShow = () => {
     setShow(true);
   };
-  console.log(asset);
+
+  const removeAsset = async (contractID, address) => {
+    try {
+      setIsDeleteLoading(true);
+      await deleteAsset(contractID, { address });
+      setAssets((prev) => {
+        const res = [...prev];
+        res.splice(
+          res.indexOf(
+            res.find((assetIterable) => assetIterable.address === address),
+          ),
+          1,
+        );
+        return res;
+      });
+      handleClose();
+    } catch (e) {
+      handleError(e);
+    } finally {
+      setIsDeleteLoading(false);
+    }
+  };
 
   return (
     <>
@@ -47,8 +76,18 @@ const DeleteAsset = ({ asset }) => {
         </Modal.Header>
 
         <Modal.Body>
-          <Modal.Content>
+          <Modal.Content style={{ textAlign: 'center' }}>
             Are you sure you would like to delete the asset?
+            <div style={{ marginTop: '30px' }}>
+              <Button
+                variant="danger"
+                size="lg"
+                disabled={isDeleteLoading}
+                onClick={() => removeAsset(contractAddress, asset.address)}
+              >
+                Delete
+              </Button>
+            </div>
           </Modal.Content>
         </Modal.Body>
       </Modal>

@@ -16,9 +16,8 @@ const schema = Yup.object({
   name: Yup.string()
     .required('Required')
     .max(32, 'At most 32 characters')
-    // TODO: Allow spaces?
-    .matches(/^\S+$/, 'No spaces are allowed')
-    .matches(/^[a-zA-Z0-9]*$/, 'Only latin characters and numbers are allowed'),
+    .matches(/^[\w ]*$/, 'Only latin characters and numbers are allowed')
+    .matches(/^[\w]+( [\w]+)*$/, 'Unnecessary spaces'),
   address: Yup.string()
     .trim()
     .required('Required')
@@ -51,13 +50,12 @@ const AssetEditor = ({
   contractType,
   scale,
   ticker,
-  onAdd,
+  onSubmit,
 }) => {
   const { contractAddress } = useContractStateContext();
-  const { editAsset } = useAPI();
+  const { createAsset, editAsset } = useAPI();
   const { setAssets } = useAssetsDispatchContext();
 
-  // eslint-disable-next-line consistent-return
   const addAsset = async (contractID, assetFields, setSubmitting) => {
     try {
       setSubmitting(true);
@@ -68,15 +66,24 @@ const AssetEditor = ({
         scale: assetFields.scale,
         ticker: assetFields.ticker,
       };
+      let resp;
 
-      const resp = await editAsset(contractID, payload);
       if (!isEdit) {
+        resp = await createAsset(contractID, payload);
         setAssets((prev) => [...prev, resp.data]);
       } else {
-        setAssets((prev) => [...prev, resp.data]);
+        resp = await editAsset(contractID, payload);
+        setAssets((prev) => {
+          const indexToModify = prev.indexOf(
+            prev.find((asset) => asset.address === resp.data.address),
+          );
+          const res = [...prev];
+          res[indexToModify] = resp.data;
+          return res;
+        });
       }
 
-      onAdd();
+      onSubmit();
     } catch (e) {
       handleError(e);
     } finally {
@@ -236,9 +243,9 @@ AssetEditor.propTypes = {
   name: PropTypes.string,
   address: PropTypes.string,
   contractType: PropTypes.string,
-  scale: PropTypes.string,
+  scale: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   ticker: PropTypes.string,
-  onAdd: PropTypes.func,
+  onSubmit: PropTypes.func,
 };
 
 AssetEditor.defaultProps = {
@@ -248,7 +255,7 @@ AssetEditor.defaultProps = {
   contractType: '',
   scale: '',
   ticker: '',
-  onAdd: () => null,
+  onSubmit: () => null,
 };
 
 export default AssetEditor;

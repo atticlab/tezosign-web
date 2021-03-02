@@ -53,10 +53,12 @@ const Assets = () => {
       key: 'Actions',
       process(asset) {
         return (
-          <div>
-            <ChangeAsset asset={asset} />
-            <DeleteAsset asset={asset} />
-          </div>
+          !asset.is_global && (
+            <div>
+              <ChangeAsset asset={asset} />
+              <DeleteAsset asset={asset} />
+            </div>
+          )
         );
       },
     },

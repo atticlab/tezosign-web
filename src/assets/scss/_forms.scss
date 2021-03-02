@@ -4,3 +4,8 @@ select.was-validated .form-control:valid,
 .form-control.is-valid {
   background-position: right calc(0.375em + 0.6875rem) center;
 }
+
+.form-control:disabled,
+.form-control[readonly] {
+  color: hsl(0, 0%, 60%);
+}
