@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import Helmet from 'react-helmet';
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import Title from '../components/styled/Title';
@@ -31,6 +32,44 @@ const Home = () => {
 
   return (
     <HomeStyled>
+      <Helmet>
+        <title>
+          Tezos wallet for XTZ: multisig, open-source, web-based. It’s TzSign.
+        </title>
+        <meta
+          name="description"
+          content="TzSign – get your secure multisig open-source wallet for Tezos ecosystem! Create, deploy & manage your XTZ-wallet contracts with a click of a button on the web."
+        />
+        <meta
+          itemProp="name"
+          content=" Tezos wallet for XTZ: multisig, open-source, web-based. It’s TzSign."
+        />
+        <meta
+          itemProp="description"
+          content="TzSign – get your secure multisig open-source wallet for Tezos ecosystem! Create, deploy & manage your XTZ-wallet contracts with a click of a button on the web."
+        />
+        <meta
+          property="og:title"
+          content="Tezos wallet for XTZ: multisig, open-source, web-based. It’s TzSign."
+        />
+        <meta
+          property="og:description"
+          content="TzSign – get your secure multisig open-source wallet for Tezos ecosystem! Create, deploy & manage your XTZ-wallet contracts with a click of a button on the web."
+        />
+        <meta
+          name="twitter:title"
+          content="Tezos wallet for XTZ: multisig, open-source, web-based. It’s TzSign."
+        />
+        <meta
+          name="twitter:description"
+          content="TzSign – get your secure multisig open-source wallet for Tezos ecosystem! Create, deploy & manage your XTZ-wallet contracts with a click of a button on the web."
+        />
+        <meta
+          name="keywords"
+          content="multisig Tezos wallet, multisig XTZ wallet, Tezos wallet, XTZ wallet, XTZ web wallet, Tezos web wallet"
+        />
+      </Helmet>
+
       <Title style={{ marginBottom: '15px' }}>
         Create, Deploy, and Manage Multisig Wallets
       </Title>

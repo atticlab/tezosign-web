@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Helmet from 'react-helmet';
 import styled from 'styled-components';
 import { Accordion } from 'react-bootstrap';
 import BtnBack from '../components/BtnBack';
@@ -31,6 +32,44 @@ const CreateMultisig = () => {
 
   return (
     <section>
+      <Helmet>
+        <title>
+          TzSign - DIY kit to launch a custom multisig XTZ wallet in seconds.
+        </title>
+        <meta
+          name="description"
+          content="TzSign is the tool to develop your custom multisig XTZ wallets following your needs: set owners and signature thresholds individually per each wallet, boss."
+        />
+        <meta
+          itemProp="name"
+          content="TzSign - DIY kit to launch a custom multisig XTZ wallet in seconds."
+        />
+        <meta
+          itemProp="description"
+          content="TzSign is the tool to develop your custom multisig XTZ wallets following your needs: set owners and signature thresholds individually per each wallet, boss."
+        />
+        <meta
+          property="og:title"
+          content="TzSign - DIY kit to launch a custom multisig XTZ wallet in seconds."
+        />
+        <meta
+          property="og:description"
+          content="TzSign is the tool to develop your custom multisig XTZ wallets following your needs: set owners and signature thresholds individually per each wallet, boss."
+        />
+        <meta
+          name="twitter:title"
+          content="TzSign - DIY kit to launch a custom multisig XTZ wallet in seconds."
+        />
+        <meta
+          name="twitter:description"
+          content="TzSign is the tool to develop your custom multisig XTZ wallets following your needs: set owners and signature thresholds individually per each wallet, boss."
+        />
+        <meta
+          name="keywords"
+          content="create Tezos wallet, create XTZ wallet, create multisig Tezos wallet, create multisig XTZ wallet"
+        />
+      </Helmet>
+
       <BtnBack pageName="Create a New Multisig" />
 
       <div>

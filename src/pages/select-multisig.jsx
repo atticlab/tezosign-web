@@ -1,6 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Link, useHistory } from 'react-router-dom';
+import Helmet from 'react-helmet';
+import styled from 'styled-components';
 import { Form as BForm, InputGroup, Button } from 'react-bootstrap';
 import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
 // TODO: Research import variants
@@ -50,6 +51,45 @@ const SelectMultisig = () => {
 
   return (
     <SelectMultisigStyled>
+      <Helmet>
+        <title>
+          Manage an existing XTZ wallet or create a new multisig one with
+          TzSign.
+        </title>
+        <meta
+          name="description"
+          content="TzSign is a web-based multisig XTZ wallet: manage a deployed wallet contract or create a new one upon your requests. Choose an option to proceed with your Tezos trip!"
+        />
+        <meta
+          itemProp="name"
+          content="Manage an existing XTZ wallet or create a new multisig one with TzSign."
+        />
+        <meta
+          itemProp="description"
+          content="TzSign is a web-based multisig XTZ wallet: manage a deployed wallet contract or create a new one upon your requests. Choose an option to proceed with your Tezos trip!"
+        />
+        <meta
+          property="og:title"
+          content="Manage an existing XTZ wallet or create a new multisig one with TzSign."
+        />
+        <meta
+          property="og:description"
+          content="TzSign is a web-based multisig XTZ wallet: manage a deployed wallet contract or create a new one upon your requests. Choose an option to proceed with your Tezos trip!"
+        />
+        <meta
+          name="twitter:title"
+          content="Manage an existing XTZ wallet or create a new multisig one with TzSign."
+        />
+        <meta
+          name="twitter:description"
+          content="TzSign is a web-based multisig XTZ wallet: manage a deployed wallet contract or create a new one upon your requests. Choose an option to proceed with your Tezos trip!"
+        />
+        <meta
+          name="keywords"
+          content="create Tezos wallet, create XTZ wallet, create multisig Tezos wallet, create multisig XTZ wallet, manage Tezos wallet, manage XTZ wallet"
+        />
+      </Helmet>
+
       <CardMultisigType
         title="Create a new multisig"
         icon="wallet"
