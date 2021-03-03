@@ -14,10 +14,12 @@ import {
   useAssetsDispatchContext,
   useAssetsStateContext,
 } from '../../../store/assetsContext';
+import { useContractStateContext } from '../../../store/contractContext';
 
 const Assets = () => {
   const { assets, isAssetsLoading } = useAssetsStateContext();
   const { getAssetsReq } = useAssetsDispatchContext();
+  const { isUserOwner } = useContractStateContext();
 
   useEffect(() => {
     (async () => {
@@ -67,7 +69,7 @@ const Assets = () => {
     <section>
       <TblGenInfo style={{ marginBottom: '20px', justifyContent: 'flex-end' }}>
         <TblGenInfo.Item style={{ margin: 0 }}>
-          <NewAsset />
+          {isUserOwner && <NewAsset />}
         </TblGenInfo.Item>
       </TblGenInfo>
 
