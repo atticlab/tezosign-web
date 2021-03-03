@@ -58,14 +58,14 @@ const Owners = () => {
     <section>
       <TblGenInfo>
         <TblGenInfo.Item>
-          Total Owners: {contractInfo.threshold}
+          Total Owners: {contractInfo?.threshold || 0}
         </TblGenInfo.Item>
       </TblGenInfo>
 
       <Card style={{ overflow: 'hidden' }}>
         <Table
           cols={cols}
-          rows={contractInfo.owners || []}
+          rows={contractInfo?.owners || []}
           rowKey="pub_key"
           maxHeight="600px"
           stickyHeader
