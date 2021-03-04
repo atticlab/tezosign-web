@@ -146,7 +146,7 @@ const UserProvider = ({ children }) => {
       const perms = await requestPermissions();
       setPermissions(perms);
 
-      const payload = await loginRequest({ address: perms.address });
+      const payload = await loginRequest({ pub_key: perms.publicKey });
 
       const signature = await requestSignPayload(payload.data.token);
 

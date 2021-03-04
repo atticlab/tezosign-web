@@ -6,7 +6,7 @@ import {
 import { convertXTZToMutez } from '../utils/helpers';
 
 const networkTypesMap = {
-  delphinet: NetworkType.DELPHINET,
+  edonet: NetworkType.EDONET,
   mainnet: NetworkType.MAINNET,
 };
 
