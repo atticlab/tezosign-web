@@ -31,91 +31,80 @@ const Thresholds = ({ addresses, onSubmit, onBack }) => {
         transaction.
       </Text>
 
-      <Formik
-        enableReinitialize
-        initialValues={{ signatures: addresses.length }}
-        validationSchema={schema}
-        onSubmit={(values, { setSubmitting }) => {
-          onSubmit(values.signatures);
-          setSubmitting(false);
-        }}
-      >
-        {({
-          values,
-          // handleChange,
-          // handleBlur,
-          isSubmitting,
-          errors,
-          touched,
-          setFieldValue,
-          setFieldTouched,
-        }) => (
-          <Form>
-            <BForm.Group style={{ maxWidth: '264px', margin: '40px auto' }}>
-              <InputGroup>
-                {/* name="signatures" */}
-                {/*  id="signatures" */}
-                {/*  aria-label="signatures" */}
-                {/*  placeholder="2" */}
-                <SelectCustom
-                  isSearchable={false}
-                  options={options}
-                  value={
-                    options
-                      ? options.find(
-                          (option) => option.value === values.signatures,
-                        )
-                      : ''
-                  }
-                  isInvalid={!!errors.signatures && touched.signatures}
-                  isValid={!errors.signatures && touched.signatures}
-                  isTouched={touched.signatures}
-                  menuWidth="100%"
-                  onChange={(value) => {
-                    setFieldValue('signatures', value.value);
-                    setFieldTouched('signatures', true);
-                  }}
-                  onBlur={() => {
-                    setFieldTouched('signatures', true);
-                  }}
-                />
-                <InputGroup.Append>
-                  <Text
-                    modifier="md"
-                    style={{ marginBottom: '0', padding: '2px 10px' }}
-                  >
-                    {`out of ${addresses.length} owners`}
-                  </Text>
-                </InputGroup.Append>
-                <ErrorMessage
-                  name="signatures"
-                  component={BForm.Control.Feedback}
-                  type="invalid"
-                />
-                {!!errors.signatures && touched.signatures && (
-                  <div style={{ color: 'red', fontSize: '12px' }}>
-                    {errors.signatures}
-                  </div>
-                )}
-              </InputGroup>
-            </BForm.Group>
+      {options && options.length && (
+        <Formik
+          enableReinitialize
+          initialValues={{ signatures: options[0].value }}
+          validationSchema={schema}
+          onSubmit={(values, { setSubmitting }) => {
+            onSubmit(values.signatures);
+            setSubmitting(false);
+          }}
+        >
+          {({
+            isSubmitting,
+            errors,
+            touched,
+            setFieldValue,
+            setFieldTouched,
+          }) => (
+            <Form>
+              <BForm.Group style={{ maxWidth: '264px', margin: '40px auto' }}>
+                <InputGroup>
+                  <SelectCustom
+                    options={options}
+                    defaultValue={options[0]}
+                    isSearchable
+                    isInvalid={!!errors.signatures && touched.signatures}
+                    isValid={!errors.signatures && touched.signatures}
+                    isTouched={touched.signatures}
+                    menuWidth="100%"
+                    onChange={(value) => {
+                      setFieldValue('signatures', value.value);
+                      setFieldTouched('signatures', true);
+                    }}
+                    onBlur={() => {
+                      setFieldTouched('signatures', true);
+                    }}
+                  />
+                  <InputGroup.Append>
+                    <Text
+                      modifier="md"
+                      style={{ marginBottom: '0', padding: '2px 10px' }}
+                    >
+                      {`out of ${addresses.length} owners`}
+                    </Text>
+                  </InputGroup.Append>
+                  <ErrorMessage
+                    name="signatures"
+                    component={BForm.Control.Feedback}
+                    type="invalid"
+                  />
+                  {!!errors.signatures && touched.signatures && (
+                    <div style={{ color: 'red', fontSize: '12px' }}>
+                      {errors.signatures}
+                    </div>
+                  )}
+                </InputGroup>
+              </BForm.Group>
 
-            <div style={{ textAlign: 'right' }}>
-              <Button
-                variant="outline-primary"
-                size="lg"
-                style={{ marginRight: '24px' }}
-                onClick={onBack}
-              >
-                Back
-              </Button>
-              <Button type="submit" size="lg" disabled={isSubmitting}>
-                Submit
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
+              <div style={{ textAlign: 'right' }}>
+                <Button
+                  variant="outline-primary"
+                  size="lg"
+                  style={{ marginRight: '24px' }}
+                  onClick={onBack}
+                >
+                  Back
+                </Button>
+                <Button type="submit" size="lg" disabled={isSubmitting}>
+                  Submit
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      )}
     </Card.Body>
   );
 };
