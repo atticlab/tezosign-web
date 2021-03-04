@@ -2,20 +2,33 @@ import React from 'react';
 import Select from 'react-select/creatable';
 import PropTypes from 'prop-types';
 import selectStyle from '../utils/theme/selectStyle';
+import colors from '../utils/theme/colors';
+
+const themeOverrides = {
+  colors: {
+    primary: colors.lightGreen,
+    primary25: 'rgba(39, 241, 144, 0.25)',
+    primary50: 'rgba(39, 241, 144, 0.5)',
+    danger: colors.red,
+  },
+  spacing: {
+    controlHeight: 21,
+  },
+};
 
 const SelectCustom = ({
-  onChange,
-  onBlur,
   options,
+  defaultValue,
   isSearchable,
   displayValue,
   isValid,
   isInvalid,
   isTouched,
-  value,
+  disabled,
   menuWidth,
   height,
-  disabled,
+  onChange,
+  onBlur,
 }) => {
   const option = options.map((el) => ({
     label: el.label ? el.label : el,
@@ -28,62 +41,59 @@ const SelectCustom = ({
   return (
     <Select
       options={option}
-      onChange={handleChange}
-      styles={selectStyle}
+      defaultValue={defaultValue}
       isSearchable={isSearchable}
-      displayValue={displayValue}
       isTouched={isTouched}
       isValid={isValid}
       isInvalid={isInvalid}
-      value={value}
-      onBlur={onBlur}
-      menuWidth={menuWidth}
-      height={height}
       isDisabled={disabled}
+      displayValue={displayValue}
+      styles={selectStyle}
       theme={(theme) => ({
         ...theme,
         colors: {
           ...theme.colors,
-          primary: '#27f190',
-          primary25: 'rgba(39, 241, 144, 0.25)',
-          primary50: 'rgba(39, 241, 144, 0.5)',
-          danger: '#f9452d',
+          ...themeOverrides.colors,
         },
         spacing: {
           ...theme.spacing,
-          controlHeight: 21,
+          ...themeOverrides.spacing,
         },
       })}
+      menuWidth={menuWidth}
+      height={height}
+      onChange={handleChange}
+      onBlur={onBlur}
     />
   );
 };
 
 SelectCustom.propTypes = {
   options: PropTypes.arrayOf(PropTypes.any).isRequired,
-  onChange: PropTypes.func.isRequired,
-  onBlur: PropTypes.func,
+  defaultValue: PropTypes.objectOf(PropTypes.any),
   isSearchable: PropTypes.bool,
   displayValue: PropTypes.bool,
   isTouched: PropTypes.bool,
   isValid: PropTypes.bool,
   isInvalid: PropTypes.bool,
-  value: PropTypes.objectOf(PropTypes.any),
   menuWidth: PropTypes.string,
   height: PropTypes.string,
   disabled: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
+  onBlur: PropTypes.func,
 };
 
 SelectCustom.defaultProps = {
+  defaultValue: {},
   isSearchable: true,
   displayValue: true,
-  onBlur: () => null,
   isTouched: false,
   isValid: false,
   isInvalid: false,
   menuWidth: '',
   height: '',
-  value: {},
   disabled: false,
+  onBlur: () => null,
 };
 
 export default SelectCustom;

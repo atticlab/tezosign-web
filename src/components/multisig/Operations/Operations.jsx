@@ -22,6 +22,7 @@ import {
 } from '../../../store/operationsContext';
 import { convertMutezToXTZ, capitalize } from '../../../utils/helpers';
 import { dateFormat } from '../../../utils/constants';
+import IndentIcon from '../../IdentIcon';
 
 dayjs.extend(utc);
 
@@ -121,20 +122,19 @@ const Operations = () => {
       process(operation) {
         const to = operation.operation_info[this.key];
 
-        return (
+        return to ? (
           <FlexCenter>
-            {to ? (
-              <>
-                <Ellipsis>{to}</Ellipsis>
-                <BtnCopy
-                  textToCopy={to}
-                  style={{ paddingTop: 0, paddingBottom: 0 }}
-                />
-              </>
-            ) : (
-              ''
-            )}
+            <div style={{ marginRight: '5px' }}>
+              <IndentIcon address={to} scale={4} />
+            </div>
+            <Ellipsis>{to}</Ellipsis>
+            <BtnCopy
+              textToCopy={to}
+              style={{ paddingTop: 0, paddingBottom: 0 }}
+            />
           </FlexCenter>
+        ) : (
+          ''
         );
       },
     },
