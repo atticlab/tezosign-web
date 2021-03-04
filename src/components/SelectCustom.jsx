@@ -48,6 +48,7 @@ const SelectCustom = ({
       isInvalid={isInvalid}
       isDisabled={disabled}
       displayValue={displayValue}
+      className={isInvalid ? 'is-invalid' : ''}
       styles={selectStyle}
       theme={(theme) => ({
         ...theme,

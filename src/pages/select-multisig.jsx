@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
+// eslint-disable-next-line no-unused-vars
 import { Form as BForm, InputGroup, Button } from 'react-bootstrap';
 import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
 // TODO: Research import variants
@@ -121,40 +122,52 @@ const SelectMultisig = () => {
             history.push(`/multisig/${values.address}`);
           }}
         >
-          {/* setFieldValue */}
-          {({ isSubmitting, errors, touched }) => (
+          {({
+            isSubmitting,
+            errors,
+            touched,
+            // setFieldValue,
+            // setFieldTouched,
+          }) => (
             <FForm as={BForm} style={{ maxWidth: '380px', margin: '0 auto' }}>
-              <BForm.Group style={{ marginBottom: '10px' }}>
-                <InputGroup style={{ textAlign: 'right' }}>
-                  <Field
-                    as={BForm.Control}
-                    type="text"
-                    name="address"
-                    aria-label="address"
-                    placeholder="KT1..."
-                    size="sm"
-                    isInvalid={!!errors.address && touched.address}
-                    isValid={!errors.address && touched.address}
-                    style={{ height: 'auto' }}
-                  />
+              <BForm.Group style={{ marginBottom: '10px', textAlign: 'left' }}>
+                {/* <InputGroup style={{ textAlign: 'right' }}> */}
+                <Field
+                  as={BForm.Control}
+                  type="text"
+                  name="address"
+                  aria-label="address"
+                  placeholder="KT1..."
+                  size="sm"
+                  isInvalid={!!errors.address && touched.address}
+                  isValid={!errors.address && touched.address}
+                  style={{ height: 'auto' }}
+                />
 
-                  {/* <InputGroup.Append> */}
-                  {/*  <SelectCustom */}
-                  {/*    options={availableContracts} */}
-                  {/*    displayValue={false} */}
-                  {/*    onChange={(value) => { */}
-                  {/*      setFieldValue('address', value.value); */}
-                  {/*    }} */}
-                  {/*  /> */}
-                  {/* </InputGroup.Append> */}
+                {/* <InputGroup.Append> */}
+                {/* <SelectCustom */}
+                {/*  options={availableContracts} */}
+                {/*  isTouched={touched.address} */}
+                {/*  isValid={touched.address && !errors.address} */}
+                {/*  isInvalid={touched.address && !!errors.address} */}
+                {/*  menuWidth="100%" */}
+                {/*  onChange={(value) => { */}
+                {/*    setFieldValue('address', value.value); */}
+                {/*    setFieldTouched('address', true); */}
+                {/*  }} */}
+                {/*  onBlur={(value) => { */}
+                {/*    setFieldTouched('address', true); */}
+                {/*  }} */}
+                {/* /> */}
+                {/* </InputGroup.Append> */}
 
-                  <ErrorMessage
-                    component={BForm.Control.Feedback}
-                    style={{ textAlign: 'left' }}
-                    name="address"
-                    type="invalid"
-                  />
-                </InputGroup>
+                <ErrorMessage
+                  component={BForm.Control.Feedback}
+                  style={{ textAlign: 'left' }}
+                  name="address"
+                  type="invalid"
+                />
+                {/* </InputGroup> */}
               </BForm.Group>
               <Button type="submit" size="lg" disabled={isSubmitting}>
                 Manage
