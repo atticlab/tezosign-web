@@ -27,7 +27,7 @@ const Deployed = () => {
         <Text>
           Transaction hash:{' '}
           <a
-            href={`https://delphinet.tezblock.io/transaction/${location.state.transactionHash}`}
+            href={`https://edo2net.tzkt.io/${location.state.transactionHash}`}
             target="_blank"
             rel="noreferrer"
           >

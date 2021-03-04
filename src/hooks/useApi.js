@@ -24,7 +24,7 @@ const useAPI = () => {
     // responseType: 'json',
   });
 
-  // {address: 'sdsdsd'};
+  // {pub_key: 'sdsdsd'};
   const loginRequest = (payload) => {
     return API.post(`/${network}/auth/request`, payload);
   };
