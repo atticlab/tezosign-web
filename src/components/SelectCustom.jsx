@@ -32,6 +32,7 @@ const SelectCustom = ({
   onBlur,
 }) => {
   const option = options.map((el) => ({
+    ...el,
     label: el.label ? el.label : el,
     value: el.value ? el.value : el,
   }));
