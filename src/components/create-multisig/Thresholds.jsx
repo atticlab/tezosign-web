@@ -54,10 +54,10 @@ const Thresholds = ({ addresses, onSubmit, onBack }) => {
                   <SelectCustom
                     options={options}
                     defaultValue={options[0]}
-                    isSearchable
-                    isInvalid={!!errors.signatures && touched.signatures}
-                    isValid={!errors.signatures && touched.signatures}
+                    isSearchable={false}
                     isTouched={touched.signatures}
+                    isValid={!errors.signatures && touched.signatures}
+                    isInvalid={!!errors.signatures && touched.signatures}
                     menuWidth="100%"
                     onChange={(value) => {
                       setFieldValue('signatures', value.value);
@@ -80,11 +80,6 @@ const Thresholds = ({ addresses, onSubmit, onBack }) => {
                     component={BForm.Control.Feedback}
                     type="invalid"
                   />
-                  {!!errors.signatures && touched.signatures && (
-                    <div style={{ color: 'red', fontSize: '12px' }}>
-                      {errors.signatures}
-                    </div>
-                  )}
                 </InputGroup>
               </BForm.Group>
 
