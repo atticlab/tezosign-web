@@ -122,16 +122,10 @@ const SelectMultisig = () => {
             history.push(`/multisig/${values.address}`);
           }}
         >
-          {({
-            isSubmitting,
-            errors,
-            touched,
-            // setFieldValue,
-            // setFieldTouched,
-          }) => (
+          {/* setFieldValue,  values */}
+          {({ isSubmitting, errors, touched }) => (
             <FForm as={BForm} style={{ maxWidth: '380px', margin: '0 auto' }}>
               <BForm.Group style={{ marginBottom: '10px', textAlign: 'left' }}>
-                {/* <InputGroup style={{ textAlign: 'right' }}> */}
                 <Field
                   as={BForm.Control}
                   type="text"
@@ -144,22 +138,20 @@ const SelectMultisig = () => {
                   style={{ height: 'auto' }}
                 />
 
-                {/* <InputGroup.Append> */}
                 {/* <SelectCustom */}
                 {/*  options={availableContracts} */}
-                {/*  isTouched={touched.address} */}
-                {/*  isValid={touched.address && !errors.address} */}
-                {/*  isInvalid={touched.address && !!errors.address} */}
-                {/*  menuWidth="100%" */}
                 {/*  onChange={(value) => { */}
                 {/*    setFieldValue('address', value.value); */}
-                {/*    setFieldTouched('address', true); */}
                 {/*  }} */}
-                {/*  onBlur={(value) => { */}
-                {/*    setFieldTouched('address', true); */}
+                {/*  isInvalid={!!errors.address && touched.address} */}
+                {/*  isValid={!errors.address && touched.address} */}
+                {/*  isTouched={touched.address} */}
+                {/*  placeholder="KT1..." */}
+                {/*  defaultValue={{ */}
+                {/*    label: values.address, */}
+                {/*    value: values.address, */}
                 {/*  }} */}
                 {/* /> */}
-                {/* </InputGroup.Append> */}
 
                 <ErrorMessage
                   component={BForm.Control.Feedback}
@@ -167,7 +159,6 @@ const SelectMultisig = () => {
                   name="address"
                   type="invalid"
                 />
-                {/* </InputGroup> */}
               </BForm.Group>
               <Button type="submit" size="lg" disabled={isSubmitting}>
                 Manage

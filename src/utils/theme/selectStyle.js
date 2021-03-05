@@ -1,4 +1,10 @@
 export default {
+  container: (base, state) => {
+    return {
+      ...base,
+      width: state.selectProps.isSearchable ? '100%' : 'auto',
+    };
+  },
   control: (base, state) => ({
     ...base,
     cursor: 'pointer',
