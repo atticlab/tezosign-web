@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Select from 'react-select/creatable';
+import Select from 'react-select';
 import PropTypes from 'prop-types';
 import selectStyle from '../utils/theme/selectStyle';
 import colors from '../utils/theme/colors';
@@ -30,7 +30,6 @@ const SelectCustom = ({
   height,
   onChange,
   onBlur,
-  value,
 }) => {
   const option = options.map((el) => ({
     label: el.label ? el.label : el,
@@ -62,8 +61,7 @@ const SelectCustom = ({
   return (
     <Select
       options={option}
-      defaultValue={defaultValue}
-      onInputChange={inputChange}
+      defaultValue={defaultValue.label ? defaultValue : null}
       isSearchable={isSearchable}
       isTouched={isTouched}
       isValid={isValid}
@@ -72,7 +70,7 @@ const SelectCustom = ({
       displayValue={displayValue}
       className={isInvalid ? 'is-invalid' : ''}
       styles={selectStyle}
-      value={value.value ? value : null}
+      onInputChange={inputChange}
       inputValue={inputValue}
       placeholder={placeholder}
       theme={(theme) => ({
@@ -102,7 +100,6 @@ SelectCustom.propTypes = {
   isTouched: PropTypes.bool,
   isValid: PropTypes.bool,
   isInvalid: PropTypes.bool,
-  value: PropTypes.objectOf(PropTypes.any),
   menuWidth: PropTypes.string,
   height: PropTypes.string,
   disabled: PropTypes.bool,
@@ -122,7 +119,6 @@ SelectCustom.defaultProps = {
   menuWidth: '',
   height: '',
   disabled: false,
-  value: {},
   placeholder: '',
 };
 
