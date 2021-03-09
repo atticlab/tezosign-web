@@ -1,12 +1,13 @@
-/* eslint-disable no-unreachable */
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { Button, Form as BForm, InputGroup } from 'react-bootstrap';
 import styled from 'styled-components';
-// import AccentText from '../../styled/AccentText';
 import { FormLabel, FormSubmit } from '../../styled/Forms';
+import { FlexAlignItemsCenter } from '../../styled/Flex';
+import SelectCustom from '../../SelectCustom';
+import IdentIcon from '../../IdentIcon';
 import useAPI from '../../../hooks/useApi';
 import {
   bs58Validation,
@@ -14,39 +15,11 @@ import {
   convertMutezToXTZ,
   limitInputDecimals,
 } from '../../../utils/helpers';
-import SelectCustom from '../../SelectCustom';
-// eslint-disable-next-line no-unused-vars
-import XTZ from '../../../assets/img/assets/xtz.png';
 import { useContractStateContext } from '../../../store/contractContext';
 import { useOperationsDispatchContext } from '../../../store/operationsContext';
 import { useAssetsStateContext } from '../../../store/assetsContext';
 import { handleError } from '../../../utils/errorsHandler';
-
-// const Check = styled(BForm.Check)`
-//   padding-left: 0;
-//   display: inline-block;
-//
-//   input {
-//     display: none;
-//   }
-//
-//   label {
-//     border: 2px solid transparent;
-//     padding: 3px;
-//     cursor: pointer;
-//     transition: transform 0.15s;
-//
-//     &:hover {
-//       transform: scale(1.2);
-//     }
-//   }
-//
-//   input:checked ~ label {
-//     border: 2px solid ${({ theme }) => theme.lightGreen};
-//     border-radius: 50%;
-//     transform: scale(1.2);
-//   }
-// `;
+import XTZ from '../../../assets/img/assets/xtz-256.svg';
 
 const BtnMax = styled(Button).attrs({ variant: 'link' })`
   padding: 0;
@@ -82,16 +55,19 @@ const schema = (maxAmount = 30000, asset = 'XTZ') => {
   });
 };
 
-// const assets = [
-//   { key: 'xtz', name: 'XTZ', logo: XTZ },
-//   // { key: 'tzBtc', name: 'tzBTC', logo: tzBTC },
-//   // { key: 'stakerDao', name: 'Staker DAO', logo: stakerDAO },
-//   // { key: 'usdTz', name: 'USDtz', logo: USDtz },
-// ];
-
 const xtzAsset = {
   value: 'xtz',
-  label: 'XTZ',
+  label: (
+    <FlexAlignItemsCenter>
+      <img
+        src={XTZ}
+        width="24px"
+        alt="XTZ"
+        style={{ marginRight: '5px', display: 'inline-block' }}
+      />
+      XTZ
+    </FlexAlignItemsCenter>
+  ),
   scale: 6,
 };
 
@@ -111,32 +87,36 @@ const CreateTx = ({ onCreate }) => {
   }, [contractInfo]);
 
   const assetsOptions = useMemo(() => {
-    if (!assets || !assets.length)
-      return [xtzAsset, { value: 'hui', label: 'Hui', scale: 2 }];
+    if (!assets || !assets.length) return [xtzAsset];
 
-    return assets
-      .map((asset) => ({
+    return [xtzAsset].concat(
+      assets.map((asset) => ({
         ...asset,
         value: asset.name,
-        label: asset.name,
-      }))
-      .shift(xtzAsset);
+        label: (
+          <FlexAlignItemsCenter>
+            <div style={{ marginRight: '5px', display: 'inline-block' }}>
+              <IdentIcon address={asset.address} scale={3} />
+            </div>
+            {asset.name}
+          </FlexAlignItemsCenter>
+        ),
+      })),
+    );
   }, [assets]);
 
   const createTx = async ({ asset, amount, to }, setSubmitting) => {
-    const isXtz = asset.value === 'xtz';
+    const isXTZ = asset.value === 'xtz';
     try {
       const payload = {
         contract_id: contractAddress,
-        type: isXtz ? 'transfer' : 'fa_transfer',
-        amount: isXtz
+        type: isXTZ ? 'transfer' : 'fa_transfer',
+        amount: isXTZ
           ? Number(convertXTZToMutez(amount))
-          : amount * asset.scale,
+          : amount * 10 ** asset.scale,
         to,
+        asset_id: isXTZ ? undefined : asset.address,
       };
-
-      console.log(payload);
-      return;
 
       const newTx = await sendOperation(payload);
       await setOps((prev) => {
@@ -155,11 +135,7 @@ const CreateTx = ({ onCreate }) => {
       initialValues={{ asset: xtzAsset, amount: '', to: '' }}
       enableReinitialize
       validationSchema={Yup.lazy((values) =>
-        schema(
-          balances[values.asset.value],
-          // assets.find((asset) => asset.value === values.asset.value),
-          values.asset.label,
-        ),
+        schema(balances[values.asset.value], values.asset.ticker),
       )}
       onSubmit={async (values, { setSubmitting }) =>
         createTx(values, setSubmitting)
@@ -176,24 +152,6 @@ const CreateTx = ({ onCreate }) => {
         <Form>
           <BForm.Group>
             <FormLabel>Select Asset</FormLabel>
-            {/* <div> */}
-            {/*  {assets.map((asset) => ( */}
-            {/*    <Check */}
-            {/*      key={asset.key} */}
-            {/*      type="radio" */}
-            {/*      label={<img src={asset.logo} alt={asset.key} width="35px" />} */}
-            {/*      name="asset" */}
-            {/*      id={asset.key} */}
-            {/*      value={asset.key} */}
-            {/*      checked={values.asset === asset.key} */}
-            {/*      onChange={handleChange} */}
-            {/*    /> */}
-            {/*  ))} */}
-            {/* </div> */}
-            {/* <AccentText as="div" style={{ marginTop: '10px' }}> */}
-            {/*  {assets.find((asset) => asset.key === values.asset).name} */}
-            {/* </AccentText> */}
-
             <SelectCustom
               options={assetsOptions}
               defaultValue={xtzAsset}
@@ -230,6 +188,7 @@ const CreateTx = ({ onCreate }) => {
                 isInvalid={!!errors.amount && touched.amount}
                 isValid={!errors.amount && touched.amount}
                 step="0.001"
+                min="0"
                 onKeyPress={(event) =>
                   limitInputDecimals(event, values.asset.scale)
                 }

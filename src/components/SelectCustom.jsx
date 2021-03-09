@@ -98,9 +98,12 @@ SelectCustom.propTypes = {
   defaultValue: PropTypes.objectOf(PropTypes.any),
   isSearchable: PropTypes.bool,
   displayValue: PropTypes.bool,
-  isTouched: PropTypes.bool,
-  isValid: PropTypes.bool,
-  isInvalid: PropTypes.bool,
+  // TODO: Investigate and handle type changes
+  isTouched: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+  // TODO: Investigate and handle type changes
+  isValid: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+  // TODO: Investigate and handle type changes
+  isInvalid: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   menuWidth: PropTypes.string,
   height: PropTypes.string,
   disabled: PropTypes.bool,
