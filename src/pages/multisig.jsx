@@ -88,45 +88,46 @@ const Multisig = () => {
   }, []);
 
   return (
-    <OperationsProvider>
-      <Helmet>
-        <title>
-          TzSign - create & manage your XTZ transactions, delegations.
-        </title>
-        <meta
-          name="description"
-          content="TzSign - manage collectively a multisig XTZ wallet with your collaborators using an easy-to-use UI. Create, manage transactions & delegations just with a click!"
-        />
-        <meta
-          itemProp="name"
-          content="TzSign - create & manage your XTZ transactions, delegations."
-        />
-        <meta
-          itemProp="description"
-          content="TzSign - manage collectively a multisig XTZ wallet with your collaborators using an easy-to-use UI. Create, manage transactions & delegations just with a click!"
-        />
-        <meta
-          property="og:title"
-          content="TzSign - create & manage your XTZ transactions, delegations."
-        />
-        <meta
-          property="og:description"
-          content="TzSign - manage collectively a multisig XTZ wallet with your collaborators using an easy-to-use UI. Create, manage transactions & delegations just with a click!"
-        />
-        <meta
-          name="twitter:title"
-          content="TzSign - create & manage your XTZ transactions, delegations."
-        />
-        <meta
-          name="twitter:description"
-          content="TzSign - manage collectively a multisig XTZ wallet with your collaborators using an easy-to-use UI. Create, manage transactions & delegations just with a click!"
-        />
-        <meta
-          name="keywords"
-          content="manage Tezos wallet, manage XTZ wallet, Tezos multisig transaction, XTZ multisig transaction, Tezos multisig delegation, XTZ multisig delegation"
-        />
-      </Helmet>
-      <AssetsProvider>
+    <AssetsProvider>
+      <OperationsProvider>
+        <Helmet>
+          <title>
+            TzSign - create & manage your XTZ transactions, delegations.
+          </title>
+          <meta
+            name="description"
+            content="TzSign - manage collectively a multisig XTZ wallet with your collaborators using an easy-to-use UI. Create, manage transactions & delegations just with a click!"
+          />
+          <meta
+            itemProp="name"
+            content="TzSign - create & manage your XTZ transactions, delegations."
+          />
+          <meta
+            itemProp="description"
+            content="TzSign - manage collectively a multisig XTZ wallet with your collaborators using an easy-to-use UI. Create, manage transactions & delegations just with a click!"
+          />
+          <meta
+            property="og:title"
+            content="TzSign - create & manage your XTZ transactions, delegations."
+          />
+          <meta
+            property="og:description"
+            content="TzSign - manage collectively a multisig XTZ wallet with your collaborators using an easy-to-use UI. Create, manage transactions & delegations just with a click!"
+          />
+          <meta
+            name="twitter:title"
+            content="TzSign - create & manage your XTZ transactions, delegations."
+          />
+          <meta
+            name="twitter:description"
+            content="TzSign - manage collectively a multisig XTZ wallet with your collaborators using an easy-to-use UI. Create, manage transactions & delegations just with a click!"
+          />
+          <meta
+            name="keywords"
+            content="manage Tezos wallet, manage XTZ wallet, Tezos multisig transaction, XTZ multisig transaction, Tezos multisig delegation, XTZ multisig delegation"
+          />
+        </Helmet>
+
         {isContractInfoLoading ? (
           <div
             style={{
@@ -179,11 +180,11 @@ const Multisig = () => {
                 </NavTabs>
 
                 <Tab.Content style={{ paddingTop: '20px' }}>
-                  <Tab.Pane eventKey="ops">
-                    <Operations />
-                  </Tab.Pane>
                   <Tab.Pane eventKey="assets">
                     <Assets />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="ops">
+                    <Operations />
                   </Tab.Pane>
                   <Tab.Pane eventKey="owners">
                     <Owners />
@@ -193,8 +194,8 @@ const Multisig = () => {
             </section>
           </>
         )}
-      </AssetsProvider>
-    </OperationsProvider>
+      </OperationsProvider>
+    </AssetsProvider>
   );
 };
 

@@ -53,6 +53,12 @@ const convertHexToPrefixedBase58 = (
   return bs58.encode(res);
 };
 
+const limitInputDecimals = (event, limit) => {
+  return event.target.value.split(/[.,]/)[1]?.length >= limit
+    ? event.preventDefault()
+    : null;
+};
+
 export {
   convertXTZToMutez,
   convertMutezToXTZ,
@@ -61,4 +67,5 @@ export {
   capitalize,
   convertHexToPrefixedBase58,
   isHex,
+  limitInputDecimals,
 };

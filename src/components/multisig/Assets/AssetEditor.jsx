@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
@@ -105,14 +104,7 @@ const AssetEditor = ({
         return addAsset(contractAddress, values, setSubmitting);
       }}
     >
-      {({
-        values,
-        errors,
-        touched,
-        setFieldValue,
-        setFieldTouched,
-        isSubmitting,
-      }) => (
+      {({ errors, touched, setFieldValue, setFieldTouched, isSubmitting }) => (
         <Form>
           <BForm.Group>
             <FormLabel>Asset name</FormLabel>
@@ -157,21 +149,17 @@ const AssetEditor = ({
             <FormLabel>Contract type</FormLabel>
 
             <SelectCustom
-              isSearchable={false}
               options={contractTypes}
+              defaultValue={contractTypes.find(
+                (contractTypeObj) => contractTypeObj.value === contractType,
+              )}
+              isSearchable={false}
               isInvalid={!!errors.contractType && touched.contractType}
               isValid={!errors.contractType && touched.contractType}
               isTouched={touched.contractType}
               menuWidth="100%"
               height="38px"
               disabled={isEdit}
-              value={
-                contractTypes
-                  ? contractTypes.find((option) => {
-                      return option.value === values.contractType;
-                    })
-                  : ''
-              }
               onChange={(value) => {
                 setFieldValue('contractType', value.value);
                 setFieldTouched('contractType', true);
@@ -181,11 +169,11 @@ const AssetEditor = ({
               }}
             />
 
-            {!!errors.contractType && touched.contractType && (
-              <div style={{ color: 'red', fontSize: '12px' }}>
-                {errors.contractType}
-              </div>
-            )}
+            <ErrorMessage
+              name="contractType"
+              component={BForm.Control.Feedback}
+              type="invalid"
+            />
           </BForm.Group>
 
           <BForm.Group>
@@ -195,6 +183,7 @@ const AssetEditor = ({
               as={BForm.Control}
               type="number"
               max="10"
+              min="0"
               name="scale"
               aria-label="scale"
               isInvalid={!!errors.scale && touched.scale}

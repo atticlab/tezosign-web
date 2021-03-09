@@ -16,6 +16,7 @@ import Table from '../../Table';
 import BtnCopy from '../../BtnCopy';
 import Spinner from '../../Spinner';
 import OperationDetails from './OperationDetails';
+import { useAssetsStateContext } from '../../../store/assetsContext';
 import {
   useOperationsDispatchContext,
   useOperationsStateContext,
@@ -50,6 +51,7 @@ const initialOpsCounts = {
 const Operations = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const hasMore = false;
+  const { assets } = useAssetsStateContext();
   const { ops, isOpsLoading } = useOperationsStateContext();
   const { getOps } = useOperationsDispatchContext();
 
@@ -111,9 +113,17 @@ const Operations = () => {
     {
       key: 'amount',
       process(operation) {
-        // eslint-disable-next-line react/no-this-in-sfc
-        const amount = operation.operation_info[this.key];
-        return amount ? `${convertMutezToXTZ(amount)} XTZ` : '';
+        const {
+          operation_info: { amount, asset_id: assetId },
+        } = operation;
+
+        const ticker = assetId
+          ? assets?.find((asset) => {
+              return asset.address === assetId;
+            })?.ticker || ''
+          : 'XTZ';
+
+        return amount ? `${convertMutezToXTZ(amount)} ${ticker}` : '';
       },
     },
     {
