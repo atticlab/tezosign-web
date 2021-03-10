@@ -10,7 +10,14 @@ const Title = styled.h1`
   ${TitleStyles}
   font-size: ${({ modifier }) =>
     // eslint-disable-next-line no-nested-ternary
-    modifier === 'md' ? '25px' : modifier === 'sm' ? '22px' : ''};
+    modifier === 'md'
+      ? '25px'
+      : // eslint-disable-next-line no-nested-ternary
+      modifier === 'sm'
+      ? '22px'
+      : modifier === 'xs'
+      ? '18px'
+      : ''};
   font-weight: ${({ fw }) => fw || ''};
 `;
 

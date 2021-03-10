@@ -72,7 +72,7 @@ const Thresholds = ({ addresses, onSubmit, onBack }) => {
                       modifier="md"
                       style={{ marginBottom: '0', padding: '2px 10px' }}
                     >
-                      {`out of ${addresses.length} owners`}
+                      {`out of ${options.length} owners`}
                     </Text>
                   </InputGroup.Append>
                   <ErrorMessage

@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CreateTx from './CreateTx';
 import CreateDelegation from './CreateDelegation';
+import ContractEditor from './ContractEditor';
 import Title from '../../styled/Title';
 import Modal from '../../styled/Modal';
 
@@ -73,6 +74,10 @@ const NewOperation = () => {
                 return <CreateDelegation onCreate={handleClose} />;
               }
 
+              if (opType === 'edit') {
+                return <ContractEditor onCreate={handleClose} />;
+              }
+
               return (
                 <div>
                   <div style={{ marginBottom: '20px' }}>
@@ -89,6 +94,14 @@ const NewOperation = () => {
                       onClick={() => setOpType('delegation')}
                     >
                       Create Delegation
+                    </Button>
+                  </div>
+                  <div>
+                    <Button
+                      style={{ width: '100%' }}
+                      onClick={() => setOpType('edit')}
+                    >
+                      Edit Contract
                     </Button>
                   </div>
                 </div>
