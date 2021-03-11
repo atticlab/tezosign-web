@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { bs58Validation, isHex } from '../../utils/helpers';
+import { bs58Validation, isHex } from '../helpers';
 
 // eslint-disable-next-line func-names
 Yup.addMethod(Yup.array, 'unique', function (message, mapper = (a) => a) {

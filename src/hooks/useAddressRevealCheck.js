@@ -1,5 +1,5 @@
-import useAPI from '../../hooks/useApi';
-import { bs58Validation } from '../../utils/helpers';
+import useAPI from './useApi';
+import { bs58Validation } from '../utils/helpers';
 
 const useAddressRevealCheck = () => {
   const { isAddressRevealed } = useAPI();
