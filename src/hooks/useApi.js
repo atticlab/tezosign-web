@@ -65,7 +65,7 @@ const useAPI = () => {
   };
   // {
   //   threshold: 1,
-  //   addresses: [
+  //   entities: [
   //     'tz1NkT6YCFS3mDo6kfaMFKFrRiA7w2o5dkWp',
   //     'tz1dBT7PKeSDbPK1No7KNhTvrr3XoLe8vKLH',
   //     'tz1To9r8GZZr5n7JeXEKxVNk7UkQfVrV4d3i',

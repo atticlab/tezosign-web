@@ -82,7 +82,7 @@ const xtzAsset = {
   scale: 6,
 };
 
-const CreateTx = ({ onCreate }) => {
+const CreateTx = ({ onCreate, onCancel }) => {
   const { sendOperation } = useAPI();
   const { assets } = useAssetsStateContext();
   const { contractAddress, contractInfo } = useContractStateContext();
@@ -292,7 +292,15 @@ const CreateTx = ({ onCreate }) => {
           </BForm.Group>
 
           <FormSubmit>
-            <Button type="submit" size="lg" disabled={isSubmitting}>
+            <Button
+              variant="danger"
+              style={{ marginRight: '20px' }}
+              onClick={onCancel}
+            >
+              Cancel
+            </Button>
+
+            <Button type="submit" disabled={isSubmitting}>
               Confirm
             </Button>
           </FormSubmit>
@@ -304,6 +312,7 @@ const CreateTx = ({ onCreate }) => {
 
 CreateTx.propTypes = {
   onCreate: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 export default CreateTx;

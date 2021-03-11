@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Form as BForm, InputGroup } from 'react-bootstrap';
 import { ErrorMessage } from 'formik';
 import SelectCustom from '../SelectCustom';
@@ -44,5 +44,14 @@ const ThresholdsFields = ({
     </InputGroup>
   </BForm.Group>
 );
+
+ThresholdsFields.propTypes = {
+  touched: PropTypes.objectOf(PropTypes.any).isRequired,
+  errors: PropTypes.objectOf(PropTypes.any).isRequired,
+  setFieldValue: PropTypes.func.isRequired,
+  setFieldTouched: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.any).isRequired,
+  defaultValue: PropTypes.objectOf(PropTypes.any).isRequired,
+};
 
 export default ThresholdsFields;

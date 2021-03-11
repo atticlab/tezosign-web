@@ -7,7 +7,7 @@ const FormLabel = styled(BForm.Label)`
 
 const FormSubmit = styled.div`
   text-align: center;
-  margin-top: 120px;
+  margin-top: 60px;
 `;
 
 export { FormLabel, FormSubmit };

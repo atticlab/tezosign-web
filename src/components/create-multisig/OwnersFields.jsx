@@ -1,4 +1,5 @@
-/* eslint-disable react/prop-types */
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Button,
   Form as BForm,
@@ -8,7 +9,6 @@ import {
 } from 'react-bootstrap';
 import { ErrorMessage, Field, FieldArray } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
 
 const OwnersFields = ({
   values,
@@ -130,5 +130,13 @@ const OwnersFields = ({
     </FieldArray>
   </>
 );
+
+OwnersFields.propTypes = {
+  values: PropTypes.objectOf(PropTypes.any).isRequired,
+  touched: PropTypes.objectOf(PropTypes.any).isRequired,
+  errors: PropTypes.objectOf(PropTypes.any).isRequired,
+  setFieldValue: PropTypes.func.isRequired,
+  validateForm: PropTypes.func.isRequired,
+};
 
 export default OwnersFields;

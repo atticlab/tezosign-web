@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 import { Badge } from 'react-bootstrap';
 import styled from 'styled-components';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import NewOperation from './NewOperation';
+// import NewOperation from './NewOperation';
+import Interact from './NewOperation/Interact';
 import IdentIcon from '../IdentIcon';
 import Title from '../styled/Title';
 import BreakTxt from '../styled/BreakTxt';
@@ -121,7 +122,8 @@ const MultisigInfo = () => {
         </ContractManagement.Address>
       </ContractManagement>
 
-      {isUserOwner && <NewOperation />}
+      {/* {isUserOwner && <NewOperation />} */}
+      {isUserOwner && <Interact />}
     </SectionMultisigInfo>
   );
 };
