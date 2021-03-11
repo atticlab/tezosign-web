@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { Table as BTable } from 'react-bootstrap';
+import { Table as BTable, Collapse } from 'react-bootstrap';
 
 const TblGenInfo = styled.div`
   display: flex;
@@ -58,14 +58,17 @@ Tbl.Tr = styled.tr`
 
 Tbl.TrCollapsible = styled.tr`
   box-shadow: inset 0 3px 6px -3px rgb(0 0 0 / 20%);
-  visibility: ${({ isCollapsed }) => (isCollapsed ? 'visible' : 'collapse')};
-  transition: visibility 0.2s ease;
 `;
 
-Tbl.CollapseContent = styled.div`
-  transform: ${({ isCollapsed }) =>
-    isCollapsed ? 'translateY(0)' : 'translateY(-150%)'};
-  transition: transform 0.3s ease;
+Tbl.TdCollapse = styled.td`
+  overflow: hidden;
+  padding: 0 !important;
+  border: none !important;
+`;
+
+Tbl.Collapse = styled(Collapse)`
+  transition: all 0.2s linear;
+  margin: 0.75rem;
 `;
 
 export { TblGenInfo, TblWrap, Tbl };
