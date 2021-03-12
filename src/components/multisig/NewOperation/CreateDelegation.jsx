@@ -16,7 +16,6 @@ import { handleError } from '../../../utils/errorsHandler';
 
 const schema = Yup.object({
   baker: Yup.string()
-    .trim()
     .required(
       "This field cannot be empty. If you want to undelegate, click the button 'Undelegate'.",
     )

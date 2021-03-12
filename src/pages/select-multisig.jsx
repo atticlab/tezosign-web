@@ -32,7 +32,6 @@ const SelectMultisigStyled = styled.section`
 
 const schema = Yup.object({
   address: Yup.string()
-    .trim()
     .required('Required')
     .matches('KT1', 'Tezos contract address must start with KT1')
     .matches(/^\S+$/, 'No spaces are allowed')

@@ -112,25 +112,41 @@ const Operations = () => {
     },
     {
       key: 'amount',
+      // TODO: Refactor
       process(operation) {
         const {
-          operation_info: { amount, asset_id: assetId },
+          operation_info: {
+            amount,
+            asset_id: assetId,
+            transfer_list: transferList,
+          },
         } = operation;
+        // eslint-disable-next-line no-underscore-dangle
+        const _amount =
+          amount || (transferList && transferList[0].txs[0].amount);
 
-        const ticker = assetId
-          ? assets?.find((asset) => {
-              return asset.address === assetId;
-            })?.ticker || ''
-          : 'XTZ';
+        const currAsset = assets?.find((asset) => {
+          return asset.address === assetId;
+        });
 
-        return amount ? `${convertMutezToXTZ(amount)} ${ticker}` : '';
+        const ticker = assetId ? currAsset?.ticker || '' : 'XTZ';
+        return _amount
+          ? `${
+              assetId
+                ? _amount / 10 ** currAsset?.scale
+                : convertMutezToXTZ(_amount)
+            } ${ticker}`
+          : '';
       },
     },
     {
       key: 'to',
       label: 'Recipient',
       process(operation) {
-        const to = operation.operation_info[this.key];
+        const to =
+          operation.operation_info.to ||
+          (operation.operation_info.transfer_list &&
+            operation.operation_info.transfer_list[0].txs[0].to);
 
         return to ? (
           <FlexCenter>

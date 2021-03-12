@@ -37,16 +37,27 @@ const BtnMax = styled(Button).attrs({ variant: 'link' })`
 const schema = (maxAmount = 30000, asset = 'XTZ') => {
   return Yup.object({
     asset: Yup.object().required('Required'),
+    tokenID: Yup.number().when('asset', {
+      is: (assetField) => assetField.contract_type === 'FA2',
+      then: Yup.number()
+        .required('Required')
+        .integer('Value must be an integer')
+        .max(
+          Number.MAX_SAFE_INTEGER,
+          `Maximum value is ${Number.MAX_SAFE_INTEGER}`,
+        )
+        .min(0, `Minimum amount is 0.000001 ${asset}`),
+      otherwise: Yup.number().max(0, 'Token ID is allowed only for FA2 assets'),
+    }),
     amount: Yup.number()
       .required('Required')
       .max(maxAmount, `Maximum amount is ${maxAmount} ${asset}`)
       .min(0.000001, `Minimum amount is 0.000001 ${asset}`),
     to: Yup.string()
-      .trim()
       .required('Required')
       .matches(
-        'tz1|tz2|tz3',
-        'Tezos baker address must start with tz1, tz2, tz3',
+        'tz1|tz2|tz3|KT1',
+        'Tezos address must start with tz1, tz2, tz3, KT1',
       )
       .matches(/^\S+$/, 'No spaces are allowed')
       .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
@@ -105,18 +116,38 @@ const CreateTx = ({ onCreate }) => {
     );
   }, [assets]);
 
-  const createTx = async ({ asset, amount, to }, setSubmitting) => {
-    const isXTZ = asset.value === 'xtz';
+  const createTx = async ({ asset, tokenID, amount, to }, setSubmitting) => {
     try {
+      const isXTZ = asset.value === 'xtz';
+
       const payload = {
         contract_id: contractAddress,
-        type: isXTZ ? 'transfer' : 'fa_transfer',
-        amount: isXTZ
-          ? Number(convertXTZToMutez(amount))
-          : amount * 10 ** asset.scale,
-        to,
-        asset_id: isXTZ ? undefined : asset.address,
+        // eslint-disable-next-line no-nested-ternary
+        type: isXTZ
+          ? 'transfer'
+          : asset.contract_type === 'FA1.2'
+          ? 'fa_transfer'
+          : 'fa2_transfer',
       };
+
+      if (isXTZ) {
+        payload.amount = Number(convertXTZToMutez(amount));
+        payload.to = to;
+      } else {
+        payload.asset_id = asset.address;
+        payload.transfer_list = [
+          {
+            // from
+            txs: [
+              {
+                amount: amount * 10 ** asset.scale,
+                to,
+                token_id: tokenID || undefined,
+              },
+            ],
+          },
+        ];
+      }
 
       const newTx = await sendOperation(payload);
       await setOps((prev) => {
@@ -132,7 +163,7 @@ const CreateTx = ({ onCreate }) => {
 
   return (
     <Formik
-      initialValues={{ asset: xtzAsset, amount: '', to: '' }}
+      initialValues={{ asset: xtzAsset, tokenID: '', amount: '', to: '' }}
       enableReinitialize
       validationSchema={Yup.lazy((values) =>
         schema(balances[values.asset.value], values.asset.ticker),
@@ -164,6 +195,7 @@ const CreateTx = ({ onCreate }) => {
               onChange={(value) => {
                 setFieldValue('asset', value);
                 setFieldValue('amount', '');
+                setFieldValue('tokenID', '');
                 setFieldTouched('asset', true);
               }}
               onBlur={() => {
@@ -173,6 +205,26 @@ const CreateTx = ({ onCreate }) => {
             <ErrorMessage
               name="asset"
               component={BForm.Control.Feedback}
+              type="invalid"
+            />
+          </BForm.Group>
+
+          <BForm.Group controlId="tokenID">
+            <FormLabel>Enter Token ID</FormLabel>
+            <Field
+              as={BForm.Control}
+              type="number"
+              name="tokenID"
+              aria-label="tokenID"
+              isInvalid={!!errors.tokenID && touched.tokenID}
+              isValid={!errors.tokenID && touched.tokenID}
+              step="1"
+              min="0"
+              disabled={values.asset.contract_type !== 'FA2'}
+            />
+            <ErrorMessage
+              component={BForm.Control.Feedback}
+              name="tokenID"
               type="invalid"
             />
           </BForm.Group>

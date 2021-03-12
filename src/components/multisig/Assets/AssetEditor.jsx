@@ -18,7 +18,6 @@ const schema = Yup.object({
     .matches(/^[\w ]*$/, 'Only latin characters and numbers are allowed')
     .matches(/^[\w]+( [\w]+)*$/, 'Unnecessary spaces'),
   address: Yup.string()
-    .trim()
     .required('Required')
     .matches('KT1', 'Tezos contract address must start with KT1')
     .matches(/^\S+$/, 'No spaces are allowed')
