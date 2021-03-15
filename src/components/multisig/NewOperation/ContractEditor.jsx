@@ -28,9 +28,8 @@ const ContractEditor = ({ onCreate, onCancel }) => {
   const testAddress = useRef(cacheTest(testIsAddressRevealed));
 
   const entities = useMemo(() => {
-    return owners.map((owner, index) => {
+    return owners.map((owner) => {
       return {
-        id: index,
         value: owner.address,
         isPubKey: !owner.address,
       };

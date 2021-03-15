@@ -10,12 +10,7 @@ import useAddressRevealCheck from '../../hooks/useAddressRevealCheck';
 import { cacheTest, ownersSchema } from '../../utils/schemas/ownersSchema';
 
 const Owners = ({ onSubmit }) => {
-  const { isAddressRevealed } = useAPI();
-  const testIsAddressRevealed = async (val) => {
-    if (!val || val.length !== 36 || !bs58Validation(val)) return false;
-    const resp = await isAddressRevealed(val);
-    return resp.data.revealed;
-  };
+  const { testIsAddressRevealed } = useAddressRevealCheck();
   const testAddress = useRef(cacheTest(testIsAddressRevealed));
 
   const schema = Yup.object().shape({

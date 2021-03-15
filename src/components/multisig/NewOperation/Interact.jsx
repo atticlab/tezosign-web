@@ -61,7 +61,7 @@ const Interact = () => {
           <span style={{ marginRight: '5px' }}>Interact</span>
           <FontAwesomeIcon
             icon="chevron-down"
-            rotation={open ? '180' : '0'}
+            rotation={open ? 180 : 0}
             style={{ transition: 'all 0.15s ease' }}
           />
         </DDwnToggle>

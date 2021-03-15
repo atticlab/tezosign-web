@@ -44,7 +44,6 @@ const ownersSchema = (testAddress) =>
         value: Yup.string().when('isPubKey', {
           is: false,
           then: Yup.string()
-            .trim()
             .required('Required')
             .matches(
               'tz1|tz2|tz3',

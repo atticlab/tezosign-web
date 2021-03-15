@@ -28,7 +28,8 @@ const OwnersFields = ({
       {(arrayHelpers) => (
         <div>
           {values.entities.map((entity, index) => (
-            <BForm.Group key={entity.id} style={{ marginBottom: '10px' }}>
+            // eslint-disable-next-line react/no-array-index-key
+            <BForm.Group key={index} style={{ marginBottom: '10px' }}>
               <InputGroup>
                 <Field
                   type="text"
@@ -83,7 +84,23 @@ const OwnersFields = ({
                     </Button>
                   </OverlayTrigger>
 
-                  {index > 0 ? (
+                  {/* {index > 0 ? ( */}
+                  {/*  <Button */}
+                  {/*    variant="link" */}
+                  {/*    style={{ paddingTop: 0, paddingBottom: 0 }} */}
+                  {/*    onClick={() => { */}
+                  {/*      arrayHelpers.remove(index); */}
+                  {/*      setTimeout(() => { */}
+                  {/*        validateForm(); */}
+                  {/*      }); */}
+                  {/*    }} */}
+                  {/*  > */}
+                  {/*    <FontAwesomeIcon icon="trash-alt" /> */}
+                  {/*  </Button> */}
+                  {/* ) : ( */}
+                  {/*  '' */}
+                  {/* )} */}
+                  {values.entities.length > 1 ? (
                     <Button
                       variant="link"
                       style={{ paddingTop: 0, paddingBottom: 0 }}
@@ -110,13 +127,11 @@ const OwnersFields = ({
               </InputGroup>
             </BForm.Group>
           ))}
-          <div style={{ maxWidth: '500px' }}>
+          <div style={{ maxWidth: '500px', textAlign: 'center' }}>
             <Button
               variant="link"
-              block
               onClick={() =>
                 arrayHelpers.push({
-                  id: values.entities.length,
                   value: '',
                   isPubKey: false,
                 })
