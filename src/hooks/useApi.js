@@ -79,9 +79,22 @@ const useAPI = () => {
   };
   // {
   //   contract_id: 'contract address',
-  //   type: 'delegation' || 'transfer',
+  //   type: 'transfer' || 'fa_transfer' || 'fa2_transfer' || 'delegation',
+  //   amount: 1 // for transfers only: mutez
   //   to: 'tezos address',
-  //   amount: 1, // only for transfers, mutez
+  //   asset_id: 'asset contract address', // for asset transfers only
+  //   transfer_list: [
+  //   {
+  //     // from
+  //     txs: [
+  //       {
+  //         amount: 1 // amount * 10 ** scale
+  //         to: 'tezos address',
+  //         token_id: 123,
+  //       },
+  //     ],
+  //   },
+  // ], // for asset transfers only
   // };
   const sendOperation = (payload) => {
     return API.post(`/${network}/contract/operation`, payload);
