@@ -30,6 +30,8 @@ const SelectCustom = ({
   height,
   onChange,
   onBlur,
+  isClearable,
+  width,
 }) => {
   const option = options.map((el) => ({
     ...el,
@@ -87,8 +89,10 @@ const SelectCustom = ({
       })}
       menuWidth={menuWidth}
       height={height}
+      width={width}
       onChange={handleChange}
       onBlur={onBlur}
+      isClearable={isClearable}
     />
   );
 };
@@ -110,6 +114,8 @@ SelectCustom.propTypes = {
   onChange: PropTypes.func.isRequired,
   onBlur: PropTypes.func,
   placeholder: PropTypes.string,
+  isClearable: PropTypes.bool,
+  width: PropTypes.string,
 };
 
 SelectCustom.defaultProps = {
@@ -124,6 +130,8 @@ SelectCustom.defaultProps = {
   height: '',
   disabled: false,
   placeholder: '',
+  isClearable: false,
+  width: 'auto',
 };
 
 export default SelectCustom;

@@ -8,6 +8,7 @@ import React, {
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { Form as BForm } from 'react-bootstrap';
 import Card from '../../styled/Card';
 import { FlexCenter } from '../../styled/Flex';
 import Ellipsis from '../../styled/Ellipsis';
@@ -24,6 +25,8 @@ import {
 import { convertMutezToXTZ, capitalize } from '../../../utils/helpers';
 import { dateFormat } from '../../../utils/constants';
 import IndentIcon from '../../IdentIcon';
+import SelectCustom from '../../SelectCustom';
+import { FormLabel } from '../../styled/Forms';
 
 dayjs.extend(utc);
 
@@ -54,6 +57,48 @@ const Operations = () => {
   const { assets } = useAssetsStateContext();
   const { ops, isOpsLoading } = useOperationsStateContext();
   const { getOps } = useOperationsDispatchContext();
+  const operationType = [
+    {
+      label: 'Delegation',
+      value: 'delegation',
+    },
+    {
+      label: 'Fa transfer',
+      value: 'fa_transfer',
+    },
+    {
+      label: 'Fa2 transfer',
+      value: 'fa2_transfer',
+    },
+    {
+      label: 'Income transfer',
+      value: 'income_transfer',
+    },
+    {
+      label: 'Storage update',
+      value: 'storage_update',
+    },
+    {
+      label: 'Transfer',
+      value: 'transfer',
+    },
+  ];
+  const [changeFilter, setChangeFilter] = useState(null);
+
+  const opsLists = useMemo(() => {
+    if (!ops) return ops;
+
+    return ops.filter((elem) => {
+      if (
+        changeFilter === null ||
+        changeFilter.value === elem.operation_info.type
+      ) {
+        return true;
+      }
+
+      return false;
+    });
+  }, [ops, changeFilter]);
 
   useEffect(() => {
     getOps();
@@ -176,9 +221,9 @@ const Operations = () => {
   ];
 
   const opsCountsByStatus = useMemo(() => {
-    if (!ops) return initialOpsCounts;
+    if (!opsLists) return initialOpsCounts;
 
-    return ops.reduce(
+    return opsLists.reduce(
       (acc, op) => {
         switch (op.status) {
           case 'pending':
@@ -203,10 +248,26 @@ const Operations = () => {
       },
       { ...initialOpsCounts },
     );
-  }, [ops]);
+  }, [opsLists]);
 
   return (
     <section>
+      <BForm>
+        <FormLabel>Operation type</FormLabel>
+        <SelectCustom
+          id="filter"
+          options={operationType}
+          onChange={(value) => {
+            setChangeFilter(value);
+          }}
+          isClearable
+          isSearchable={false}
+          placeholder="Select type"
+          menuWidth="100%"
+          width="20%"
+        />
+      </BForm>
+
       <TblGenInfo>
         <TblGenInfo.Item>Pending: {opsCountsByStatus?.pending}</TblGenInfo.Item>
         <TblGenInfo.Item>
@@ -221,7 +282,7 @@ const Operations = () => {
       <Card style={{ overflow: 'hidden' }}>
         <Table
           cols={cols}
-          rows={ops || []}
+          rows={opsLists || []}
           rowKey="operation_id"
           maxHeight="600px"
           stickyHeader
