@@ -1,17 +1,16 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Form as BForm, InputGroup, Button } from 'react-bootstrap';
-import { Formik, Form, ErrorMessage } from 'formik';
+import { Button } from 'react-bootstrap';
+import { Formik, Form } from 'formik';
 // TODO: Research import variants
 import * as Yup from 'yup';
 import Card from '../styled/Card';
-import Text from '../styled/Text';
-import SelectCustom from '../SelectCustom';
+import { Text } from '../styled/Text';
+import ThresholdsFields from './ThresholdsFields';
+import signaturesSchema from '../../utils/schemas/signaturesSchema';
 
 const schema = Yup.object({
-  signatures: Yup.number()
-    .moreThan(0, 'The number of signatures must be greater than 0')
-    .required('Required'),
+  signatures: signaturesSchema,
 });
 
 const Thresholds = ({ addresses, onSubmit, onBack }) => {
@@ -49,39 +48,14 @@ const Thresholds = ({ addresses, onSubmit, onBack }) => {
             setFieldTouched,
           }) => (
             <Form>
-              <BForm.Group style={{ maxWidth: '264px', margin: '40px auto' }}>
-                <InputGroup>
-                  <SelectCustom
-                    options={options}
-                    defaultValue={options[0]}
-                    isSearchable={false}
-                    isTouched={touched.signatures}
-                    isValid={!errors.signatures && touched.signatures}
-                    isInvalid={!!errors.signatures && touched.signatures}
-                    menuWidth="100%"
-                    onChange={(value) => {
-                      setFieldValue('signatures', value.value);
-                      setFieldTouched('signatures', true);
-                    }}
-                    onBlur={() => {
-                      setFieldTouched('signatures', true);
-                    }}
-                  />
-                  <InputGroup.Append>
-                    <Text
-                      modifier="md"
-                      style={{ marginBottom: '0', padding: '2px 10px' }}
-                    >
-                      {`out of ${addresses.length} owners`}
-                    </Text>
-                  </InputGroup.Append>
-                  <ErrorMessage
-                    name="signatures"
-                    component={BForm.Control.Feedback}
-                    type="invalid"
-                  />
-                </InputGroup>
-              </BForm.Group>
+              <ThresholdsFields
+                options={options}
+                defaultValue={options[0]}
+                touched={touched}
+                errors={errors}
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched}
+              />
 
               <div style={{ textAlign: 'right' }}>
                 <Button

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Redirect, useLocation } from 'react-router-dom';
 import BtnBack from '../components/BtnBack';
-import Text from '../components/styled/Text';
+import { Text } from '../components/styled/Text';
 
 const DeployedStyle = styled.div`
   text-align: center;

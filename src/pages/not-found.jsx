@@ -1,6 +1,6 @@
 import React from 'react';
 import Title from '../components/styled/Title';
-import Text from '../components/styled/Text';
+import { Text } from '../components/styled/Text';
 
 const NotFound = () => (
   <section style={{ textAlign: 'center' }}>

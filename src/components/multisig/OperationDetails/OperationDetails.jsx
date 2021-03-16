@@ -1,26 +1,17 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Badge, Button } from 'react-bootstrap';
+import styled from 'styled-components';
+import Bold from '../../styled/Bold';
+import { Green, Red } from '../../styled/Text';
 import Stepper from '../../Stepper';
 import Address from './Address';
+import ContractChanges from './ContractChanges';
 import { useContractStateContext } from '../../../store/contractContext';
 import { requestSignPayload, sendTx } from '../../../plugins/beacon';
 import useAPI from '../../../hooks/useApi';
 import { useUserStateContext } from '../../../store/userContext';
 import { useOperationsDispatchContext } from '../../../store/operationsContext';
-
-const Bold = styled.span`
-  font-weight: bold;
-`;
-
-const Approved = styled.span`
-  color: ${({ theme }) => theme.lightGreen};
-`;
-
-const Rejected = styled.span`
-  color: ${({ theme }) => theme.red};
-`;
 
 const OperationGeneralInfo = styled.div`
   display: flex;
@@ -226,8 +217,7 @@ const OperationDetails = ({ operation }) => {
             <Bold>Total owners:</Bold> {contractInfo.owners.length}
           </div>
           <div>
-            <Bold>Approved:</Bold>{' '}
-            <Approved>{signaturesCount.approved}</Approved>
+            <Bold>Approved:</Bold> <Green>{signaturesCount.approved}</Green>
           </div>
         </OperationGeneralInfo.Item>
         <OperationGeneralInfo.Item>
@@ -236,10 +226,19 @@ const OperationDetails = ({ operation }) => {
             {`${contractInfo.threshold}/${contractInfo.owners.length}`}
           </div>
           <div>
-            <Bold>Rejected:</Bold>{' '}
-            <Rejected>{signaturesCount.rejected}</Rejected>
+            <Bold>Rejected:</Bold> <Red>{signaturesCount.rejected}</Red>
           </div>
         </OperationGeneralInfo.Item>
+        {operation.operation_info.type === 'storage_update' ? (
+          <OperationGeneralInfo.Item style={{ flex: '1 0 50%' }}>
+            <ContractChanges
+              newKeys={operation.operation_info.keys}
+              newThreshold={operation.operation_info.threshold}
+            />
+          </OperationGeneralInfo.Item>
+        ) : (
+          ''
+        )}
       </OperationGeneralInfo>
 
       <div>

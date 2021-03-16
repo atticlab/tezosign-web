@@ -39,7 +39,7 @@ const schema = Yup.object({
 //   },
 // ];
 
-const CreateDelegation = ({ onCreate }) => {
+const CreateDelegation = ({ onCreate, onCancel }) => {
   // const [alias, setAlias] = useState('');
   const { sendOperation } = useAPI();
   const { contractAddress } = useContractStateContext();
@@ -132,16 +132,22 @@ const CreateDelegation = ({ onCreate }) => {
             </BForm.Group>
 
             <FormSubmit>
-              <Button type="submit" size="lg" disabled={isSubmitting}>
-                Delegate
-              </Button>
               <Button
                 variant="danger"
-                size="lg"
-                style={{ marginLeft: '10px' }}
+                style={{ marginRight: '20px' }}
+                onClick={onCancel}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="warning"
+                style={{ marginRight: '20px' }}
                 onClick={() => createDelegation(undefined, setSubmitting)}
               >
                 Undelegate
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                Delegate
               </Button>
             </FormSubmit>
           </Form>
@@ -153,6 +159,7 @@ const CreateDelegation = ({ onCreate }) => {
 
 CreateDelegation.propTypes = {
   onCreate: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 export default CreateDelegation;

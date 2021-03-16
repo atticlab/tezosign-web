@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
-import Text from '../styled/Text';
+import { Text } from '../styled/Text';
 import Card from '../styled/Card';
 import BreakTxt from '../styled/BreakTxt';
 import AccentText from '../styled/AccentText';

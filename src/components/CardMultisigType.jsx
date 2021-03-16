@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Card from './styled/Card';
 import Title from './styled/Title';
 import IconGreen from './styled/IconGreen';
-import Text from './styled/Text';
+import { Text } from './styled/Text';
 
 const CardMultisig = styled(Card)`
   padding: 22px 18px 36px;
