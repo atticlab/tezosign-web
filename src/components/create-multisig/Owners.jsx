@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import Card from '../styled/Card';
-import Text from '../styled/Text';
+import { Text } from '../styled/Text';
 import OwnersFields from './OwnersFields';
 import useAddressRevealCheck from '../../hooks/useAddressRevealCheck';
 import { cacheTest, ownersSchema } from '../../utils/schemas/ownersSchema';

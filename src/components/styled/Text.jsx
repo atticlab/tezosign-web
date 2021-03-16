@@ -8,4 +8,12 @@ const Text = styled.p`
     modifier === 'md' ? '18px' : modifier === 'sm' ? '16px' : ''};
 `;
 
-export default Text;
+const Green = styled.span`
+  color: ${({ theme }) => theme.lightGreen};
+`;
+
+const Red = styled.span`
+  color: ${({ theme }) => theme.red};
+`;
+
+export { Text, Green, Red };

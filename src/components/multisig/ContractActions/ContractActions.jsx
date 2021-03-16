@@ -40,7 +40,7 @@ const DDwnMenu = styled(Dropdown.Menu)`
   }
 `;
 
-const Interact = () => {
+const ContractActions = () => {
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
   const [opType, setOpType] = useState('');
@@ -58,7 +58,7 @@ const Interact = () => {
     <>
       <Dropdown onToggle={() => setOpen(!open)}>
         <DDwnToggle>
-          <span style={{ marginRight: '5px' }}>Interact</span>
+          <span style={{ marginRight: '5px' }}>Actions</span>
           <FontAwesomeIcon
             icon="chevron-down"
             rotation={open ? 180 : 0}
@@ -153,4 +153,4 @@ const Interact = () => {
   );
 };
 
-export default Interact;
+export default ContractActions;

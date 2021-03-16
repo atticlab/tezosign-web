@@ -2,6 +2,7 @@ import numeral from 'numeral';
 import crypto from 'crypto';
 import bs58 from 'bs58';
 import bs58check from 'bs58check';
+import * as sodium from 'libsodium-wrappers';
 import { XTZInMutez, XTZFormat, base58Prefixes } from './constants';
 
 const convertXTZToMutez = (amount) => {
@@ -59,6 +60,61 @@ const limitInputDecimals = (event, limit) => {
     : null;
 };
 
+const getAddressFromPubKey = (publicKey) => {
+  const prefixes = {
+    // tz1...
+    edpk: {
+      length: 54,
+      prefix: Buffer.from(new Uint8Array([6, 161, 159])),
+    },
+    // tz2...
+    sppk: {
+      length: 55,
+      prefix: Buffer.from(new Uint8Array([6, 161, 161])),
+    },
+    // tz3...
+    p2pk: {
+      length: 55,
+      prefix: Buffer.from(new Uint8Array([6, 161, 164])),
+    },
+  };
+
+  let prefix;
+  let plainPublicKey;
+
+  if (!publicKey) return;
+  if (publicKey.length === 64) {
+    prefix = prefixes.edpk.prefix;
+    plainPublicKey = publicKey;
+  } else {
+    const entries = Object.entries(prefixes);
+    // eslint-disable-next-line no-plusplus
+    for (let index = 0; index < entries.length; index++) {
+      const [key, value] = entries[index];
+      if (publicKey.startsWith(key) && publicKey.length === value.length) {
+        prefix = value.prefix;
+        const decoded = bs58check.decode(publicKey);
+        plainPublicKey = decoded
+          .slice(key.length, decoded.length)
+          .toString('hex');
+        break;
+      }
+    }
+  }
+
+  if (!prefix || !plainPublicKey) {
+    throw new Error(`invalid publicKey: ${publicKey}`);
+  }
+
+  const payload = sodium.crypto_generichash(
+    20,
+    Buffer.from(plainPublicKey, 'hex'),
+  );
+
+  // eslint-disable-next-line consistent-return
+  return bs58check.encode(Buffer.concat([prefix, Buffer.from(payload)]));
+};
+
 export {
   convertXTZToMutez,
   convertMutezToXTZ,
@@ -68,4 +124,5 @@ export {
   convertHexToPrefixedBase58,
   isHex,
   limitInputDecimals,
+  getAddressFromPubKey,
 };

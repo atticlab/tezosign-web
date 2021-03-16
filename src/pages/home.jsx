@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import Title from '../components/styled/Title';
-import Text from '../components/styled/Text';
+import { Text } from '../components/styled/Text';
 // import { useUserStateContext } from '../store/userContext';
 import {
   useUserStateContext,

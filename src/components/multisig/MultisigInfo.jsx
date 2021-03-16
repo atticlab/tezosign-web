@@ -2,12 +2,12 @@ import React, { useMemo } from 'react';
 import { Badge } from 'react-bootstrap';
 import styled from 'styled-components';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Interact from './NewOperation/Interact';
+import ContractActions from './ContractActions';
 import IdentIcon from '../IdentIcon';
 import Title from '../styled/Title';
 import BreakTxt from '../styled/BreakTxt';
 // import BtnLink from '../styled/BtnLink';
-import Text from '../styled/Text';
+import { Text } from '../styled/Text';
 import AccentText from '../styled/AccentText';
 import BtnCopy from '../BtnCopy';
 import { useContractStateContext } from '../../store/contractContext';
@@ -121,7 +121,7 @@ const MultisigInfo = () => {
         </ContractManagement.Address>
       </ContractManagement>
 
-      {isUserOwner && <Interact />}
+      {isUserOwner && <ContractActions />}
     </SectionMultisigInfo>
   );
 };

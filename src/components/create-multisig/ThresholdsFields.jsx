@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form as BForm, InputGroup } from 'react-bootstrap';
 import { ErrorMessage } from 'formik';
 import SelectCustom from '../SelectCustom';
-import Text from '../styled/Text';
+import { Text } from '../styled/Text';
 
 const ThresholdsFields = ({
   touched,

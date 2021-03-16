@@ -9,22 +9,22 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Form as BForm } from 'react-bootstrap';
-import Card from '../../styled/Card';
-import { FlexCenter } from '../../styled/Flex';
-import Ellipsis from '../../styled/Ellipsis';
-import { TblGenInfo } from '../../styled/Tbl';
-import Table from '../../Table';
-import BtnCopy from '../../BtnCopy';
-import Spinner from '../../Spinner';
+import Card from '../styled/Card';
+import { FlexCenter } from '../styled/Flex';
+import Ellipsis from '../styled/Ellipsis';
+import { TblGenInfo } from '../styled/Tbl';
+import Table from '../Table';
+import BtnCopy from '../BtnCopy';
+import Spinner from '../Spinner';
 import OperationDetails from './OperationDetails';
-import { useAssetsStateContext } from '../../../store/assetsContext';
+import { useAssetsStateContext } from '../../store/assetsContext';
 import {
   useOperationsDispatchContext,
   useOperationsStateContext,
-} from '../../../store/operationsContext';
-import { convertMutezToXTZ, capitalize } from '../../../utils/helpers';
-import { dateFormat } from '../../../utils/constants';
-import IndentIcon from '../../IdentIcon';
+} from '../../store/operationsContext';
+import { convertMutezToXTZ, capitalize } from '../../utils/helpers';
+import { dateFormat } from '../../utils/constants';
+import IndentIcon from '../IdentIcon';
 import SelectCustom from '../../SelectCustom';
 import { FormLabel } from '../../styled/Forms';
 

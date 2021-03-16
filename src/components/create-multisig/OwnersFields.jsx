@@ -84,22 +84,6 @@ const OwnersFields = ({
                     </Button>
                   </OverlayTrigger>
 
-                  {/* {index > 0 ? ( */}
-                  {/*  <Button */}
-                  {/*    variant="link" */}
-                  {/*    style={{ paddingTop: 0, paddingBottom: 0 }} */}
-                  {/*    onClick={() => { */}
-                  {/*      arrayHelpers.remove(index); */}
-                  {/*      setTimeout(() => { */}
-                  {/*        validateForm(); */}
-                  {/*      }); */}
-                  {/*    }} */}
-                  {/*  > */}
-                  {/*    <FontAwesomeIcon icon="trash-alt" /> */}
-                  {/*  </Button> */}
-                  {/* ) : ( */}
-                  {/*  '' */}
-                  {/* )} */}
                   {values.entities.length > 1 ? (
                     <Button
                       variant="link"

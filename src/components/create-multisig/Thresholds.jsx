@@ -5,7 +5,7 @@ import { Formik, Form } from 'formik';
 // TODO: Research import variants
 import * as Yup from 'yup';
 import Card from '../styled/Card';
-import Text from '../styled/Text';
+import { Text } from '../styled/Text';
 import ThresholdsFields from './ThresholdsFields';
 import signaturesSchema from '../../utils/schemas/signaturesSchema';
 
