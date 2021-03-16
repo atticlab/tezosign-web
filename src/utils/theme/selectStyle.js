@@ -2,7 +2,9 @@ export default {
   container: (base, state) => {
     return {
       ...base,
-      width: state.selectProps.isSearchable ? '100%' : 'auto',
+      maxWidth: state.selectProps.isSearchable
+        ? '100%'
+        : state.selectProps.maxWidth,
     };
   },
   control: (base, state) => ({
@@ -53,6 +55,7 @@ export default {
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
     border: '1px solid #cacaca',
     marginTop: '1px',
+    zIndex: 50,
   }),
   menuList: (base) => ({
     ...base,
@@ -78,5 +81,9 @@ export default {
     cursor: 'pointer',
     fontWeight: 300,
     transition: 'background-color 0.15s',
+  }),
+  clearIndicator: (base) => ({
+    ...base,
+    padding: '2px 8px',
   }),
 };

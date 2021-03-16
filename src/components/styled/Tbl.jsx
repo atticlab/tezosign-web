@@ -7,7 +7,7 @@ const TblGenInfo = styled.div`
 `;
 
 TblGenInfo.Item = styled.span`
-  margin: 0 30px 20px;
+  margin: 20px 30px 20px;
   text-transform: capitalize;
   font-size: 16px;
 `;
