@@ -2,7 +2,9 @@ export default {
   container: (base, state) => {
     return {
       ...base,
-      width: state.selectProps.isSearchable ? '100%' : state.selectProps.width,
+      maxWidth: state.selectProps.isSearchable
+        ? '100%'
+        : state.selectProps.maxWidth,
     };
   },
   control: (base, state) => ({

@@ -51,54 +51,52 @@ const initialOpsCounts = {
   success: 0,
 };
 
+const listOperationType = [
+  {
+    label: 'Transfer',
+    value: 'transfer',
+  },
+  {
+    label: 'Fa transfer',
+    value: 'fa_transfer',
+  },
+  {
+    label: 'Fa2 transfer',
+    value: 'fa2_transfer',
+  },
+  {
+    label: 'Income transfer',
+    value: 'income_transfer',
+  },
+  {
+    label: 'Delegation',
+    value: 'delegation',
+  },
+  {
+    label: 'Storage update',
+    value: 'storage_update',
+  },
+];
+
 const Operations = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const hasMore = false;
   const { assets } = useAssetsStateContext();
   const { ops, isOpsLoading } = useOperationsStateContext();
   const { getOps } = useOperationsDispatchContext();
-  const operationType = [
-    {
-      label: 'Delegation',
-      value: 'delegation',
-    },
-    {
-      label: 'Fa transfer',
-      value: 'fa_transfer',
-    },
-    {
-      label: 'Fa2 transfer',
-      value: 'fa2_transfer',
-    },
-    {
-      label: 'Income transfer',
-      value: 'income_transfer',
-    },
-    {
-      label: 'Storage update',
-      value: 'storage_update',
-    },
-    {
-      label: 'Transfer',
-      value: 'transfer',
-    },
-  ];
-  const [changeFilter, setChangeFilter] = useState(null);
+  const [operationType, setOperationType] = useState(null);
 
   const opsLists = useMemo(() => {
     if (!ops) return ops;
 
-    return ops.filter((elem) => {
-      if (
-        changeFilter === null ||
-        changeFilter.value === elem.operation_info.type
-      ) {
-        return true;
-      }
-
-      return false;
-    });
-  }, [ops, changeFilter]);
+    return ops.filter(
+      (elem) =>
+        !!(
+          operationType === null ||
+          operationType.value === elem.operation_info.type
+        ),
+    );
+  }, [ops, operationType]);
 
   useEffect(() => {
     getOps();
@@ -256,15 +254,15 @@ const Operations = () => {
         <FormLabel>Operation type</FormLabel>
         <SelectCustom
           id="filter"
-          options={operationType}
+          options={listOperationType}
           onChange={(value) => {
-            setChangeFilter(value);
+            setOperationType(value);
           }}
           isClearable
           isSearchable={false}
           placeholder="Select type"
           menuWidth="100%"
-          width="20%"
+          maxWidth="200px"
         />
       </BForm>
 
