@@ -52,6 +52,13 @@ const Assets = () => {
     },
     { key: 'contract_type', label: 'contract type' },
     {
+      key: 'balances',
+      label: 'Balance',
+      process({ balances, scale, ticker }) {
+        return `${balances[0].balance / 10 ** scale} ${ticker}`;
+      },
+    },
+    {
       key: 'Actions',
       process(asset) {
         return (

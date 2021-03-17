@@ -53,8 +53,7 @@ const SelectMultisig = () => {
     <SelectMultisigStyled>
       <Helmet>
         <title>
-          Manage an existing XTZ wallet or create a new multisig one with
-          TzSign.
+          Manage existing XTZ wallet or create a new multisig one with TzSign.
         </title>
         <meta
           name="description"
@@ -62,7 +61,7 @@ const SelectMultisig = () => {
         />
         <meta
           itemProp="name"
-          content="Manage an existing XTZ wallet or create a new multisig one with TzSign."
+          content="Manage existing XTZ wallet or create a new multisig one with TzSign."
         />
         <meta
           itemProp="description"
@@ -70,7 +69,7 @@ const SelectMultisig = () => {
         />
         <meta
           property="og:title"
-          content="Manage an existing XTZ wallet or create a new multisig one with TzSign."
+          content="Manage existing XTZ wallet or create a new multisig one with TzSign."
         />
         <meta
           property="og:description"
@@ -78,7 +77,7 @@ const SelectMultisig = () => {
         />
         <meta
           name="twitter:title"
-          content="Manage an existing XTZ wallet or create a new multisig one with TzSign."
+          content="Manage existing XTZ wallet or create a new multisig one with TzSign."
         />
         <meta
           name="twitter:description"
