@@ -42,4 +42,4 @@ const handleError = (error) => {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export { handleError, availableCodes };
+export { handleError };
