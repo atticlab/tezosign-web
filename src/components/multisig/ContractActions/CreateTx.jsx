@@ -40,7 +40,7 @@ const BtnMax = styled(Button).attrs({ variant: 'link' })`
   }
 `;
 
-const schema = (maxAmount = 30000, asset = 'XTZ') => {
+const schema = (maxAmount = 30000, minAmount = 0.000001, asset = 'XTZ') => {
   return Yup.object({
     asset: Yup.object().required('Required'),
     tokenID: Yup.number().when('asset', {
@@ -58,7 +58,7 @@ const schema = (maxAmount = 30000, asset = 'XTZ') => {
     amount: Yup.number()
       .required('Required')
       .max(maxAmount, `Maximum amount is ${maxAmount} ${asset}`)
-      .min(0.000001, `Minimum amount is 0.000001 ${asset}`),
+      .min(minAmount, `Minimum amount is ${minAmount} ${asset}`),
     to: Yup.string()
       .required('Required')
       .matches(
@@ -72,7 +72,7 @@ const schema = (maxAmount = 30000, asset = 'XTZ') => {
   });
 };
 
-const xtzAsset = {
+const formXTZAsset = (balance) => ({
   value: 'xtz',
   label: (
     <FlexAlignItemsCenter>
@@ -86,7 +86,8 @@ const xtzAsset = {
     </FlexAlignItemsCenter>
   ),
   scale: 6,
-};
+  balance: convertMutezToXTZ(balance),
+});
 
 const CreateTx = ({ onCreate, onCancel }) => {
   const { sendOperation } = useAPI();
@@ -94,19 +95,14 @@ const CreateTx = ({ onCreate, onCancel }) => {
   const { contractAddress, contractInfo } = useContractStateContext();
   const { setOps } = useOperationsDispatchContext();
 
-  const balances = useMemo(() => {
-    return {
-      xtz: convertMutezToXTZ(contractInfo.balance),
-      // tzBtc: 11.32,
-      // stakerDao: 54.23,
-      // usdTz: 32.54,
-    };
+  const XTZAsset = useMemo(() => {
+    return formXTZAsset(contractInfo.balance);
   }, [contractInfo]);
 
   const assetsOptions = useMemo(() => {
-    if (!assets || !assets.length) return [xtzAsset];
+    if (!assets || !assets.length) return [XTZAsset];
 
-    return [xtzAsset].concat(
+    return [XTZAsset].concat(
       assets.map((asset) => ({
         ...asset,
         value: asset.name,
@@ -118,9 +114,10 @@ const CreateTx = ({ onCreate, onCancel }) => {
             {asset.name}
           </FlexAlignItemsCenter>
         ),
+        balance: asset.balances[0].balance / 10 ** asset.scale,
       })),
     );
-  }, [assets]);
+  }, [assets, XTZAsset]);
 
   const createTx = async ({ asset, tokenID, amount, to }, setSubmitting) => {
     try {
@@ -169,10 +166,14 @@ const CreateTx = ({ onCreate, onCancel }) => {
 
   return (
     <Formik
-      initialValues={{ asset: xtzAsset, tokenID: '', amount: '', to: '' }}
+      initialValues={{ asset: XTZAsset, tokenID: '', amount: '', to: '' }}
       enableReinitialize
       validationSchema={Yup.lazy((values) =>
-        schema(balances[values.asset.value], values.asset.ticker),
+        schema(
+          values.asset.balance,
+          1 / 10 ** values.asset.scale,
+          values.asset.ticker,
+        ),
       )}
       onSubmit={async (values, { setSubmitting }) =>
         createTx(values, setSubmitting)
@@ -191,7 +192,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
             <FormLabel>Select Asset</FormLabel>
             <SelectCustom
               options={assetsOptions}
-              defaultValue={xtzAsset}
+              defaultValue={XTZAsset}
               isSearchable={false}
               isTouched={touched.asset}
               isValid={!errors.asset && touched.asset}
@@ -260,25 +261,23 @@ const CreateTx = ({ onCreate, onCancel }) => {
                 }
               />
 
-              {values.asset.value === 'xtz' && (
-                <InputGroup.Append>
-                  <InputGroup.Text style={{ paddingTop: 0, paddingBottom: 0 }}>
-                    <span style={{ display: 'flex', alignItems: 'center' }}>
-                      <BtnMax
-                        onClick={() => {
-                          setFieldValue('amount', balances[values.asset.value]);
-                          setFieldTouched('amount', true, false);
-                        }}
-                      >
-                        MAX
-                      </BtnMax>
-                      <span style={{ fontSize: '12px', marginBottom: '2px' }}>
-                        {balances[values.asset.value]}
-                      </span>
+              <InputGroup.Append>
+                <InputGroup.Text style={{ paddingTop: 0, paddingBottom: 0 }}>
+                  <span style={{ display: 'flex', alignItems: 'center' }}>
+                    <BtnMax
+                      onClick={() => {
+                        setFieldValue('amount', values.asset.balance);
+                        setFieldTouched('amount', true, false);
+                      }}
+                    >
+                      MAX
+                    </BtnMax>
+                    <span style={{ fontSize: '12px', marginBottom: '2px' }}>
+                      {values.asset.balance}
                     </span>
-                  </InputGroup.Text>
-                </InputGroup.Append>
-              )}
+                  </span>
+                </InputGroup.Text>
+              </InputGroup.Append>
 
               <ErrorMessage
                 component={BForm.Control.Feedback}
