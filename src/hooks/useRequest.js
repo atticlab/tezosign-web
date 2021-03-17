@@ -24,7 +24,7 @@ const useRequest = (
     }
   };
 
-  return { request, isLoading, resp, setResp, err, setIsLoading };
+  return { request, isLoading, resp, setResp, err, setErr, setIsLoading };
 };
 
 export default useRequest;

@@ -17,6 +17,7 @@ import {
 import { OperationsProvider } from '../store/operationsContext';
 import { AssetsProvider } from '../store/assetsContext';
 import Owners from '../components/multisig/Owners';
+import { availableCodes } from '../utils/errorsHandler';
 
 const NavTabs = styled(Nav).attrs({ variant: 'pills' })`
   border-bottom: ${({ theme }) => theme.borderGrey};
@@ -54,12 +55,32 @@ const NavTabs = styled(Nav).attrs({ variant: 'pills' })`
 const Multisig = () => {
   const history = useHistory();
   const { address } = useParams();
-  const { contractAddress, isContractInfoLoading } = useContractStateContext();
+  const {
+    contractAddress,
+    isContractInfoLoading,
+    errorContract,
+  } = useContractStateContext();
   const {
     setContractAddress,
     setIsContractInfoLoading,
     getContract,
+    setErrorContract,
   } = useContractDispatchContext();
+
+  useEffect(() => {
+    if (!errorContract) return errorContract;
+
+    if (
+      availableCodes.includes(
+        `${errorContract.response.data.error}:${errorContract.response.data.value}`,
+      )
+    ) {
+      history.push('/not-found');
+      setErrorContract(null);
+    }
+
+    return errorContract;
+  }, [errorContract, history, setErrorContract]);
 
   useEffect(() => {
     setContractAddress(address);
