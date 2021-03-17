@@ -25,8 +25,8 @@ import {
 import { convertMutezToXTZ, capitalize } from '../../utils/helpers';
 import { dateFormat } from '../../utils/constants';
 import IndentIcon from '../IdentIcon';
-import SelectCustom from '../../SelectCustom';
-import { FormLabel } from '../../styled/Forms';
+import SelectCustom from '../SelectCustom';
+import { FormLabel } from '../styled/Forms';
 
 dayjs.extend(utc);
 
@@ -91,10 +91,8 @@ const Operations = () => {
 
     return ops.filter(
       (elem) =>
-        !!(
-          operationType === null ||
-          operationType.value === elem.operation_info.type
-        ),
+        operationType === null ||
+        operationType.value === elem.operation_info.type,
     );
   }, [ops, operationType]);
 
