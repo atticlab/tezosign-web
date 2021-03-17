@@ -67,16 +67,14 @@ const Multisig = () => {
   } = useContractDispatchContext();
 
   useEffect(() => {
-    if (!contractError) return contractError;
-    const { error, value } = contractError.response.data;
+    if (contractError) {
+      const { error, value } = contractError.response.data;
 
-    if (`${error}:${value}` === 'ERR_NOT_FOUND:contract') {
-      history.push('/not-found');
-      setContractError(null);
+      if (`${error}:${value}` === 'ERR_NOT_FOUND:contract') {
+        history.push('/not-found');
+      }
     }
-
-    return contractError;
-  }, [contractError, setContractError, history]);
+  }, [contractError, history]);
 
   useEffect(() => {
     setContractAddress(address);
@@ -100,6 +98,7 @@ const Multisig = () => {
     return () => {
       setContractAddress('');
       setIsContractInfoLoading(true);
+      setContractError(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
