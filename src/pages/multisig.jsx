@@ -54,12 +54,27 @@ const NavTabs = styled(Nav).attrs({ variant: 'pills' })`
 const Multisig = () => {
   const history = useHistory();
   const { address } = useParams();
-  const { contractAddress, isContractInfoLoading } = useContractStateContext();
+  const {
+    contractAddress,
+    isContractInfoLoading,
+    contractError,
+  } = useContractStateContext();
   const {
     setContractAddress,
     setIsContractInfoLoading,
     getContract,
+    setContractError,
   } = useContractDispatchContext();
+
+  useEffect(() => {
+    if (contractError) {
+      const { error, value } = contractError.response.data;
+
+      if (`${error}:${value}` === 'ERR_NOT_FOUND:contract') {
+        history.push('/not-found');
+      }
+    }
+  }, [contractError, history]);
 
   useEffect(() => {
     setContractAddress(address);
@@ -83,6 +98,7 @@ const Multisig = () => {
     return () => {
       setContractAddress('');
       setIsContractInfoLoading(true);
+      setContractError(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

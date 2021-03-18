@@ -55,6 +55,8 @@ const ContractProvider = ({ children }) => {
     setResp: setContractInfo,
     isLoading: isContractInfoLoading,
     setIsLoading: setIsContractInfoLoading,
+    err: contractError,
+    setErr: setContractError,
   } = useRequest(getContractInfo, contractAddress, true);
   const isUserOwner = useMemo(() => {
     return (
@@ -69,8 +71,15 @@ const ContractProvider = ({ children }) => {
       contractInfo,
       isContractInfoLoading,
       isUserOwner,
+      contractError,
     };
-  }, [contractAddress, contractInfo, isContractInfoLoading, isUserOwner]);
+  }, [
+    contractAddress,
+    contractInfo,
+    isContractInfoLoading,
+    isUserOwner,
+    contractError,
+  ]);
 
   const dispatchValue = useMemo(() => {
     return {
@@ -78,12 +87,14 @@ const ContractProvider = ({ children }) => {
       getContract,
       setContractInfo,
       setIsContractInfoLoading,
+      setContractError,
     };
   }, [
     setContractAddress,
     getContract,
     setContractInfo,
     setIsContractInfoLoading,
+    setContractError,
   ]);
 
   return (
