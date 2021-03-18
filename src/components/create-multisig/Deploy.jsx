@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { Text } from '../styled/Text';
-import Card from '../styled/Card';
 import BreakTxt from '../styled/BreakTxt';
 import AccentText from '../styled/AccentText';
 import useAPI from '../../hooks/useApi';
@@ -49,7 +48,7 @@ const Deploy = ({ entities, signatures, onBack }) => {
   const history = useHistory();
 
   return (
-    <Card.Body>
+    <>
       <Text modifier="md">
         Please review the following multisig before deploying it on mainnet.
         <br />
@@ -83,8 +82,7 @@ const Deploy = ({ entities, signatures, onBack }) => {
       <div style={{ textAlign: 'right' }}>
         <Button
           variant="outline-primary"
-          size="lg"
-          style={{ marginRight: '24px' }}
+          style={{ marginRight: '10px' }}
           onClick={onBack}
         >
           Back
@@ -92,7 +90,6 @@ const Deploy = ({ entities, signatures, onBack }) => {
         {/* disabled={isSubmitting} */}
         <Button
           type="submit"
-          size="lg"
           onClick={() => {
             onSubmit(
               getContractCode,
@@ -106,7 +103,7 @@ const Deploy = ({ entities, signatures, onBack }) => {
           Submit
         </Button>
       </div>
-    </Card.Body>
+    </>
   );
 };
 

@@ -7,26 +7,34 @@ import { Form as BForm, InputGroup, Button } from 'react-bootstrap';
 import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
 // TODO: Research import variants
 import * as Yup from 'yup';
+import { Text, Bold } from '../components/styled/Text';
 // import SelectCustom from '../components/SelectCustom';
-import CardMultisigType from '../components/CardMultisigType';
+import CardMultisigType from '../components/select-multisig/CardMultisigType';
 import { bs58Validation } from '../utils/helpers';
-
-const Bold = styled.span`
-  font-weight: 800;
-`;
-
-const Regular = styled.span`
-  font-weight: 400;
-`;
 
 const SelectMultisigStyled = styled.section`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: 53px;
+  margin: 53px auto 0;
+  max-width: 1060px;
 
   @media (${({ theme }) => theme.smDown}) {
     margin-top: 0;
+  }
+`;
+
+SelectMultisigStyled.Item = styled.div`
+  max-width: 480px;
+
+  @media (${({ theme }) => theme.xlDown}) {
+    max-width: 450px;
+  }
+
+  @media (${({ theme }) => theme.lgDown}) {
+    flex: 1 0 100%;
+    max-width: 100%;
+    margin-bottom: 30px;
   }
 `;
 
@@ -89,82 +97,96 @@ const SelectMultisig = () => {
         />
       </Helmet>
 
-      <CardMultisigType
-        title="Create a new multisig"
-        icon="wallet"
-        text={
-          <>
-            Create a new multisig wallet by declaring owners, signature
-            thresholds and more. <br />
-            <Bold>Note: </Bold>
-            <Regular>Requires contract deployment cost.</Regular>
-          </>
-        }
-      >
-        <Button as={Link} variant="primary" size="lg" to="/create-multisig">
-          Create
-        </Button>
-      </CardMultisigType>
-
-      <CardMultisigType
-        title="Manage an existing multisig"
-        icon="cogs"
-        text="Enter a contract address that has an owner associated with the account
-        that is currently connected."
-      >
-        <Formik
-          initialValues={{ address: '' }}
-          validationSchema={schema}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(false);
-            history.push(`/multisig/${values.address}`);
-          }}
+      <SelectMultisigStyled.Item>
+        <CardMultisigType
+          title="Create a new multisig"
+          icon="wallet"
+          text={
+            <>
+              <Text>
+                Create a new multisig wallet by declaring owners, signature
+                thresholds and more.
+              </Text>
+              <Text>
+                <Bold>Note: </Bold>
+                Requires contract deployment cost.
+              </Text>
+            </>
+          }
         >
-          {/* setFieldValue,  values */}
-          {({ isSubmitting, errors, touched }) => (
-            <FForm as={BForm} style={{ maxWidth: '380px', margin: '0 auto' }}>
-              <BForm.Group style={{ marginBottom: '10px', textAlign: 'left' }}>
-                <Field
-                  as={BForm.Control}
-                  type="text"
-                  name="address"
-                  aria-label="address"
-                  placeholder="KT1..."
-                  size="sm"
-                  isInvalid={!!errors.address && touched.address}
-                  isValid={!errors.address && touched.address}
-                  style={{ height: 'auto' }}
-                />
+          <Button as={Link} variant="primary" block to="/create-multisig">
+            Create
+          </Button>
+        </CardMultisigType>
+      </SelectMultisigStyled.Item>
 
-                {/* <SelectCustom */}
-                {/*  options={availableContracts} */}
-                {/*  onChange={(value) => { */}
-                {/*    setFieldValue('address', value.value); */}
-                {/*  }} */}
-                {/*  isInvalid={!!errors.address && touched.address} */}
-                {/*  isValid={!errors.address && touched.address} */}
-                {/*  isTouched={touched.address} */}
-                {/*  placeholder="KT1..." */}
-                {/*  defaultValue={{ */}
-                {/*    label: values.address, */}
-                {/*    value: values.address, */}
-                {/*  }} */}
-                {/* /> */}
+      <SelectMultisigStyled.Item>
+        <CardMultisigType
+          title="Manage an existing multisig"
+          icon="cogs"
+          text={
+            <Text>
+              Enter a contract address that has an owner associated with the
+              account that is currently connected.
+            </Text>
+          }
+        >
+          <Formik
+            initialValues={{ address: '' }}
+            validationSchema={schema}
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(false);
+              history.push(`/multisig/${values.address}`);
+            }}
+          >
+            {/* setFieldValue,  values */}
+            {({ isSubmitting, errors, touched }) => (
+              <FForm as={BForm}>
+                <BForm.Group
+                  style={{ marginBottom: '10px', textAlign: 'left' }}
+                >
+                  <Field
+                    as={BForm.Control}
+                    type="text"
+                    name="address"
+                    aria-label="address"
+                    placeholder="KT1..."
+                    size="sm"
+                    isInvalid={!!errors.address && touched.address}
+                    isValid={!errors.address && touched.address}
+                    style={{ height: 'auto' }}
+                  />
 
-                <ErrorMessage
-                  component={BForm.Control.Feedback}
-                  style={{ textAlign: 'left' }}
-                  name="address"
-                  type="invalid"
-                />
-              </BForm.Group>
-              <Button type="submit" size="lg" disabled={isSubmitting}>
-                Manage
-              </Button>
-            </FForm>
-          )}
-        </Formik>
-      </CardMultisigType>
+                  {/* <SelectCustom */}
+                  {/*  options={availableContracts} */}
+                  {/*  onChange={(value) => { */}
+                  {/*    setFieldValue('address', value.value); */}
+                  {/*  }} */}
+                  {/*  isInvalid={!!errors.address && touched.address} */}
+                  {/*  isValid={!errors.address && touched.address} */}
+                  {/*  isTouched={touched.address} */}
+                  {/*  placeholder="KT1..." */}
+                  {/*  defaultValue={{ */}
+                  {/*    label: values.address, */}
+                  {/*    value: values.address, */}
+                  {/*  }} */}
+                  {/* /> */}
+
+                  <ErrorMessage
+                    component={BForm.Control.Feedback}
+                    style={{ textAlign: 'left' }}
+                    name="address"
+                    type="invalid"
+                  />
+                </BForm.Group>
+                <Button type="submit" block disabled={isSubmitting}>
+                  Manage
+                </Button>
+              </FForm>
+            )}
+          </Formik>
+        </CardMultisigType>
+      </SelectMultisigStyled.Item>
     </SelectMultisigStyled>
   );
 };

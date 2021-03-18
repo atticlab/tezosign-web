@@ -1,7 +1,7 @@
 import React from 'react';
 import Card from '../styled/Card';
 import { FlexCenter } from '../styled/Flex';
-import Ellipsis from '../styled/Ellipsis';
+import { Ellipsis } from '../styled/Text';
 import { TblGenInfo } from '../styled/Tbl';
 import Table from '../Table';
 import Spinner from '../Spinner';

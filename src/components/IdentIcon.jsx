@@ -39,7 +39,7 @@ IdentIcon.propTypes = {
 
 IdentIcon.defaultProps = {
   address: '',
-  scale: 4.5,
+  scale: 4,
 };
 
 export default IdentIcon;

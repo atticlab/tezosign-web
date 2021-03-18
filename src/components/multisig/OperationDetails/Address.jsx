@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Ellipsis from '../../styled/Ellipsis';
+import { Ellipsis } from '../../styled/Text';
 import { FlexCenter } from '../../styled/Flex';
 import IdentIcon from '../../IdentIcon';
 import BtnCopy from '../../BtnCopy';

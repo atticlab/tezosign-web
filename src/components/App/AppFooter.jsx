@@ -1,18 +1,14 @@
 import React, { useMemo } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 const TheFooter = styled.footer`
-  ${({ theme: { border, borderShadowTop, smDown } }) => css`
-    border-top: ${border};
-    box-shadow: ${borderShadowTop};
-    padding: 12px 46px;
-    font-size: 16px;
-    font-weight: 300;
+  padding: 12px 46px;
+  font-size: 16px;
+  font-weight: 300;
 
-    @media (${smDown}) {
-      padding: 15px;
-    }
-  `}
+  @media (${({ theme }) => theme.smDown}) {
+    padding: 15px;
+  }
 `;
 
 const AppFooter = () => {

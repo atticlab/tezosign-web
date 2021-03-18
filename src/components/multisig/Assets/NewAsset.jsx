@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
 import Modal from '../../styled/Modal';
-import Title from '../../styled/Title';
+import { Title } from '../../styled/Text';
 import AssetEditor from './AssetEditor';
 
 const NewAsset = () => {

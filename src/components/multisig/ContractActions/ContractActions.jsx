@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../styled/Modal';
-import Title from '../../styled/Title';
+import { Title } from '../../styled/Text';
 import CreateTx from './CreateTx';
 import CreateDelegation from './CreateDelegation';
 import ContractEditor from './ContractEditor';

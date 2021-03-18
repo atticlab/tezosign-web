@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Dropdown, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import beaconLogo from '../assets/img/beacon-logo.svg';
-import IdentIcon from './IdentIcon';
-import { useUserDispatchContext } from '../store/userContext';
+import { Ellipsis } from '../styled/Text';
+import beaconLogo from '../../assets/img/beacon-logo.svg';
+import IdentIcon from '../IdentIcon';
+import { useUserDispatchContext } from '../../store/userContext';
 
 const DDwnToggle = styled(Dropdown.Toggle)`
   color: ${({ theme }) => theme.black};
@@ -24,21 +25,17 @@ const DDwnToggle = styled(Dropdown.Toggle)`
 const DDwnToggleContent = styled.div`
   display: flex;
   font-size: 10px;
-  font-weight: 700;
   align-items: center;
 `;
 
 const DDwnMenu = styled(Dropdown.Menu)`
   padding: 16px 34px;
   box-shadow: ${({ theme }) => theme.borderShadow};
-  text-align: center;
+  border: 0;
 `;
 
-const Address = styled.span`
-  display: inline-block;
-  max-width: 100px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+const Address = styled(Ellipsis)`
+  font-weight: 700;
 `;
 
 const UserDropdown = ({ address }) => {
@@ -59,7 +56,8 @@ const UserDropdown = ({ address }) => {
           <div style={{ fontSize: '14px' }}>
             <FontAwesomeIcon
               icon="chevron-down"
-              flip={open ? 'vertical' : 'horizontal'}
+              rotation={open ? 180 : 0}
+              style={{ transition: 'transform 0.15s ease' }}
             />
           </div>
         </DDwnToggleContent>
@@ -69,7 +67,7 @@ const UserDropdown = ({ address }) => {
         <div style={{ marginBottom: '20px' }}>
           <img src={beaconLogo} alt="Beacon" width="123px" />
         </div>
-        <Button variant="danger" size="sm" onClick={() => disconnect()}>
+        <Button variant="danger" size="sm" block onClick={() => disconnect()}>
           Disconnect
         </Button>
       </DDwnMenu>

@@ -6,7 +6,7 @@ export default createGlobalStyle`
     padding: 0;
     margin: 0;
     font-family: Roboto, sans-serif;
-    font-size: ${({ theme }) => theme.fs20};
+    font-size: ${({ theme }) => theme.fs16};
     box-sizing: border-box;
     letter-spacing: 0.75px;
   }

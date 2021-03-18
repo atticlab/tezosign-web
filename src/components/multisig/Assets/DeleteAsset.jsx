@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
 import Modal from '../../styled/Modal';
-import Title from '../../styled/Title';
+import { Title } from '../../styled/Text';
 import useAPI from '../../../hooks/useApi';
 import { useContractStateContext } from '../../../store/contractContext';
 import { handleError } from '../../../utils/errorsHandler';

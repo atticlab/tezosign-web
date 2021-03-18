@@ -10,6 +10,7 @@ const AppWrapper = styled.div`
 const Content = styled.main`
   flex: 1 0 auto;
   padding: 80px 0;
+  background-color: ${({ theme }) => theme.whiteBlueish};
 `;
 
 AppWrapper.Content = Content;

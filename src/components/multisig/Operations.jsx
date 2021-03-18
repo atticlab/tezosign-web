@@ -11,7 +11,7 @@ import utc from 'dayjs/plugin/utc';
 import { Form as BForm } from 'react-bootstrap';
 import Card from '../styled/Card';
 import { FlexCenter } from '../styled/Flex';
-import Ellipsis from '../styled/Ellipsis';
+import { Ellipsis } from '../styled/Text';
 import { TblGenInfo } from '../styled/Tbl';
 import Table from '../Table';
 import BtnCopy from '../BtnCopy';
