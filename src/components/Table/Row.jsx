@@ -2,8 +2,10 @@ import React, { forwardRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tbl } from '../styled/Tbl';
+import useThemeContext from '../../hooks/useThemeContext';
 
 const Row = forwardRef(({ cols, row, isCollapsible, collapseContent }, ref) => {
+  const theme = useThemeContext();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggle = (e) => {
     if (e.target.type) return;
@@ -27,7 +29,7 @@ const Row = forwardRef(({ cols, row, isCollapsible, collapseContent }, ref) => {
           <Tbl.Td>
             <FontAwesomeIcon
               icon="chevron-down"
-              color="#cacaca"
+              color={theme.gray}
               rotation={isCollapsed ? 180 : 0}
               style={{ transition: 'all 0.3s ease' }}
             />

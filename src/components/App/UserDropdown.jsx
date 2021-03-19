@@ -18,7 +18,7 @@ const DDwnToggle = styled(Dropdown.Toggle)`
   &:hover,
   &:focus {
     text-decoration: none;
-    color: ${({ theme }) => theme.lightGreen};
+    color: ${({ theme }) => theme.green};
   }
 `;
 

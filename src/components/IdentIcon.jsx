@@ -21,7 +21,7 @@ const IdentIcon = ({ address, scale }) => {
       setIcon(
         createIcon({
           seed: address,
-          color: theme.lightGreen,
+          color: theme.green,
           size: 8,
           scale,
         }).toDataURL(),

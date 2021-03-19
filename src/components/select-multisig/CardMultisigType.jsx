@@ -15,7 +15,7 @@ const CardMSigType = styled(Card)`
 `;
 
 CardMSigType.Header = styled(Card.Header)`
-  border-bottom: ${({ theme }) => `1px solid ${theme.lightGreen}`};
+  border-bottom: ${({ theme }) => `1px solid ${theme.green}`};
   border-radius: 0;
   text-align: center;
   min-height: ${cardHeaderHeight};
@@ -47,7 +47,7 @@ const CardMultisigType = ({ title, icon, text, children }) => {
   return (
     <CardMSigType>
       <CardMSigType.Header>
-        <Title color={theme.lightGreen} style={{ marginBottom: 0 }}>
+        <Title color={theme.green} style={{ marginBottom: 0 }}>
           {title}
         </Title>
       </CardMSigType.Header>

@@ -16,6 +16,7 @@ const DDwnToggle = styled(Dropdown.Toggle)`
 
 const DDwnMenu = styled(Dropdown.Menu)`
   padding: 0;
+  border: 0;
   box-shadow: ${({ theme }) => theme.borderShadow};
 
   .dropdown-item {
@@ -33,7 +34,7 @@ const DDwnMenu = styled(Dropdown.Menu)`
     }
 
     &:focus {
-      background-color: ${({ theme }) => theme.lightGreen};
+      background-color: ${({ theme }) => theme.green};
       color: white;
       outline: rgba(38, 210, 129, 0.5) auto 1px;
     }

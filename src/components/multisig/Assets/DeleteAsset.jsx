@@ -11,7 +11,7 @@ import { handleError } from '../../../utils/errorsHandler';
 import { useAssetsDispatchContext } from '../../../store/assetsContext';
 
 const Close = styled(Button).attrs({ variant: 'link' })`
-  color: ${({ theme }) => theme.lightGray};
+  color: ${({ theme }) => theme.gray};
   &:hover {
     color: ${({ theme }) => theme.red};
   }

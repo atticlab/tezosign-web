@@ -8,9 +8,9 @@ import { Title } from '../../styled/Text';
 import AssetEditor from './AssetEditor';
 
 const Edit = styled(Button).attrs({ variant: 'link' })`
-  color: ${({ theme }) => theme.lightGray};
+  color: ${({ theme }) => theme.gray};
   &:hover {
-    color: ${({ theme }) => theme.lightGreen};
+    color: ${({ theme }) => theme.green};
   }
 `;
 

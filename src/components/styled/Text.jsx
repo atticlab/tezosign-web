@@ -23,16 +23,34 @@ const Ellipsis = styled.span`
   text-overflow: ellipsis;
 `;
 
+const TextAccent = styled.span`
+  color: ${({ color, theme }) => color || theme.green};
+  font-weight: 700;
+`;
+
+const BreakTxt = styled.span`
+  word-break: break-all;
+`;
 const Bold = styled.span`
   font-weight: 700;
 `;
 
 const Green = styled.span`
-  color: ${({ theme }) => theme.lightGreen};
+  color: ${({ theme }) => theme.green};
 `;
 
 const Red = styled.span`
   color: ${({ theme }) => theme.red};
 `;
 
-export { Title, TitleStyles, Text, Ellipsis, Bold, Green, Red };
+export {
+  Title,
+  TitleStyles,
+  Text,
+  TextAccent,
+  Ellipsis,
+  BreakTxt,
+  Bold,
+  Green,
+  Red,
+};

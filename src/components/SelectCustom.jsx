@@ -6,7 +6,7 @@ import colors from '../utils/theme/colors';
 
 const themeOverrides = {
   colors: {
-    primary: colors.lightGreen,
+    primary: colors.green,
     primary25: 'rgba(39, 241, 144, 0.25)',
     primary50: 'rgba(39, 241, 144, 0.5)',
     danger: colors.red,

@@ -1,4 +1,6 @@
+import colors from './colors';
+
 export default {
-  border: '1px solid #c4c4c4',
+  border: `1px solid ${colors.lightGray}`,
   borderGrey: '1px solid #cacaca',
 };

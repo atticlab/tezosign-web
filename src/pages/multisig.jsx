@@ -3,7 +3,6 @@ import Helmet from 'react-helmet';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { Tab, Nav } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import BtnBack from '../components/BtnBack';
 import MultisigInfo from '../components/multisig/MultisigInfo';
 import Operations from '../components/multisig/Operations';
@@ -19,12 +18,9 @@ import { AssetsProvider } from '../store/assetsContext';
 import Owners from '../components/multisig/Owners';
 
 const NavTabs = styled(Nav).attrs({ variant: 'pills' })`
-  border-bottom: ${({ theme }) => theme.borderGrey};
-  padding-bottom: 8px;
-
   .nav-item {
     &:not(:last-child) {
-      margin-right: 64px;
+      margin-right: 20px;
 
       @media (${({ theme }) => theme.lgDown}) {
         margin-right: 10px;
@@ -33,17 +29,19 @@ const NavTabs = styled(Nav).attrs({ variant: 'pills' })`
   }
 
   .nav-link {
-    border-radius: 16px;
-    transition: color 0.15s;
-    color: ${({ theme }) => theme.lightGray2};
+    background-color: white;
+    border-radius: ${({ theme }) => theme.borderRadiusDefault};
+    transition: background-color 0.15s;
+    color: ${({ theme }) => theme.green};
     font-size: 16px;
-    font-weight: 500;
 
     &:hover {
-      color: ${({ theme }) => theme.lightGreen};
+      background-color: ${({ theme }) => theme.lightGray};
     }
 
     &.active {
+      background-color: ${({ theme }) => theme.gray};
+
       &:hover {
         color: white;
       }
@@ -165,33 +163,15 @@ const Multisig = () => {
               <Tab.Container defaultActiveKey="ops">
                 <NavTabs>
                   <NavTabs.Item>
-                    <NavTabs.Link eventKey="ops">
-                      <FontAwesomeIcon
-                        icon="layer-group"
-                        style={{ marginRight: '5px' }}
-                      />
-                      OPERATIONS
-                    </NavTabs.Link>
+                    <NavTabs.Link eventKey="ops">Operations</NavTabs.Link>
                   </NavTabs.Item>
 
                   <NavTabs.Item>
-                    <NavTabs.Link eventKey="assets">
-                      <FontAwesomeIcon
-                        icon="dollar-sign"
-                        style={{ marginRight: '5px' }}
-                      />
-                      ASSETS
-                    </NavTabs.Link>
+                    <NavTabs.Link eventKey="assets">Assets</NavTabs.Link>
                   </NavTabs.Item>
 
                   <NavTabs.Item>
-                    <NavTabs.Link eventKey="owners">
-                      <FontAwesomeIcon
-                        icon="key"
-                        style={{ marginRight: '5px' }}
-                      />
-                      OWNERS
-                    </NavTabs.Link>
+                    <NavTabs.Link eventKey="owners">Owners</NavTabs.Link>
                   </NavTabs.Item>
                 </NavTabs>
 

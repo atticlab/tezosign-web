@@ -2,9 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
-import { Text } from '../styled/Text';
-import BreakTxt from '../styled/BreakTxt';
-import AccentText from '../styled/AccentText';
+import { Text, TextAccent, BreakTxt } from '../styled/Text';
 import useAPI from '../../hooks/useApi';
 import { sendOrigination } from '../../plugins/beacon';
 import { handleError } from '../../utils/errorsHandler';
@@ -63,19 +61,19 @@ const Deploy = ({ entities, signatures, onBack }) => {
         <Text modifier="md">
           Owners: <br />
           {entities.map((entity, index) => (
-            <AccentText key={entity}>
+            <TextAccent key={entity}>
               <BreakTxt>
                 {entity}
                 {index !== entities.length - 1 ? ', ' : ''}
               </BreakTxt>
               <br />
-            </AccentText>
+            </TextAccent>
           ))}
         </Text>
 
         <Text modifier="md">
           Number of confirmations required:{' '}
-          <AccentText>{signatures}</AccentText>
+          <TextAccent>{signatures}</TextAccent>
         </Text>
       </div>
 

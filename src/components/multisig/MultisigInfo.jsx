@@ -4,12 +4,11 @@ import styled from 'styled-components';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ContractActions from './ContractActions';
 import IdentIcon from '../IdentIcon';
-import BreakTxt from '../styled/BreakTxt';
 // import BtnLink from '../styled/BtnLink';
-import { Title, Text } from '../styled/Text';
-import AccentText from '../styled/AccentText';
+import { Title, Text, TextAccent, BreakTxt } from '../styled/Text';
 import BtnCopy from '../BtnCopy';
 import { useContractStateContext } from '../../store/contractContext';
+import useThemeContext from '../../hooks/useThemeContext';
 import { formatXTZ, convertMutezToXTZ } from '../../utils/helpers';
 
 const SectionMultisigInfo = styled.section`
@@ -30,9 +29,11 @@ const Flex = styled.div`
 `;
 
 const BadgeCustom = styled(Badge)`
-  padding: 4px 20px;
+  border: 0;
+  background-color: ${({ theme }) => theme.green15};
+  padding: 8px 20px;
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 400;
 `;
 
 const ContractManagement = styled.div`
@@ -64,6 +65,7 @@ ContractManagement.Address = styled.div`
 `;
 
 const MultisigInfo = () => {
+  const theme = useThemeContext();
   const {
     contractAddress,
     isUserOwner,
@@ -85,6 +87,7 @@ const MultisigInfo = () => {
             <Title
               modifier="sm"
               style={{ lineHeight: '22px', marginBottom: '0' }}
+              fw="400"
             >
               <BreakTxt>{contractAddress}</BreakTxt>
             </Title>
@@ -112,9 +115,9 @@ const MultisigInfo = () => {
             </BadgeCustom>
             <Text style={{ marginBottom: 0 }}>
               Balance:{' '}
-              <AccentText>
+              <TextAccent color={theme.blue}>
                 {formatXTZ(convertMutezToXTZ(contractInfo?.balance))} XTZ
-              </AccentText>
+              </TextAccent>
             </Text>
           </Flex>
         </ContractManagement.Address>

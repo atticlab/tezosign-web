@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Card = styled.div`
-  background-color: ${({ theme }) => theme.lightGray4};
+  background-color: ${({ theme }) => theme.lightGray};
   border-radius: 10px;
 `;
 

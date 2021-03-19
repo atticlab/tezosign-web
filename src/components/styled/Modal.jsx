@@ -15,7 +15,7 @@ Modal.Content = styled.div`
 `;
 
 Modal.Close = styled(Button).attrs({ variant: 'link' })`
-  color: ${({ theme }) => theme.lightGray};
+  color: ${({ theme }) => theme.gray};
   font-size: 24px;
   padding-top: 0;
   padding-bottom: 0;

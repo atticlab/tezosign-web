@@ -4,9 +4,9 @@ import { Button } from 'react-bootstrap';
 const BtnLink = styled(Button).attrs({
   variant: 'link',
 })`
-  color: ${({ theme }) => theme.lightGray2};
+  color: ${({ theme }) => theme.gray};
   &:hover {
-    color: ${({ theme }) => theme.lightGreen};
+    color: ${({ theme }) => theme.green};
   }
 `;
 

@@ -23,15 +23,15 @@ StepperStyled.Step = styled.li`
     background: ${({ variant, theme, isVertical }) => {
       switch (variant) {
         case 'success':
-          return theme.lightGreen;
+          return theme.green;
         case 'danger':
           return theme.red;
         case 'halved':
           return isVertical
-            ? `linear-gradient(180deg, ${theme.lightGreen} 50%, ${theme.red} 50%)`
-            : `linear-gradient(90deg, ${theme.lightGreen} 50%, ${theme.red} 50%)`;
+            ? `linear-gradient(180deg, ${theme.green} 50%, ${theme.red} 50%)`
+            : `linear-gradient(90deg, ${theme.green} 50%, ${theme.red} 50%)`;
         default:
-          return theme.lightGray2;
+          return theme.gray;
       }
     }};
   }
@@ -41,7 +41,7 @@ StepperStyled.Step = styled.li`
     display: block;
     height: 14px;
     position: absolute;
-    background-color: ${({ theme }) => theme.lightGray2};
+    background-color: ${({ theme }) => theme.gray};
     width: 2px;
     right: 0;
     ${({ isVertical }) =>
@@ -83,15 +83,15 @@ StepperStyled.Point = styled.div`
   background: ${({ variant, theme, isVertical }) => {
     switch (variant) {
       case 'success':
-        return theme.lightGreen;
+        return theme.green;
       case 'danger':
         return theme.red;
       case 'halved':
         return isVertical
-          ? `linear-gradient(180deg, ${theme.lightGreen} 50%, ${theme.red} 50%)`
-          : `linear-gradient(90deg, ${theme.lightGreen} 50%, ${theme.red} 50%)`;
+          ? `linear-gradient(180deg, ${theme.green} 50%, ${theme.red} 50%)`
+          : `linear-gradient(90deg, ${theme.green} 50%, ${theme.red} 50%)`;
       default:
-        return theme.lightGray2;
+        return theme.gray;
     }
   }};
   width: 13px;

@@ -13,7 +13,7 @@ const Toastr = styled(ToastContainer)`
   }
 
   .Toastify__toast--success {
-    background: ${({ theme }) => theme.lightGreen};
+    background: ${({ theme }) => theme.green};
   }
 
   .Toastify__toast--error {
