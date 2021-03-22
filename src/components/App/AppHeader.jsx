@@ -1,27 +1,23 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import logo from '../../assets/img/logo.svg';
-import UserDropdown from '../UserDropdown';
+import UserDropdown from './UserDropdown';
 import {
   useUserStateContext,
   useUserDispatchContext,
 } from '../../store/userContext';
 
 const TheHeader = styled.header`
-  ${({ theme: { border, borderShadow, smDown } }) => css`
-    display: flex;
-    align-items: center;
-    padding: 12px 46px;
-    justify-content: space-between;
-    border-bottom: ${border};
-    box-shadow: ${borderShadow};
+  display: flex;
+  align-items: center;
+  padding: 21px 48px;
+  justify-content: space-between;
 
-    @media (${smDown}) {
-      padding: 15px;
-    }
-  `}
+  @media (${({ theme }) => theme.smDown}) {
+    padding: 15px;
+  }
 `;
 
 const AppHeader = () => {

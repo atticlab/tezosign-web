@@ -6,16 +6,16 @@ export default createGlobalStyle`
     padding: 0;
     margin: 0;
     font-family: Roboto, sans-serif;
-    font-size: ${({ theme }) => theme.fs20};
+    font-size: ${({ theme }) => theme.fs16};
     box-sizing: border-box;
     letter-spacing: 0.75px;
   }
   
   ::-moz-selection {
-    background-color: #87f7c1;
+    background-color: #22d369;
   }
   ::selection {
-    background-color: #87f7c1;
+    background-color: #22d369;
   }
   
   :focus {
@@ -34,7 +34,7 @@ export default createGlobalStyle`
     &__content {
       button {
         outline: none;
-        border: ${({ theme }) => `2px solid ${theme.lightGreen}`};
+        border: ${({ theme }) => `2px solid ${theme.green}`};
         transition: all 0.2s ease;
 
         &:hover {
@@ -47,7 +47,7 @@ export default createGlobalStyle`
       }
 
       .beacon-modal__button {
-        background: ${({ theme }) => theme.lightGreen};
+        background: ${({ theme }) => theme.green};
 
         &:hover {
           background: #0fe37d;
@@ -55,7 +55,7 @@ export default createGlobalStyle`
       }
 
       .beacon-modal__button--outline {
-        color: ${({ theme }) => theme.lightGreen};
+        color: ${({ theme }) => theme.green};
 
         &:hover {
           color: #0ed776;
@@ -68,14 +68,14 @@ export default createGlobalStyle`
     display: flex;
     border: ${({ theme }) => theme.borderGrey};
     box-shadow: ${({ theme }) => theme.borderShadow};
-    color: ${({ theme }) => theme.lightGreen};
+    color: ${({ theme }) => theme.green};
     
     .beacon-toast__content p {
         margin-bottom: 0;
     }
     
     .spinner .loader {
-      border-left-color: ${({ theme }) => theme.lightGreen};
+      border-left-color: ${({ theme }) => theme.green};
     }
   }
 `;

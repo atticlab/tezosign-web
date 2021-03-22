@@ -5,8 +5,7 @@ import { Form as BForm, InputGroup, Button } from 'react-bootstrap';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 // import SelectCustom from '../../SelectCustom';
-// import AccentText from '../../styled/AccentText';
-// import BreakTxt from '../../styled/BreakTxt';
+// import { TextAccent, BreakTxt } from '../../styled/Text';
 import { FormLabel, FormSubmit } from '../../styled/Forms';
 import { bs58Validation } from '../../../utils/helpers';
 import useAPI from '../../../hooks/useApi';
@@ -68,9 +67,9 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
       {/*  <FormLabel as="p" style={{ marginBottom: '0' }}> */}
       {/*    Currently delegating to: */}
       {/*  </FormLabel> */}
-      {/*  <AccentText> */}
+      {/*  <TextAccent> */}
       {/*    <BreakTxt>{delegatingTo}</BreakTxt> */}
-      {/*  </AccentText> */}
+      {/*  </TextAccent> */}
       {/* </div> */}
 
       <Formik
@@ -99,7 +98,6 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
                   name="baker"
                   aria-label="baker"
                   placeholder="tz1..."
-                  size="sm"
                   isInvalid={!!errors.baker && touched.baker}
                   isValid={!errors.baker && touched.baker}
                   onChange={(value) => {
@@ -127,21 +125,21 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
               </InputGroup>
 
               {/* <BForm.Text> */}
-              {/*  <AccentText>{alias}</AccentText> */}
+              {/*  <TextAccent>{alias}</TextAccent> */}
               {/* </BForm.Text> */}
             </BForm.Group>
 
             <FormSubmit>
               <Button
                 variant="danger"
-                style={{ marginRight: '20px' }}
+                style={{ marginRight: '10px' }}
                 onClick={onCancel}
               >
                 Cancel
               </Button>
               <Button
-                variant="warning"
-                style={{ marginRight: '20px' }}
+                variant="info"
+                style={{ marginRight: '10px' }}
                 onClick={() => createDelegation(undefined, setSubmitting)}
               >
                 Undelegate

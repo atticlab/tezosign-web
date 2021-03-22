@@ -2,8 +2,7 @@ import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Badge, Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import Bold from '../../styled/Bold';
-import { Green, Red } from '../../styled/Text';
+import { Green, Red, Bold } from '../../styled/Text';
 import Stepper from '../../Stepper';
 import Address from './Address';
 import ContractChanges from './ContractChanges';
@@ -50,7 +49,7 @@ const BadgeOutline = styled(Badge)`
         ? theme.black
         : variant === 'warning'
         ? theme.yellow
-        : theme.lightGreen};
+        : theme.green};
   color: ${({ variant, theme }) =>
     // eslint-disable-next-line no-nested-ternary
     variant === 'danger'
@@ -60,7 +59,7 @@ const BadgeOutline = styled(Badge)`
       ? theme.black
       : variant === 'warning'
       ? theme.yellow
-      : theme.lightGreen};
+      : theme.green};
 `;
 
 const defineOperationStepVariant = (operationType) => {
@@ -255,6 +254,7 @@ const OperationDetails = ({ operation }) => {
             <Button
               size="sm"
               style={{ marginRight: '10px' }}
+              variant="info"
               disabled={
                 isActionLoading ||
                 checkOwnersIndices(
@@ -299,6 +299,7 @@ const OperationDetails = ({ operation }) => {
                     <Button
                       size="sm"
                       style={{ marginRight: '10px' }}
+                      variant="info"
                       disabled={isActionLoading}
                       onClick={() =>
                         sendOperation(operation.operation_id, {

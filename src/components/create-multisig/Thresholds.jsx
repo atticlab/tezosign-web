@@ -4,7 +4,6 @@ import { Button } from 'react-bootstrap';
 import { Formik, Form } from 'formik';
 // TODO: Research import variants
 import * as Yup from 'yup';
-import Card from '../styled/Card';
 import { Text } from '../styled/Text';
 import ThresholdsFields from './ThresholdsFields';
 import signaturesSchema from '../../utils/schemas/signaturesSchema';
@@ -24,8 +23,8 @@ const Thresholds = ({ addresses, onSubmit, onBack }) => {
   );
 
   return (
-    <Card.Body>
-      <Text modifier="md">
+    <>
+      <Text>
         Next, provide the number of signatures required in order to confirm a
         transaction.
       </Text>
@@ -60,13 +59,12 @@ const Thresholds = ({ addresses, onSubmit, onBack }) => {
               <div style={{ textAlign: 'right' }}>
                 <Button
                   variant="outline-primary"
-                  size="lg"
-                  style={{ marginRight: '24px' }}
+                  style={{ marginRight: '10px' }}
                   onClick={onBack}
                 >
                   Back
                 </Button>
-                <Button type="submit" size="lg" disabled={isSubmitting}>
+                <Button type="submit" disabled={isSubmitting}>
                   Submit
                 </Button>
               </div>
@@ -74,7 +72,7 @@ const Thresholds = ({ addresses, onSubmit, onBack }) => {
           )}
         </Formik>
       )}
-    </Card.Body>
+    </>
   );
 };
 

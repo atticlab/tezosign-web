@@ -1,4 +1,5 @@
 $green: #22d369;
+$dark-blue: #2f61d5;
 $light-grey: #c4c4c4;
 $black: #000;
 $red: #f9452d;
@@ -6,12 +7,15 @@ $red: #f9452d;
 // Bootstrap overrides
 $primary: $green;
 $danger: $red;
+$info: $dark-blue;
 $input-border-color: $light-grey;
 $input-font-weight: 300;
 $input-color: $black;
 $input-border-radius: 5px;
 $form-feedback-font-size: 12px;
 $input-disabled-bg: hsl(0, 0%, 95%);
+$btn-font-size: 14px;
+$btn-font-weight: 500;
 $container-max-widths: (
   sm: 540px,
   md: 720px,

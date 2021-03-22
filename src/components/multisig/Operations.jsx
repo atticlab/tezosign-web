@@ -11,12 +11,16 @@ import utc from 'dayjs/plugin/utc';
 import { Form as BForm } from 'react-bootstrap';
 import Card from '../styled/Card';
 import { FlexCenter } from '../styled/Flex';
-import Ellipsis from '../styled/Ellipsis';
+import { Ellipsis, TextAccent } from '../styled/Text';
 import { TblGenInfo } from '../styled/Tbl';
+import { FormLabel } from '../styled/Forms';
 import Table from '../Table';
 import BtnCopy from '../BtnCopy';
 import Spinner from '../Spinner';
 import OperationDetails from './OperationDetails';
+import SelectCustom from '../SelectCustom';
+import IndentIcon from '../IdentIcon';
+import useThemeContext from '../../hooks/useThemeContext';
 import { useAssetsStateContext } from '../../store/assetsContext';
 import {
   useOperationsDispatchContext,
@@ -24,9 +28,6 @@ import {
 } from '../../store/operationsContext';
 import { convertMutezToXTZ, capitalize } from '../../utils/helpers';
 import { dateFormat } from '../../utils/constants';
-import IndentIcon from '../IdentIcon';
-import SelectCustom from '../SelectCustom';
-import { FormLabel } from '../styled/Forms';
 
 dayjs.extend(utc);
 
@@ -39,7 +40,7 @@ const Status = styled.span`
       case 'pending':
         return theme.yellow;
       default:
-        return theme.lightGreen;
+        return theme.green;
     }
   }};
 `;
@@ -79,6 +80,7 @@ const listOperationType = [
 ];
 
 const Operations = () => {
+  const theme = useThemeContext();
   const [pageNumber, setPageNumber] = useState(1);
   const hasMore = false;
   const { assets } = useAssetsStateContext();
@@ -265,14 +267,30 @@ const Operations = () => {
       </BForm>
 
       <TblGenInfo>
-        <TblGenInfo.Item>Pending: {opsCountsByStatus?.pending}</TblGenInfo.Item>
         <TblGenInfo.Item>
-          Approved: {opsCountsByStatus?.approved}
+          Pending:{' '}
+          <TextAccent color={theme.blue}>
+            {opsCountsByStatus?.pending}
+          </TextAccent>
         </TblGenInfo.Item>
         <TblGenInfo.Item>
-          Rejected: {opsCountsByStatus?.rejected}
+          Approved:{' '}
+          <TextAccent color={theme.blue}>
+            {opsCountsByStatus?.approved}
+          </TextAccent>
         </TblGenInfo.Item>
-        <TblGenInfo.Item>Success: {opsCountsByStatus?.success}</TblGenInfo.Item>
+        <TblGenInfo.Item>
+          Rejected:{' '}
+          <TextAccent color={theme.blue}>
+            {opsCountsByStatus?.rejected}
+          </TextAccent>
+        </TblGenInfo.Item>
+        <TblGenInfo.Item>
+          Success:{' '}
+          <TextAccent color={theme.blue}>
+            {opsCountsByStatus?.success}
+          </TextAccent>
+        </TblGenInfo.Item>
       </TblGenInfo>
 
       <Card style={{ overflow: 'hidden' }}>

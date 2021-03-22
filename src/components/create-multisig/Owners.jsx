@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import Card from '../styled/Card';
 import { Text } from '../styled/Text';
 import OwnersFields from './OwnersFields';
 import useAddressRevealCheck from '../../hooks/useAddressRevealCheck';
@@ -18,8 +17,8 @@ const Owners = ({ onSubmit }) => {
   });
 
   return (
-    <Card.Body>
-      <Text modifier="md">
+    <>
+      <Text>
         First, provide the accounts that will be controlling and administering
         the funds associated with this multisig wallet. <br />
         You can provide either Tezos addresses or accounts&#39; public keys.
@@ -55,14 +54,14 @@ const Owners = ({ onSubmit }) => {
             />
 
             <div style={{ textAlign: 'right' }}>
-              <Button type="submit" size="lg" disabled={isSubmitting}>
+              <Button type="submit" disabled={isSubmitting}>
                 Submit
               </Button>
             </div>
           </Form>
         )}
       </Formik>
-    </Card.Body>
+    </>
   );
 };
 

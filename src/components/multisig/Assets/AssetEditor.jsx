@@ -49,6 +49,7 @@ const AssetEditor = ({
   scale,
   ticker,
   onSubmit,
+  onCancel,
 }) => {
   const { contractAddress } = useContractStateContext();
   const { createAsset, editAsset } = useAPI();
@@ -215,9 +216,16 @@ const AssetEditor = ({
             />
           </BForm.Group>
 
-          <FormSubmit style={{ marginTop: '30px' }}>
-            <Button type="submit" size="lg" disabled={isSubmitting}>
-              Submit
+          <FormSubmit>
+            <Button
+              variant="danger"
+              style={{ marginRight: '10px' }}
+              onClick={onCancel}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isSubmitting}>
+              Confirm
             </Button>
           </FormSubmit>
         </Form>
@@ -234,6 +242,7 @@ AssetEditor.propTypes = {
   scale: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   ticker: PropTypes.string,
   onSubmit: PropTypes.func,
+  onCancel: PropTypes.func,
 };
 
 AssetEditor.defaultProps = {
@@ -244,6 +253,7 @@ AssetEditor.defaultProps = {
   scale: '',
   ticker: '',
   onSubmit: () => null,
+  onCancel: () => null,
 };
 
 export default AssetEditor;

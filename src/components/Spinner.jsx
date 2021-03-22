@@ -14,10 +14,10 @@ const SpinnerStyled = styled.div`
     width: 64px;
     height: 64px;
     margin: 8px;
-    border: 8px solid ${({ theme }) => theme.lightGreen};
+    border: 8px solid ${({ theme }) => theme.green};
     border-radius: 50%;
     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: ${({ theme }) => theme.lightGreen} transparent transparent
+    border-color: ${({ theme }) => theme.green} transparent transparent
       transparent;
   }
   div:nth-child(1) {

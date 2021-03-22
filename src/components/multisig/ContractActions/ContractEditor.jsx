@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { Button } from 'react-bootstrap';
-import Title from '../../styled/Title';
-import { Text } from '../../styled/Text';
+import { Title, Text } from '../../styled/Text';
 import { FormSubmit } from '../../styled/Forms';
 import OwnersFields from '../../create-multisig/OwnersFields';
 import ThresholdsFields from '../../create-multisig/ThresholdsFields';
@@ -90,10 +89,8 @@ const ContractEditor = ({ onCreate, onCancel }) => {
       }) => (
         <Form>
           <div>
-            <Title modifier="xs" fw="400">
-              Owners
-            </Title>
-            <Text modifier="sm">
+            <Title fs="18px">Owners</Title>
+            <Text>
               You can edit the contract owners by adding, removing or changing
               their addresses
             </Text>
@@ -108,10 +105,8 @@ const ContractEditor = ({ onCreate, onCancel }) => {
           </div>
 
           <div>
-            <Title modifier="xs" fw="400">
-              Thresholds
-            </Title>
-            <Text modifier="sm">
+            <Title fs="18px">Thresholds</Title>
+            <Text>
               Edit the amount of signatures required to confirm operations
             </Text>
 
@@ -131,7 +126,7 @@ const ContractEditor = ({ onCreate, onCancel }) => {
           <FormSubmit>
             <Button
               variant="danger"
-              style={{ marginRight: '20px' }}
+              style={{ marginRight: '10px' }}
               onClick={onCancel}
             >
               Cancel

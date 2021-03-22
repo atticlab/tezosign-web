@@ -1,12 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Redirect, useLocation } from 'react-router-dom';
+import { useLocation, Redirect } from 'react-router-dom';
 import BtnBack from '../components/BtnBack';
 import { Text } from '../components/styled/Text';
-
-const DeployedStyle = styled.div`
-  text-align: center;
-`;
+import Card from '../components/styled/Card';
 
 const Deployed = () => {
   const location = useLocation();
@@ -19,22 +15,24 @@ const Deployed = () => {
     <>
       <BtnBack pageName="Create a New Multisig" />
 
-      <DeployedStyle>
-        <Text>
-          Your transaction has been sent. Please wait until it is added to the
-          network, it may take a few minutes.
-        </Text>
-        <Text>
-          Transaction hash:{' '}
-          <a
-            href={`https://edo2net.tzkt.io/${location.state.transactionHash}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {location.state.transactionHash}
-          </a>
-        </Text>
-      </DeployedStyle>
+      <Card>
+        <Card.Body>
+          <Text>
+            Your transaction has been sent. Please wait until it is added to the
+            network, it may take a few minutes.
+          </Text>
+          <Text>
+            Transaction hash:{' '}
+            <a
+              href={`https://edo2net.tzkt.io/${location.state?.transactionHash}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {location.state?.transactionHash}
+            </a>
+          </Text>
+        </Card.Body>
+      </Card>
     </>
   );
 };

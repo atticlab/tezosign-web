@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { FlexCenter } from '../../styled/Flex';
 import Card from '../../styled/Card';
 import { TblGenInfo } from '../../styled/Tbl';
-import Ellipsis from '../../styled/Ellipsis';
+import { Ellipsis } from '../../styled/Text';
 import NewAsset from './NewAsset';
 import IdentIcon from '../../IdentIcon';
 import Table from '../../Table';

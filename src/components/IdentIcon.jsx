@@ -21,7 +21,7 @@ const IdentIcon = ({ address, scale }) => {
       setIcon(
         createIcon({
           seed: address,
-          color: theme.lightGreen,
+          color: theme.green,
           size: 8,
           scale,
         }).toDataURL(),
@@ -39,7 +39,7 @@ IdentIcon.propTypes = {
 
 IdentIcon.defaultProps = {
   address: '',
-  scale: 4.5,
+  scale: 4,
 };
 
 export default IdentIcon;

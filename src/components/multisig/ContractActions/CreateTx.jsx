@@ -33,10 +33,12 @@ const BtnMax = styled(Button).attrs({ variant: 'link' })`
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
+  color: ${({ theme }) => theme.blue};
 
   &:hover,
   &:focus {
     text-decoration: none;
+    color: #249ac2;
   }
 `;
 
@@ -307,7 +309,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
           <FormSubmit>
             <Button
               variant="danger"
-              style={{ marginRight: '20px' }}
+              style={{ marginRight: '10px' }}
               onClick={onCancel}
             >
               Cancel

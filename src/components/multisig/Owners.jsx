@@ -1,15 +1,17 @@
 import React from 'react';
 import Card from '../styled/Card';
 import { FlexCenter } from '../styled/Flex';
-import Ellipsis from '../styled/Ellipsis';
+import { Ellipsis, TextAccent } from '../styled/Text';
 import { TblGenInfo } from '../styled/Tbl';
 import Table from '../Table';
 import Spinner from '../Spinner';
 import BtnCopy from '../BtnCopy';
 import IndentIcon from '../IdentIcon';
 import { useContractStateContext } from '../../store/contractContext';
+import useThemeContext from '../../hooks/useThemeContext';
 
 const Owners = () => {
+  const theme = useThemeContext();
   const { contractInfo, isContractInfoLoading } = useContractStateContext();
   const cols = [
     {
@@ -57,8 +59,11 @@ const Owners = () => {
   return (
     <section>
       <TblGenInfo>
-        <TblGenInfo.Item>
-          Total Owners: {contractInfo?.threshold || 0}
+        <TblGenInfo.Item style={{ marginTop: 0 }}>
+          Total Owners:{' '}
+          <TextAccent color={theme.blue}>
+            {contractInfo?.threshold || 0}
+          </TextAccent>
         </TblGenInfo.Item>
       </TblGenInfo>
 

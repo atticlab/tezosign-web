@@ -2,10 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
-import { Text } from '../styled/Text';
-import Card from '../styled/Card';
-import BreakTxt from '../styled/BreakTxt';
-import AccentText from '../styled/AccentText';
+import { Text, TextAccent, BreakTxt } from '../styled/Text';
 import useAPI from '../../hooks/useApi';
 import { sendOrigination } from '../../plugins/beacon';
 import { handleError } from '../../utils/errorsHandler';
@@ -49,42 +46,39 @@ const Deploy = ({ entities, signatures, onBack }) => {
   const history = useHistory();
 
   return (
-    <Card.Body>
-      <Text modifier="md">
+    <>
+      <Text>
         Please review the following multisig before deploying it on mainnet.
         <br />
         The creation of a multisig will incur a fee.
         <br />
       </Text>
-      <Text modifier="md">
-        Your multisig will be deployed with the following attributes:
-      </Text>
+      <Text>Your multisig will be deployed with the following attributes:</Text>
 
       <div>
-        <Text modifier="md">
+        <Text>
           Owners: <br />
           {entities.map((entity, index) => (
-            <AccentText key={entity}>
+            <TextAccent key={entity}>
               <BreakTxt>
                 {entity}
                 {index !== entities.length - 1 ? ', ' : ''}
               </BreakTxt>
               <br />
-            </AccentText>
+            </TextAccent>
           ))}
         </Text>
 
-        <Text modifier="md">
+        <Text>
           Number of confirmations required:{' '}
-          <AccentText>{signatures}</AccentText>
+          <TextAccent>{signatures}</TextAccent>
         </Text>
       </div>
 
       <div style={{ textAlign: 'right' }}>
         <Button
           variant="outline-primary"
-          size="lg"
-          style={{ marginRight: '24px' }}
+          style={{ marginRight: '10px' }}
           onClick={onBack}
         >
           Back
@@ -92,7 +86,6 @@ const Deploy = ({ entities, signatures, onBack }) => {
         {/* disabled={isSubmitting} */}
         <Button
           type="submit"
-          size="lg"
           onClick={() => {
             onSubmit(
               getContractCode,
@@ -106,7 +99,7 @@ const Deploy = ({ entities, signatures, onBack }) => {
           Submit
         </Button>
       </div>
-    </Card.Body>
+    </>
   );
 };
 

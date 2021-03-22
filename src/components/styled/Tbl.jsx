@@ -7,9 +7,13 @@ const TblGenInfo = styled.div`
 `;
 
 TblGenInfo.Item = styled.span`
-  margin: 20px 30px 20px;
+  margin: 20px 30px 20px 0;
   text-transform: capitalize;
   font-size: 16px;
+
+  &:last-child {
+    margin-right: 0;
+  }
 `;
 
 const TblWrap = styled.div`
@@ -22,14 +26,16 @@ const TblWrap = styled.div`
 const Tbl = styled(BTable)`
   margin-bottom: 0;
   text-align: center;
-  font-size: 16px;
+  font-size: ${({ theme }) => theme.fs14};
   color: ${({ theme }) => theme.black};
+  background-color: white;
 `;
 
 Tbl.Th = styled.th`
   text-transform: uppercase;
   border: none !important;
   background-color: white;
+  color: ${({ theme }) => theme.gray};
   ${({ stickyHeader }) =>
     stickyHeader
       ? css`
@@ -41,8 +47,7 @@ Tbl.Th = styled.th`
 `;
 
 Tbl.Td = styled.td`
-  font-size: 14px;
-  border-top: 1px solid ${({ theme }) => theme.lightGray} !important;
+  border-top: 0 !important;
   vertical-align: middle !important;
   padding: 0.55rem !important;
 `;
@@ -52,12 +57,13 @@ Tbl.Tr = styled.tr`
 
   &:hover {
     transition: background-color 0.15s;
-    background-color: ${({ theme }) => theme.lightGray3};
+    background-color: ${({ theme }) => theme.lightGray};
   }
 `;
 
 Tbl.TrCollapsible = styled.tr`
-  box-shadow: inset 0 3px 6px -3px rgb(0 0 0 / 20%);
+  box-shadow: inset 0 3px 6px -3px rgb(0 0 0 / 20%),
+    inset 0 -3px 6px -3px rgb(0 0 0 / 20%);
 `;
 
 Tbl.TdCollapse = styled.td`

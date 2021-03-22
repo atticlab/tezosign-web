@@ -32,7 +32,7 @@ const ThresholdsFields = ({
         }}
       />
       <InputGroup.Append>
-        <Text modifier="sm" style={{ marginBottom: '0', padding: '2px 10px' }}>
+        <Text style={{ marginBottom: '0', padding: '2px 10px' }}>
           {`out of ${options.length} owners`}
         </Text>
       </InputGroup.Append>

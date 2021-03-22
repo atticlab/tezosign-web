@@ -6,9 +6,9 @@ import colors from '../utils/theme/colors';
 
 const themeOverrides = {
   colors: {
-    primary: colors.lightGreen,
-    primary25: 'rgba(39, 241, 144, 0.25)',
-    primary50: 'rgba(39, 241, 144, 0.5)',
+    primary: colors.green,
+    primary25: 'rgba(34, 211, 105, 0.25)',
+    primary50: 'rgba(34, 211, 105, 0.5)',
     danger: colors.red,
   },
   spacing: {

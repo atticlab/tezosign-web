@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
 import Modal from '../../styled/Modal';
-import Title from '../../styled/Title';
+import { Title } from '../../styled/Text';
 import AssetEditor from './AssetEditor';
 
 const NewAsset = () => {
@@ -23,24 +23,20 @@ const NewAsset = () => {
         backdrop="static"
         keyboard={false}
       >
-        <Modal.Header>
+        <Modal.Header style={{ padding: '15px 30px' }}>
           <div style={{ width: '100%' }}>
             <Modal.Close onClick={handleClose}>
               <FontAwesomeIcon icon="times" />
             </Modal.Close>
 
-            <div style={{ textAlign: 'center' }}>
-              <Title as="h3" modifier="sm" fw={400} style={{ marginBottom: 0 }}>
-                New Asset
-              </Title>
-            </div>
+            <Title as="h3" style={{ marginBottom: 0 }}>
+              New Asset
+            </Title>
           </div>
         </Modal.Header>
 
-        <Modal.Body>
-          <Modal.Content>
-            <AssetEditor onSubmit={handleClose} />
-          </Modal.Content>
+        <Modal.Body style={{ padding: '15px 30px' }}>
+          <AssetEditor onSubmit={handleClose} onCancel={handleClose} />
         </Modal.Body>
       </Modal>
 

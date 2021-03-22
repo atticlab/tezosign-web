@@ -52,8 +52,8 @@ export default {
       ? state.selectProps.menuWidth
       : 'max-content',
     fontSize: '14px',
-    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-    border: '1px solid #cacaca',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.05)',
+    border: 0,
     marginTop: '1px',
     zIndex: 50,
   }),
@@ -79,7 +79,6 @@ export default {
     ...base,
     padding: '4px 10px',
     cursor: 'pointer',
-    fontWeight: 300,
     transition: 'background-color 0.15s',
   }),
   clearIndicator: (base) => ({
