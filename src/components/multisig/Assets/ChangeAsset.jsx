@@ -32,32 +32,29 @@ const ChangeAsset = ({ asset }) => {
         backdrop="static"
         keyboard={false}
       >
-        <Modal.Header>
+        <Modal.Header style={{ padding: '15px 30px' }}>
           <div style={{ width: '100%' }}>
             <Modal.Close onClick={handleClose}>
               <FontAwesomeIcon icon="times" />
             </Modal.Close>
 
-            <div style={{ textAlign: 'center' }}>
-              <Title as="h3" modifier="sm" fw={400} style={{ marginBottom: 0 }}>
-                Edit Asset
-              </Title>
-            </div>
+            <Title as="h3" style={{ marginBottom: 0 }}>
+              Edit Asset
+            </Title>
           </div>
         </Modal.Header>
 
-        <Modal.Body>
-          <Modal.Content>
-            <AssetEditor
-              isEdit
-              name={asset.name}
-              address={asset.address}
-              contractType={asset.contract_type}
-              scale={asset.scale}
-              ticker={asset.ticker}
-              onSubmit={handleClose}
-            />
-          </Modal.Content>
+        <Modal.Body style={{ padding: '15px 30px' }}>
+          <AssetEditor
+            isEdit
+            name={asset.name}
+            address={asset.address}
+            contractType={asset.contract_type}
+            scale={asset.scale}
+            ticker={asset.ticker}
+            onSubmit={handleClose}
+            onCancel={handleClose}
+          />
         </Modal.Body>
       </Modal>
 

@@ -59,7 +59,7 @@ const Owners = () => {
   return (
     <section>
       <TblGenInfo>
-        <TblGenInfo.Item>
+        <TblGenInfo.Item style={{ marginTop: 0 }}>
           Total Owners:{' '}
           <TextAccent color={theme.blue}>
             {contractInfo?.threshold || 0}

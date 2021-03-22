@@ -2,8 +2,7 @@ import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-// eslint-disable-next-line no-unused-vars
-import { Form as BForm, InputGroup, Button } from 'react-bootstrap';
+import { Form as BForm, Button } from 'react-bootstrap';
 import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
 // TODO: Research import variants
 import * as Yup from 'yup';

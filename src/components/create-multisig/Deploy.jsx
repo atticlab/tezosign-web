@@ -47,18 +47,16 @@ const Deploy = ({ entities, signatures, onBack }) => {
 
   return (
     <>
-      <Text modifier="md">
+      <Text>
         Please review the following multisig before deploying it on mainnet.
         <br />
         The creation of a multisig will incur a fee.
         <br />
       </Text>
-      <Text modifier="md">
-        Your multisig will be deployed with the following attributes:
-      </Text>
+      <Text>Your multisig will be deployed with the following attributes:</Text>
 
       <div>
-        <Text modifier="md">
+        <Text>
           Owners: <br />
           {entities.map((entity, index) => (
             <TextAccent key={entity}>
@@ -71,7 +69,7 @@ const Deploy = ({ entities, signatures, onBack }) => {
           ))}
         </Text>
 
-        <Text modifier="md">
+        <Text>
           Number of confirmations required:{' '}
           <TextAccent>{signatures}</TextAccent>
         </Text>

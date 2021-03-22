@@ -18,7 +18,7 @@ const Owners = ({ onSubmit }) => {
 
   return (
     <>
-      <Text modifier="md">
+      <Text>
         First, provide the accounts that will be controlling and administering
         the funds associated with this multisig wallet. <br />
         You can provide either Tezos addresses or accounts&#39; public keys.

@@ -119,7 +119,7 @@ const CreateMultisig = () => {
                       style={{ marginRight: '10px' }}
                     />
                   )}
-                  <Title as="h2" modifier="md" style={{ marginBottom: '0' }}>
+                  <Title as="h2" style={{ marginBottom: '0' }}>
                     Owners
                   </Title>
                 </FlexAlignItemsCenter>
@@ -152,7 +152,7 @@ const CreateMultisig = () => {
                       style={{ marginRight: '10px' }}
                     />
                   )}
-                  <Title as="h2" modifier="md" style={{ marginBottom: '0' }}>
+                  <Title as="h2" style={{ marginBottom: '0' }}>
                     Signature Thresholds
                   </Title>
                 </FlexAlignItemsCenter>
@@ -179,7 +179,7 @@ const CreateMultisig = () => {
           <AccordionCard isActive={activeKey === '2'}>
             <Accordion.Toggle eventKey="2" as={AccordionCard.Header}>
               <AccordionToggleInner>
-                <Title as="h2" modifier="md" style={{ marginBottom: '0' }}>
+                <Title as="h2" style={{ marginBottom: '0' }}>
                   Deploy
                 </Title>
 

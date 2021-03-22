@@ -8,7 +8,6 @@ export default {
   green15: 'rgba(34, 211, 105, 0.15)',
   gray: '#9a9fa8',
   lightGray: '#e9edf1',
-  // red: '#f9452d',
   red: '#ff7052',
   yellow: '#ffc107',
 };

@@ -21,21 +21,21 @@ const DDwnMenu = styled(Dropdown.Menu)`
 
   .dropdown-item {
     transition: color, background-color 0.15s;
-    font-weight: 300;
+    font-size: 14px;
+    padding: 4px 10px;
     color: ${({ theme }) => theme.black};
 
     &:hover {
-      background-color: rgba(39, 241, 144, 0.25);
+      background-color: rgba(34, 211, 105, 0.25);
     }
 
     &:active {
-      background-color: rgba(39, 241, 144, 0.5);
+      background-color: rgba(34, 211, 105, 0.5);
       color: ${({ theme }) => theme.black};
     }
 
     &:focus {
-      background-color: ${({ theme }) => theme.green};
-      color: white;
+      background-color: rgba(34, 211, 105, 0.5);
       outline: rgba(38, 210, 129, 0.5) auto 1px;
     }
   }
@@ -96,58 +96,49 @@ const ContractActions = () => {
         backdrop="static"
         keyboard={false}
       >
-        <Modal.Header>
+        <Modal.Header style={{ padding: '15px 30px' }}>
           <div style={{ width: '100%' }}>
             <Modal.Close onClick={handleClose}>
               <FontAwesomeIcon icon="times" />
             </Modal.Close>
 
-            <div style={{ textAlign: 'center' }}>
-              <Title as="h3" modifier="sm" fw={400} style={{ marginBottom: 0 }}>
-                {/* eslint-disable-next-line no-nested-ternary */}
-                {opType === 'transaction'
-                  ? 'New transaction'
-                  : // eslint-disable-next-line no-nested-ternary
-                  opType === 'delegation'
-                  ? 'New delegation'
-                  : opType === 'edit'
-                  ? 'New contract update'
-                  : ''}
-              </Title>
-            </div>
+            <Title as="h3" style={{ marginBottom: 0 }}>
+              {/* eslint-disable-next-line no-nested-ternary */}
+              {opType === 'transaction'
+                ? 'New transaction'
+                : // eslint-disable-next-line no-nested-ternary
+                opType === 'delegation'
+                ? 'New delegation'
+                : opType === 'edit'
+                ? 'New contract update'
+                : ''}
+            </Title>
           </div>
         </Modal.Header>
 
-        <Modal.Body>
-          <Modal.Content>
-            {(() => {
-              if (opType === 'transaction') {
-                return (
-                  <CreateTx onCreate={handleClose} onCancel={handleClose} />
-                );
-              }
+        <Modal.Body style={{ padding: '15px 30px' }}>
+          {(() => {
+            if (opType === 'transaction') {
+              return <CreateTx onCreate={handleClose} onCancel={handleClose} />;
+            }
 
-              if (opType === 'delegation') {
-                return (
-                  <CreateDelegation
-                    onCreate={handleClose}
-                    onCancel={handleClose}
-                  />
-                );
-              }
+            if (opType === 'delegation') {
+              return (
+                <CreateDelegation
+                  onCreate={handleClose}
+                  onCancel={handleClose}
+                />
+              );
+            }
 
-              if (opType === 'edit') {
-                return (
-                  <ContractEditor
-                    onCreate={handleClose}
-                    onCancel={handleClose}
-                  />
-                );
-              }
+            if (opType === 'edit') {
+              return (
+                <ContractEditor onCreate={handleClose} onCancel={handleClose} />
+              );
+            }
 
-              return '';
-            })()}
-          </Modal.Content>
+            return '';
+          })()}
         </Modal.Body>
       </Modal>
     </>

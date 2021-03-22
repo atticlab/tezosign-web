@@ -24,7 +24,7 @@ const Thresholds = ({ addresses, onSubmit, onBack }) => {
 
   return (
     <>
-      <Text modifier="md">
+      <Text>
         Next, provide the number of signatures required in order to confirm a
         transaction.
       </Text>

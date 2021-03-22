@@ -31,8 +31,8 @@ const Flex = styled.div`
 const BadgeCustom = styled(Badge)`
   border: 0;
   background-color: ${({ theme }) => theme.green15};
-  padding: 8px 20px;
-  font-size: 20px;
+  padding: 10px 18px;
+  font-size: 14px;
   font-weight: 400;
 `;
 
@@ -84,11 +84,7 @@ const MultisigInfo = () => {
 
         <ContractManagement.Address>
           <Flex>
-            <Title
-              modifier="sm"
-              style={{ lineHeight: '22px', marginBottom: '0' }}
-              fw="400"
-            >
+            <Title style={{ lineHeight: '22px', marginBottom: '0' }} fw="300">
               <BreakTxt>{contractAddress}</BreakTxt>
             </Title>
             {/* <BtnLink */}

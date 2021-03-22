@@ -29,7 +29,6 @@ const Deployed = () => {
               rel="noreferrer"
             >
               {location.state?.transactionHash}
-              1233333
             </a>
           </Text>
         </Card.Body>

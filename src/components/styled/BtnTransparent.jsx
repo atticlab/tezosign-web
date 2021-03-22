@@ -7,6 +7,7 @@ const BtnTransparent = styled(Button).attrs({
   background-color: ${({ theme }) => theme.green15};
   color: ${({ theme }) => theme.green};
   border: 0;
+  font-weight: 400;
 
   &:hover {
     background-color: rgba(34, 211, 105, 0.25);

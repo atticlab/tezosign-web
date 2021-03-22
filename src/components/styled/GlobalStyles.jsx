@@ -12,10 +12,10 @@ export default createGlobalStyle`
   }
   
   ::-moz-selection {
-    background-color: #87f7c1;
+    background-color: #22d369;
   }
   ::selection {
-    background-color: #87f7c1;
+    background-color: #22d369;
   }
   
   :focus {

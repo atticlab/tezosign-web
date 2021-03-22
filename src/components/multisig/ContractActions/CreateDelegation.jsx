@@ -98,7 +98,6 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
                   name="baker"
                   aria-label="baker"
                   placeholder="tz1..."
-                  size="sm"
                   isInvalid={!!errors.baker && touched.baker}
                   isValid={!errors.baker && touched.baker}
                   onChange={(value) => {
@@ -133,14 +132,14 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
             <FormSubmit>
               <Button
                 variant="danger"
-                style={{ marginRight: '20px' }}
+                style={{ marginRight: '10px' }}
                 onClick={onCancel}
               >
                 Cancel
               </Button>
               <Button
-                variant="warning"
-                style={{ marginRight: '20px' }}
+                variant="info"
+                style={{ marginRight: '10px' }}
                 onClick={() => createDelegation(undefined, setSubmitting)}
               >
                 Undelegate
