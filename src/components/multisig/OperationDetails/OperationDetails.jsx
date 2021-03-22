@@ -3,14 +3,17 @@ import PropTypes from 'prop-types';
 import { Badge, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { Green, Red, Bold } from '../../styled/Text';
+import { FlexCenter } from '../../styled/Flex';
 import Stepper from '../../Stepper';
 import Address from './Address';
 import ContractChanges from './ContractChanges';
+import BtnCopy from '../../BtnCopy';
 import { useContractStateContext } from '../../../store/contractContext';
 import { requestSignPayload, sendTx } from '../../../plugins/beacon';
 import useAPI from '../../../hooks/useApi';
 import { useUserStateContext } from '../../../store/userContext';
 import { useOperationsDispatchContext } from '../../../store/operationsContext';
+import { useAssetsStateContext } from '../../../store/assetsContext';
 
 const OperationGeneralInfo = styled.div`
   display: flex;
@@ -98,6 +101,7 @@ const OperationDetails = ({ operation }) => {
     isUserOwner,
     contractAddress,
   } = useContractStateContext();
+  const { assets } = useAssetsStateContext();
   const { publicKey, address } = useUserStateContext();
   const [signaturesCount, setSignaturesCount] = useState(
     initialSignaturesCount,
@@ -228,6 +232,32 @@ const OperationDetails = ({ operation }) => {
             <Bold>Rejected:</Bold> <Red>{signaturesCount.rejected}</Red>
           </div>
         </OperationGeneralInfo.Item>
+        {(() => {
+          const {
+            operation_info: { type, asset_id: assetID },
+          } = operation;
+
+          return type === 'fa_transfer' || type === 'fa2_transfer' ? (
+            <OperationGeneralInfo.Item>
+              <FlexCenter>
+                <Bold style={{ marginRight: '5px' }}>Asset address:</Bold>
+                {assetID}
+                <BtnCopy
+                  textToCopy={operation.operation_info.asset_id}
+                  style={{ paddingTop: 0, paddingBottom: 0 }}
+                />
+              </FlexCenter>
+              {assets && assets.length > 0 && (
+                <div>
+                  <Bold>Asset name:</Bold>{' '}
+                  {assets.find((asset) => asset.address === assetID).name}
+                </div>
+              )}
+            </OperationGeneralInfo.Item>
+          ) : (
+            ''
+          );
+        })()}
         {operation.operation_info.type === 'storage_update' ? (
           <OperationGeneralInfo.Item style={{ flex: '1 0 50%' }}>
             <ContractChanges
