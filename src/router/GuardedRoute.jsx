@@ -13,7 +13,7 @@ const GuardedRoute = ({ component: Component, isLoggedIn, ...rest }) => {
         ) : (
           <Redirect
             to={{
-              pathname: '/not-found',
+              pathname: '/',
               state: { from: location },
             }}
           />
