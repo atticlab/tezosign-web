@@ -108,13 +108,16 @@ const UserProvider = ({ children }) => {
     }
   };
 
-  const disconnect = async () => {
+  const disconnect = async (disconnection) => {
     try {
       await clearActiveAccount();
       await getAcc();
-      await logout();
       await setTokens(() => null);
-      history.push('/');
+
+      if (disconnection) {
+        history.push('/');
+        await logout();
+      }
     } catch (e) {
       handleError(e);
     }
