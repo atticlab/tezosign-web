@@ -108,13 +108,16 @@ const UserProvider = ({ children }) => {
     }
   };
 
-  const disconnect = async () => {
+  const disconnect = async (withRedirect) => {
     try {
       await clearActiveAccount();
       await getAcc();
       await logout();
       await setTokens(() => null);
-      history.push('/');
+
+      if (withRedirect) {
+        history.push('/');
+      }
     } catch (e) {
       handleError(e);
     }

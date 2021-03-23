@@ -67,7 +67,13 @@ const UserDropdown = ({ address }) => {
         <div style={{ marginBottom: '20px' }}>
           <img src={beaconLogo} alt="Beacon" width="123px" />
         </div>
-        <Button variant="danger" size="sm" block onClick={() => disconnect()}>
+        <Button
+          variant="danger"
+          size="sm"
+          onClick={() => {
+            disconnect(true);
+          }}
+        >
           Disconnect
         </Button>
       </DDwnMenu>
