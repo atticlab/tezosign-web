@@ -55,7 +55,9 @@ const Assets = () => {
       key: 'balances',
       label: 'Balance',
       process({ balances, scale, ticker }) {
-        return `${balances[0].balance / 10 ** scale} ${ticker}`;
+        return balances && balances.length
+          ? `${balances[0].balance / 10 ** scale} ${ticker}`
+          : '';
       },
     },
     {
