@@ -172,11 +172,12 @@ const Operations = () => {
           return asset.address === assetId;
         });
 
-        const ticker = assetId ? currAsset?.ticker || '' : 'XTZ';
+        const ticker = assetId ? currAsset?.ticker || '???' : 'XTZ';
+
         return _amount
           ? `${
               assetId
-                ? _amount / 10 ** currAsset?.scale
+                ? _amount / (10 ** currAsset?.scale || 1)
                 : convertMutezToXTZ(_amount)
             } ${ticker}`
           : '';

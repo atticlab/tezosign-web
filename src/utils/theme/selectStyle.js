@@ -41,7 +41,6 @@ export default {
     padding: state.selectProps.displayValue ? '2px 8px' : 0,
     width: state.selectProps.displayValue ? 'auto' : 0,
     minWidth: state.selectProps.displayValue ? '30px' : 0,
-    fontWeight: 300,
     fontSize: '14px',
   }),
   menu: (provided, state) => ({
