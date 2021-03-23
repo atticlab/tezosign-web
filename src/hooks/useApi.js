@@ -170,7 +170,7 @@ const useAPI = () => {
   const deleteAsset = (contractID, payload) => {
     return API.post(`/${network}/contract/${contractID}/asset/delete`, payload);
   };
-  const checkOrigination = (txID) => {
+  const getOriginatedContract = (txID) => {
     return API.get(`/${network}/origination/${txID}`);
   };
 
@@ -249,7 +249,7 @@ const useAPI = () => {
     createAsset,
     editAsset,
     deleteAsset,
-    checkOrigination,
+    getOriginatedContract,
   };
 };
 
