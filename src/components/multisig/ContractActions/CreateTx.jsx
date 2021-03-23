@@ -116,7 +116,10 @@ const CreateTx = ({ onCreate, onCancel }) => {
             {asset.name}
           </FlexAlignItemsCenter>
         ),
-        balance: asset.balances[0].balance / 10 ** asset.scale,
+        balance:
+          asset.balances && asset.balances.length
+            ? asset.balances[0].balance / 10 ** asset.scale
+            : 0,
       })),
     );
   }, [assets, XTZAsset]);
