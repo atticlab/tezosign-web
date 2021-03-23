@@ -1,4 +1,5 @@
 import React from 'react';
+// eslint-disable-next-line no-unused-vars
 import { useLocation, Redirect } from 'react-router-dom';
 import BtnBack from '../components/BtnBack';
 import { Text } from '../components/styled/Text';
@@ -8,7 +9,7 @@ const Deployed = () => {
   const location = useLocation();
 
   if (!location.state) {
-    return <Redirect to="/not-found" />;
+    // return <Redirect to="/not-found" />;
   }
 
   return (
