@@ -129,8 +129,14 @@ const useAPI = () => {
       })}`,
     );
   };
-  const getOperations = (contractID) => {
-    return API.get(`/${network}/contract/${contractID}/operations`);
+  const getOperations = (contractID, params = {}) => {
+    const { limit = 10, offset = 0 } = params;
+    return API.get(
+      `/${network}/contract/${contractID}/operations${formatParams({
+        limit,
+        offset,
+      })}`,
+    );
   };
   const getContractInfo = (contractID) => {
     return API.get(`/${network}/contract/${contractID}/info`);
