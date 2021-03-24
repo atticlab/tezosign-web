@@ -50,7 +50,6 @@ const AssetEditor = ({
   ticker,
   onSubmit,
   onCancel,
-  isEditAsset,
 }) => {
   const { contractAddress } = useContractStateContext();
   const { createAsset, editAsset } = useAPI();
@@ -105,14 +104,7 @@ const AssetEditor = ({
         return addAsset(contractAddress, values, setSubmitting);
       }}
     >
-      {({
-        errors,
-        touched,
-        setFieldValue,
-        setFieldTouched,
-        isSubmitting,
-        values,
-      }) => (
+      {({ errors, touched, setFieldValue, setFieldTouched, isSubmitting }) => (
         <Form>
           <BForm.Group>
             <FormLabel>Asset name</FormLabel>
@@ -143,11 +135,11 @@ const AssetEditor = ({
               isInvalid={!!errors.address && touched.address}
               isValid={!errors.address && touched.address}
               onBlur={() => {
-                if (isEditAsset) {
+                setFieldTouched('address', true);
+                if (isEdit) {
                   setFieldValue('address', address);
                 }
               }}
-              value={isEditAsset ? address : values.address}
             />
 
             <ErrorMessage
@@ -178,7 +170,7 @@ const AssetEditor = ({
               }}
               onBlur={() => {
                 setFieldTouched('contractType', true);
-                if (isEditAsset) {
+                if (isEdit) {
                   setFieldValue('contractType', contractType);
                 }
               }}
@@ -255,7 +247,6 @@ AssetEditor.propTypes = {
   ticker: PropTypes.string,
   onSubmit: PropTypes.func,
   onCancel: PropTypes.func,
-  isEditAsset: PropTypes.bool,
 };
 
 AssetEditor.defaultProps = {
@@ -267,7 +258,6 @@ AssetEditor.defaultProps = {
   ticker: '',
   onSubmit: () => null,
   onCancel: () => null,
-  isEditAsset: true,
 };
 
 export default AssetEditor;
