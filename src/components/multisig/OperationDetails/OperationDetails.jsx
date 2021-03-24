@@ -123,8 +123,8 @@ const OperationDetails = ({ operation }) => {
         pub_key: publicKey,
         signature: resSignature.signature,
       });
-      await setOps(() => null);
-      await getOps();
+      await setOps(() => []);
+      await getOps(15, 0);
     } catch (e) {
       console.error(e);
     } finally {
@@ -145,8 +145,8 @@ const OperationDetails = ({ operation }) => {
         pub_key: publicKey,
         signature: resSignature.signature,
       });
-      await setOps(() => null);
-      await getOps();
+      await setOps(() => []);
+      await getOps(15, 0);
     } catch (e) {
       console.error(e);
     } finally {
@@ -163,8 +163,8 @@ const OperationDetails = ({ operation }) => {
         value: JSON.parse(res.data.value),
       };
       await sendTx(0, contractAddress, params);
-      await setOps(() => null);
-      await getOps();
+      await setOps(() => []);
+      await getOps(15, 0);
     } catch (e) {
       console.error(e);
     } finally {
