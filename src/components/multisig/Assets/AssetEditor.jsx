@@ -108,7 +108,6 @@ const AssetEditor = ({
         <Form>
           <BForm.Group>
             <FormLabel>Asset name</FormLabel>
-
             <Field
               as={BForm.Control}
               type="text"
@@ -124,7 +123,6 @@ const AssetEditor = ({
               type="invalid"
             />
           </BForm.Group>
-
           <BForm.Group>
             <FormLabel>Contract address</FormLabel>
 
@@ -136,6 +134,12 @@ const AssetEditor = ({
               disabled={isEdit}
               isInvalid={!!errors.address && touched.address}
               isValid={!errors.address && touched.address}
+              onBlur={() => {
+                setFieldTouched('address', true);
+                if (isEdit) {
+                  setFieldValue('address', address);
+                }
+              }}
             />
 
             <ErrorMessage
@@ -166,6 +170,9 @@ const AssetEditor = ({
               }}
               onBlur={() => {
                 setFieldTouched('contractType', true);
+                if (isEdit) {
+                  setFieldValue('contractType', contractType);
+                }
               }}
             />
 
@@ -175,7 +182,6 @@ const AssetEditor = ({
               type="invalid"
             />
           </BForm.Group>
-
           <BForm.Group>
             <FormLabel>Scale</FormLabel>
 
@@ -196,7 +202,6 @@ const AssetEditor = ({
               type="invalid"
             />
           </BForm.Group>
-
           <BForm.Group>
             <FormLabel>Ticker</FormLabel>
 
@@ -215,7 +220,6 @@ const AssetEditor = ({
               type="invalid"
             />
           </BForm.Group>
-
           <FormSubmit>
             <Button
               variant="danger"
