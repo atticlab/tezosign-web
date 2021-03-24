@@ -50,6 +50,7 @@ const AssetEditor = ({
   ticker,
   onSubmit,
   onCancel,
+  isEditAsset,
 }) => {
   const { contractAddress } = useContractStateContext();
   const { createAsset, editAsset } = useAPI();
@@ -104,11 +105,17 @@ const AssetEditor = ({
         return addAsset(contractAddress, values, setSubmitting);
       }}
     >
-      {({ errors, touched, setFieldValue, setFieldTouched, isSubmitting }) => (
+      {({
+        errors,
+        touched,
+        setFieldValue,
+        setFieldTouched,
+        isSubmitting,
+        values,
+      }) => (
         <Form>
           <BForm.Group>
             <FormLabel>Asset name</FormLabel>
-
             <Field
               as={BForm.Control}
               type="text"
@@ -124,7 +131,6 @@ const AssetEditor = ({
               type="invalid"
             />
           </BForm.Group>
-
           <BForm.Group>
             <FormLabel>Contract address</FormLabel>
 
@@ -136,6 +142,12 @@ const AssetEditor = ({
               disabled={isEdit}
               isInvalid={!!errors.address && touched.address}
               isValid={!errors.address && touched.address}
+              onBlur={() => {
+                if (isEditAsset) {
+                  setFieldValue('address', address);
+                }
+              }}
+              value={isEditAsset ? address : values.address}
             />
 
             <ErrorMessage
@@ -166,6 +178,9 @@ const AssetEditor = ({
               }}
               onBlur={() => {
                 setFieldTouched('contractType', true);
+                if (isEditAsset) {
+                  setFieldValue('contractType', contractType);
+                }
               }}
             />
 
@@ -175,7 +190,6 @@ const AssetEditor = ({
               type="invalid"
             />
           </BForm.Group>
-
           <BForm.Group>
             <FormLabel>Scale</FormLabel>
 
@@ -196,7 +210,6 @@ const AssetEditor = ({
               type="invalid"
             />
           </BForm.Group>
-
           <BForm.Group>
             <FormLabel>Ticker</FormLabel>
 
@@ -215,7 +228,6 @@ const AssetEditor = ({
               type="invalid"
             />
           </BForm.Group>
-
           <FormSubmit>
             <Button
               variant="danger"
@@ -243,6 +255,7 @@ AssetEditor.propTypes = {
   ticker: PropTypes.string,
   onSubmit: PropTypes.func,
   onCancel: PropTypes.func,
+  isEditAsset: PropTypes.bool,
 };
 
 AssetEditor.defaultProps = {
@@ -254,6 +267,7 @@ AssetEditor.defaultProps = {
   ticker: '',
   onSubmit: () => null,
   onCancel: () => null,
+  isEditAsset: true,
 };
 
 export default AssetEditor;

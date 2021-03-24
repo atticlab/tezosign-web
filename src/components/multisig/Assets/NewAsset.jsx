@@ -36,7 +36,11 @@ const NewAsset = () => {
         </Modal.Header>
 
         <Modal.Body style={{ padding: '15px 30px' }}>
-          <AssetEditor onSubmit={handleClose} onCancel={handleClose} />
+          <AssetEditor
+            onSubmit={handleClose}
+            onCancel={handleClose}
+            isEditAsset={false}
+          />
         </Modal.Body>
       </Modal>
 
