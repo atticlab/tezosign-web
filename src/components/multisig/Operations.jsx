@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -21,6 +15,7 @@ import OperationDetails from './OperationDetails';
 import SelectCustom from '../SelectCustom';
 import IndentIcon from '../IdentIcon';
 import useThemeContext from '../../hooks/useThemeContext';
+import useInfiniteScroll from '../../hooks/useInfiniteScroll';
 import { useAssetsStateContext } from '../../store/assetsContext';
 import {
   useOperationsDispatchContext,
@@ -83,37 +78,11 @@ const limit = 15;
 
 const Operations = () => {
   const theme = useThemeContext();
-  const [pageNumber, setPageNumber] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
   const { assets } = useAssetsStateContext();
   const { ops, isOpsLoading } = useOperationsStateContext();
   const { getOps } = useOperationsDispatchContext();
   const [operationType, setOperationType] = useState(null);
-
-  const observer = useRef();
-  const lastItem = useCallback(
-    (node) => {
-      if (isOpsLoading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setPageNumber((prevPageNumber) => prevPageNumber + 1);
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [isOpsLoading, hasMore],
-  );
-
-  const opsLists = useMemo(() => {
-    if (!ops) return ops;
-
-    return ops.filter(
-      (elem) =>
-        operationType === null ||
-        operationType.value === elem.operation_info.type,
-    );
-  }, [ops, operationType]);
+  const { lastItem, pageNumber, setHasMore } = useInfiniteScroll(isOpsLoading);
 
   useEffect(() => {
     const loadOps = async () => {
@@ -124,6 +93,16 @@ const Operations = () => {
     loadOps();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);
+
+  const opsLists = useMemo(() => {
+    if (!ops) return ops;
+
+    return ops.filter(
+      (elem) =>
+        operationType === null ||
+        operationType.value === elem.operation_info.type,
+    );
+  }, [ops, operationType]);
 
   const cols = [
     {
