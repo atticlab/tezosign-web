@@ -250,7 +250,7 @@ const OperationDetails = ({ operation }) => {
               {assets && assets.length > 0 && (
                 <div>
                   <Bold>Asset name:</Bold>{' '}
-                  {assets.find((asset) => asset.address === assetID).name}
+                  {assets.find((asset) => asset.address === assetID)?.name}
                 </div>
               )}
             </OperationGeneralInfo.Item>
