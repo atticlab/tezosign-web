@@ -79,29 +79,16 @@ const listOperationType = [
   },
 ];
 
+const limit = 15;
+
 const Operations = () => {
   const theme = useThemeContext();
   const [pageNumber, setPageNumber] = useState(1);
-  const hasMore = false;
+  const [hasMore, setHasMore] = useState(true);
   const { assets } = useAssetsStateContext();
   const { ops, isOpsLoading } = useOperationsStateContext();
   const { getOps } = useOperationsDispatchContext();
   const [operationType, setOperationType] = useState(null);
-
-  const opsLists = useMemo(() => {
-    if (!ops) return ops;
-
-    return ops.filter(
-      (elem) =>
-        operationType === null ||
-        operationType.value === elem.operation_info.type,
-    );
-  }, [ops, operationType]);
-
-  useEffect(() => {
-    getOps();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNumber]);
 
   const observer = useRef();
   const lastItem = useCallback(
@@ -117,6 +104,26 @@ const Operations = () => {
     },
     [isOpsLoading, hasMore],
   );
+
+  const opsLists = useMemo(() => {
+    if (!ops) return ops;
+
+    return ops.filter(
+      (elem) =>
+        operationType === null ||
+        operationType.value === elem.operation_info.type,
+    );
+  }, [ops, operationType]);
+
+  useEffect(() => {
+    const loadOps = async () => {
+      const resp = await getOps(limit, (pageNumber - 1) * limit);
+      if (!resp.length || resp.length < limit) setHasMore(false);
+    };
+
+    loadOps();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageNumber]);
 
   const cols = [
     {

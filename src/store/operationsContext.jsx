@@ -1,8 +1,14 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
-import useRequest from '../hooks/useRequest';
 import useAPI from '../hooks/useApi';
 import { useContractStateContext } from './contractContext';
+import { handleError } from '../utils/errorsHandler';
 
 const OperationsStateContext = createContext(undefined);
 OperationsStateContext.displayName = 'OperationsStateContext';
@@ -12,12 +18,24 @@ OperationsDispatchContext.displayName = 'OperationsDispatchContext';
 const OperationsProvider = ({ children }) => {
   const { getOperations } = useAPI();
   const { contractAddress } = useContractStateContext();
-  const {
-    request: getOps,
-    resp: ops,
-    setResp: setOps,
-    isLoading: isOpsLoading,
-  } = useRequest(getOperations, contractAddress);
+  const [ops, setOps] = useState([]);
+  const [isOpsLoading, setIsOpsLoading] = useState(false);
+
+  const getOps = useCallback(
+    async (limit, offset) => {
+      try {
+        setIsOpsLoading(true);
+        const resp = await getOperations(contractAddress, { limit, offset });
+        setOps((prev) => [...prev, ...resp.data]);
+        return resp.data;
+      } catch (e) {
+        return handleError(e);
+      } finally {
+        setIsOpsLoading(false);
+      }
+    },
+    [contractAddress, getOperations],
+  );
 
   const stateValue = useMemo(
     () => ({
