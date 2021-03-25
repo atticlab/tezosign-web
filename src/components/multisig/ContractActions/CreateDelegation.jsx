@@ -45,6 +45,7 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
   const { setOps } = useOperationsDispatchContext();
   const createDelegation = async (baker, setSubmitting) => {
     try {
+      setSubmitting(true);
       const newDelegation = await sendOperation({
         contract_id: contractAddress,
         type: 'delegation',
@@ -140,6 +141,7 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
               <Button
                 variant="info"
                 style={{ marginRight: '10px' }}
+                disabled={isSubmitting}
                 onClick={() => createDelegation(undefined, setSubmitting)}
               >
                 Undelegate
