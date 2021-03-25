@@ -12,7 +12,6 @@ import { useContractStateContext } from '../../../store/contractContext';
 import { requestSignPayload, sendTx } from '../../../plugins/beacon';
 import useAPI from '../../../hooks/useApi';
 import { useUserStateContext } from '../../../store/userContext';
-import { useOperationsDispatchContext } from '../../../store/operationsContext';
 import { useAssetsStateContext } from '../../../store/assetsContext';
 
 const OperationGeneralInfo = styled.div`
@@ -95,7 +94,7 @@ const initialSignaturesCount = {
   rejected: 0,
 };
 
-const OperationDetails = ({ operation }) => {
+const OperationDetails = ({ operation, resetOperations }) => {
   const {
     contractInfo,
     isUserOwner,
@@ -108,7 +107,6 @@ const OperationDetails = ({ operation }) => {
   );
   const { sendSignature, getOperationPayload, buildOperation } = useAPI();
   const [isActionLoading, setIsActionLoading] = useState(false);
-  const { getOps, setOps } = useOperationsDispatchContext();
 
   const acceptOperation = async (operationID) => {
     try {
@@ -123,8 +121,7 @@ const OperationDetails = ({ operation }) => {
         pub_key: publicKey,
         signature: resSignature.signature,
       });
-      await setOps(() => []);
-      await getOps(15, 0);
+      resetOperations();
     } catch (e) {
       console.error(e);
     } finally {
@@ -145,8 +142,7 @@ const OperationDetails = ({ operation }) => {
         pub_key: publicKey,
         signature: resSignature.signature,
       });
-      await setOps(() => []);
-      await getOps(15, 0);
+      resetOperations();
     } catch (e) {
       console.error(e);
     } finally {
@@ -163,8 +159,7 @@ const OperationDetails = ({ operation }) => {
         value: JSON.parse(res.data.value),
       };
       await sendTx(0, contractAddress, params);
-      await setOps(() => []);
-      await getOps(15, 0);
+      resetOperations();
     } catch (e) {
       console.error(e);
     } finally {
@@ -366,6 +361,7 @@ const OperationDetails = ({ operation }) => {
 
 OperationDetails.propTypes = {
   operation: PropTypes.objectOf(PropTypes.any).isRequired,
+  resetOperations: PropTypes.func.isRequired,
 };
 
 export default OperationDetails;

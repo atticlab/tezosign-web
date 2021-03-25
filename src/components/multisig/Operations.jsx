@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -80,9 +80,25 @@ const Operations = () => {
   const theme = useThemeContext();
   const { assets } = useAssetsStateContext();
   const { ops, isOpsLoading } = useOperationsStateContext();
-  const { getOps } = useOperationsDispatchContext();
+  const { getOps, setOps } = useOperationsDispatchContext();
   const [operationType, setOperationType] = useState(null);
-  const { lastItem, pageNumber, setHasMore } = useInfiniteScroll(isOpsLoading);
+  const { lastItem, pageNumber, setHasMore, setPageNumber } = useInfiniteScroll(
+    isOpsLoading,
+  );
+
+  const resetOperations = useCallback(async () => {
+    let prevPageNumber;
+    setOps(() => []);
+    setHasMore(true);
+    setPageNumber((prev) => {
+      prevPageNumber = prev;
+      return 1;
+    });
+
+    if (prevPageNumber === 1) {
+      await getOps(limit, 0);
+    }
+  }, [getOps, setHasMore, setOps, setPageNumber]);
 
   useEffect(() => {
     const loadOps = async () => {
@@ -291,7 +307,12 @@ const Operations = () => {
           isDataLoading={isOpsLoading}
           isCollapsible
           collapseContent={(operation) => {
-            return <OperationDetails operation={operation} />;
+            return (
+              <OperationDetails
+                operation={operation}
+                resetOperations={resetOperations}
+              />
+            );
           }}
         />
 
