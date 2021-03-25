@@ -1,0 +1,48 @@
+import React, { useState } from 'react';
+import { Button } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Modal from '../../styled/Modal';
+import { Title } from '../../styled/Text';
+import VestingEditor from './VestingEditor';
+
+const AddVesting = () => {
+  const [show, setShow] = useState(false);
+  const handleClose = () => {
+    setShow(false);
+  };
+  const handleShow = () => {
+    setShow(true);
+  };
+
+  return (
+    <>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        centered
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header style={{ padding: '15px 30px' }}>
+          <div style={{ width: '100%' }}>
+            <Modal.Close onClick={handleClose}>
+              <FontAwesomeIcon icon="times" />
+            </Modal.Close>
+
+            <Title as="h3" style={{ marginBottom: 0 }}>
+              Add vesting
+            </Title>
+          </div>
+        </Modal.Header>
+
+        <Modal.Body style={{ padding: '15px 30px' }}>
+          <VestingEditor />
+        </Modal.Body>
+      </Modal>
+
+      <Button onClick={handleShow}>Add vesting</Button>
+    </>
+  );
+};
+
+export default AddVesting;

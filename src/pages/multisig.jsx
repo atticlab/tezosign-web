@@ -7,6 +7,8 @@ import BtnBack from '../components/BtnBack';
 import MultisigInfo from '../components/multisig/MultisigInfo';
 import Operations from '../components/multisig/Operations';
 import Assets from '../components/multisig/Assets';
+import Owners from '../components/multisig/Owners';
+import Vesting from '../components/multisig/Vesting';
 import Spinner from '../components/Spinner';
 import { bs58Validation } from '../utils/helpers';
 import {
@@ -15,7 +17,6 @@ import {
 } from '../store/contractContext';
 import { OperationsProvider } from '../store/operationsContext';
 import { AssetsProvider } from '../store/assetsContext';
-import Owners from '../components/multisig/Owners';
 
 const NavTabs = styled(Nav).attrs({ variant: 'pills' })`
   .nav-item {
@@ -173,6 +174,10 @@ const Multisig = () => {
                   <NavTabs.Item>
                     <NavTabs.Link eventKey="owners">Owners</NavTabs.Link>
                   </NavTabs.Item>
+
+                  <NavTabs.Item>
+                    <NavTabs.Link eventKey="vesting">Vesting</NavTabs.Link>
+                  </NavTabs.Item>
                 </NavTabs>
 
                 <Tab.Content style={{ paddingTop: '20px' }}>
@@ -184,6 +189,9 @@ const Multisig = () => {
                   </Tab.Pane>
                   <Tab.Pane eventKey="owners">
                     <Owners />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="vesting">
+                    <Vesting />
                   </Tab.Pane>
                 </Tab.Content>
               </Tab.Container>
