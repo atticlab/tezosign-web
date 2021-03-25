@@ -22,7 +22,7 @@ const useInfiniteScroll = (isLoading) => {
     [isLoading, hasMore],
   );
 
-  return { setHasMore, lastItem, pageNumber };
+  return { setHasMore, lastItem, pageNumber, setPageNumber };
 };
 
 export default useInfiniteScroll;
