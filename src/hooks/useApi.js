@@ -179,14 +179,15 @@ const useAPI = () => {
   const getOriginatedContract = (txID) => {
     return API.get(`/${network}/origination/${txID}`);
   };
+  const getVestingContractCode = () => {
+    return API.get('/static/vesting.json');
+  };
   // {
-  //   user: {
-  //     vesting_address: 'KT1' || 'tz1' || 'tz2' || 'tz3',
-  //     delegate_admin: 'KT1' || 'tz1' || 'tz2' || 'tz3',
-  //     timestamp: 1616678669,
-  //     seconds_per_tick: 10,
-  //     tokens_per_tick: 1,
-  //   }
+  //   vesting_address: 'KT1' || 'tz1' || 'tz2' || 'tz3',
+  //   delegate_admin: 'KT1' || 'tz1' || 'tz2' || 'tz3',
+  //   timestamp: 1616678669,
+  //   seconds_per_tick: 10,
+  //   tokens_per_tick: 1,
   // }
   const initVesting = (payload) => {
     return API.post(`/${network}/contract/vesting/storage/init`, payload);
@@ -225,10 +226,9 @@ const useAPI = () => {
   // {
   //   address: 'KT1' || 'tz1' || 'tz2' || 'tz3',
   //   name: 'Name',
-  //   balance: 0, // ?
   // }
-  const addVesting = (contractID) => {
-    return API.post(`/${network}/contract/${contractID}/vesting`);
+  const addVesting = (contractID, payload) => {
+    return API.post(`/${network}/contract/${contractID}/vesting`, payload);
   };
   // {
   //   address: 'KT1' || 'tz1' || 'tz2' || 'tz3',
@@ -323,6 +323,7 @@ const useAPI = () => {
     editAsset,
     deleteAsset,
     getOriginatedContract,
+    getVestingContractCode,
     initVesting,
     sendVestingOperation,
     getVestingInfo,

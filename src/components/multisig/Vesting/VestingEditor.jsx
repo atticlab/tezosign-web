@@ -4,7 +4,10 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Form as BForm } from 'react-bootstrap';
 import { FormLabel, FormSubmit } from '../../styled/Forms';
+import useAPI from '../../../hooks/useApi';
+import { useContractStateContext } from '../../../store/contractContext';
 import { bs58Validation } from '../../../utils/helpers';
+import { handleError } from '../../../utils/errorsHandler';
 
 const schema = Yup.object({
   name: Yup.string()
@@ -22,24 +25,38 @@ const schema = Yup.object({
     .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
     .length(36, 'Tezos address must be 36 characters long')
     .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
-  balance: Yup.number()
-    .required('Required')
-    .min(1, 'Minimum balance is 1')
-    .max(10, 'Maximum balance is 10'),
 });
 
-const VestingEditor = ({ name, address, balance, onCancel }) => {
+const VestingEditor = ({ isEdit, name, address, onCancel }) => {
+  const { addVesting, editVesting } = useAPI();
+  const { contractAddress } = useContractStateContext();
+
+  const manageVesting = async (values, setSubmitting) => {
+    try {
+      let resp;
+
+      if (!isEdit) {
+        resp = await addVesting(contractAddress, values);
+      } else {
+        resp = await editVesting(contractAddress, values);
+      }
+      console.log(resp);
+    } catch (e) {
+      handleError(e);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Formik
       initialValues={{
         name,
         address,
-        balance,
       }}
       validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {
-        console.log(values);
-        console.log(setSubmitting);
+        manageVesting(values, setSubmitting);
       }}
     >
       {({ errors, touched, isSubmitting }) => (
@@ -72,32 +89,12 @@ const VestingEditor = ({ name, address, balance, onCancel }) => {
               aria-label="address"
               isInvalid={!!errors.address && touched.address}
               isValid={!errors.address && touched.address}
+              disabled={isEdit}
             />
 
             <ErrorMessage
               component={BForm.Control.Feedback}
               name="address"
-              type="invalid"
-            />
-          </BForm.Group>
-
-          <BForm.Group>
-            <FormLabel>Balance</FormLabel>
-
-            <Field
-              as={BForm.Control}
-              type="number"
-              max="10"
-              min="0"
-              name="balance"
-              aria-label="balance"
-              isInvalid={!!errors.balance && touched.balance}
-              isValid={!errors.balance && touched.balance}
-            />
-
-            <ErrorMessage
-              component={BForm.Control.Feedback}
-              name="balance"
               type="invalid"
             />
           </BForm.Group>
@@ -121,15 +118,15 @@ const VestingEditor = ({ name, address, balance, onCancel }) => {
 };
 
 VestingEditor.propTypes = {
+  isEdit: PropTypes.bool,
   name: PropTypes.string,
   address: PropTypes.string,
-  balance: PropTypes.number,
   onCancel: PropTypes.func.isRequired,
 };
 VestingEditor.defaultProps = {
+  isEdit: false,
   name: '',
   address: '',
-  balance: 0,
 };
 
 export default VestingEditor;

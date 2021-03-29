@@ -1,38 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TblGenInfo } from '../../styled/Tbl';
 import Card from '../../styled/Card';
+import { FlexCenter } from '../../styled/Flex';
+import { Ellipsis } from '../../styled/Text';
 import NewVesting from './NewVesting';
 import AddVesting from './AddVesting';
 import Table from '../../Table';
 import Spinner from '../../Spinner';
-import { useContractStateContext } from '../../../store/contractContext';
-import { FlexCenter } from '../../styled/Flex';
-import IdentIcon from '../../IdentIcon';
-import { Ellipsis } from '../../styled/Text';
 import BtnCopy from '../../BtnCopy';
+import IdentIcon from '../../IdentIcon';
 import ChangeVesting from './ChangeVesting';
 import DeleteVesting from './DeleteVesting';
+import { useContractStateContext } from '../../../store/contractContext';
+import {
+  useVestingsDispatchContext,
+  useVestingsStateContext,
+} from '../../../store/vestingsContext';
 
 const Vesting = () => {
   const { isUserOwner } = useContractStateContext();
-  const isVestingsLoading = false;
-  const vestings = [
-    {
-      address: 'KT1JJbWfW8CHUY95hG9iq2CEMma1RiKhMHDR',
-      name: 'Vesting 1',
-      balance: 123300,
-    },
-    {
-      address: 'KT1JiQhr9EXHL88U3hjJH6FkPv8wWdVYvwtg',
-      name: 'Vesting 2',
-      balance: 0,
-    },
-    {
-      address: 'KT1UF15SCkdvqkS6QDA5kJZqov6VGUU6vwFJ',
-      name: 'Vesting 3',
-      balance: 0,
-    },
-  ];
+  const { vestings, isVestingsLoading } = useVestingsStateContext();
+  const { getVestingsReq } = useVestingsDispatchContext();
+
+  useEffect(() => {
+    (async () => {
+      await getVestingsReq();
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const cols = [
     {
       key: 'address',
@@ -91,6 +87,10 @@ const Vesting = () => {
           maxHeight="600px"
           stickyHeader
           isDataLoading={isVestingsLoading}
+          isCollapsible
+          collapseContent={(vesting) => {
+            return <div style={{ height: '200px' }}>{vesting.name}</div>;
+          }}
         />
 
         {isVestingsLoading && (

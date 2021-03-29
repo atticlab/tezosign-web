@@ -24,6 +24,9 @@ export default createGlobalStyle`
   
   button {
     letter-spacing: 0.75px;
+    &:focus {
+      outline: rgba(38,210,129,0.5) auto 1px
+    }
   }
   
   .beacon-modal {

@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../styled/Modal';
 import { Title } from '../../styled/Text';
+import NewVestingForm from './NewVestingForm';
 
 const NewVesting = () => {
   const [show, setShow] = useState(false);
@@ -29,18 +30,18 @@ const NewVesting = () => {
             </Modal.Close>
 
             <Title as="h3" style={{ marginBottom: 0 }}>
-              New vesting
+              Create vesting
             </Title>
           </div>
         </Modal.Header>
 
         <Modal.Body style={{ padding: '15px 30px' }}>
-          New vesting form
+          <NewVestingForm onCancel={handleClose} />
         </Modal.Body>
       </Modal>
 
       <Button variant="info" onClick={handleShow}>
-        New vesting
+        Create vesting
       </Button>
     </>
   );

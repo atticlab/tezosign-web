@@ -8,7 +8,13 @@ const Row = forwardRef(({ cols, row, isCollapsible, collapseContent }, ref) => {
   const theme = useThemeContext();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggle = (e) => {
-    if (e.target.type) return;
+    if (
+      e.target.tagName === 'BUTTON' ||
+      e.target.tagName === 'svg' ||
+      e.target.tagName === 'path' ||
+      e.target.classList?.contains('fade')
+    )
+      return;
     setIsCollapsed((prev) => !prev);
   };
 

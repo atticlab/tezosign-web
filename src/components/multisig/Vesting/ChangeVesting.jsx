@@ -46,15 +46,19 @@ const ChangeVesting = ({ vesting }) => {
 
         <Modal.Body style={{ padding: '15px 30px' }}>
           <VestingEditor
+            isEdit
             name={vesting.name}
             address={vesting.address}
-            balance={vesting.balance}
             onCancel={handleClose}
           />
         </Modal.Body>
       </Modal>
 
-      <Edit onClick={handleShow}>
+      <Edit
+        onClick={() => {
+          handleShow();
+        }}
+      >
         <FontAwesomeIcon icon="pen" />
       </Edit>
     </>
