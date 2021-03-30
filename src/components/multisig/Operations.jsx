@@ -61,6 +61,10 @@ const listOperationType = [
     value: 'fa2_transfer',
   },
   {
+    label: 'Income fa transfer',
+    value: 'income_fa_transfer',
+  },
+  {
     label: 'Income transfer',
     value: 'income_transfer',
   },
@@ -164,8 +168,10 @@ const Operations = () => {
             amount,
             asset_id: assetId,
             transfer_list: transferList,
+            type,
           },
         } = operation;
+
         // eslint-disable-next-line no-underscore-dangle
         const _amount =
           amount || (transferList && transferList[0].txs[0].amount);
@@ -174,13 +180,26 @@ const Operations = () => {
           return asset.address === assetId;
         });
 
-        const ticker = assetId ? currAsset?.ticker || '???' : 'XTZ';
+        let ticker = '';
+
+        switch (type) {
+          case 'income_fa_transfer':
+            ticker = '???';
+            break;
+          case 'fa_transfer':
+          case 'fa2_transfer':
+            ticker = assetId ? currAsset?.ticker || '???' : 'XTZ';
+            break;
+          default:
+            ticker = 'XTZ';
+        }
+
+        const convertAmount =
+          type === 'income_fa_transfer' ? _amount : convertMutezToXTZ(_amount);
 
         return _amount
           ? `${
-              assetId
-                ? _amount / (10 ** currAsset?.scale || 1)
-                : convertMutezToXTZ(_amount)
+              assetId ? _amount / (10 ** currAsset?.scale || 1) : convertAmount
             } ${ticker}`
           : '';
       },
