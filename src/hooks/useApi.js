@@ -235,16 +235,19 @@ const useAPI = () => {
   //   name: 'Name',
   //   balance: 0, // ?
   // }
-  const editVesting = (contractID) => {
-    return API.post(`/${network}/contract/${contractID}/vesting/edit`);
+  const editVesting = (contractID, payload) => {
+    return API.post(`/${network}/contract/${contractID}/vesting/edit`, payload);
   };
   // {
   //   address: 'KT1' || 'tz1' || 'tz2' || 'tz3',
   //   name: 'Name',
   //   balance: 0, // ?
   // }
-  const deleteVesting = (contractID) => {
-    return API.post(`/${network}/contract/${contractID}/vesting/delete`);
+  const deleteVesting = (contractID, payload) => {
+    return API.post(
+      `/${network}/contract/${contractID}/vesting/delete`,
+      payload,
+    );
   };
 
   currentTokens = { ...tokens };

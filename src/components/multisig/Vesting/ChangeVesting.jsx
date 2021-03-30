@@ -49,6 +49,7 @@ const ChangeVesting = ({ vesting }) => {
             isEdit
             name={vesting.name}
             address={vesting.address}
+            onSubmit={handleClose}
             onCancel={handleClose}
           />
         </Modal.Body>

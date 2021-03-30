@@ -16,6 +16,7 @@ import {
   useVestingsDispatchContext,
   useVestingsStateContext,
 } from '../../../store/vestingsContext';
+import { convertMutezToXTZ } from '../../../utils/helpers';
 
 const Vesting = () => {
   const { isUserOwner } = useContractStateContext();
@@ -50,7 +51,12 @@ const Vesting = () => {
       },
     },
     { key: 'name' },
-    { key: 'balance' },
+    {
+      key: 'balance',
+      process(vesting) {
+        return `${convertMutezToXTZ(vesting.balance)} XTZ`;
+      },
+    },
     {
       key: 'Actions',
       process(vesting) {

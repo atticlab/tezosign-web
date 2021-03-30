@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import Modal from '../../styled/Modal';
 import { Title } from '../../styled/Text';
-import VestingEditor from './VestingEditor';
+import { handleError } from '../../../utils/errorsHandler';
+import { useVestingsDispatchContext } from '../../../store/vestingsContext';
+import useAPI from '../../../hooks/useApi';
+import { useContractStateContext } from '../../../store/contractContext';
 
 const Close = styled(Button).attrs({ variant: 'link' })`
   color: ${({ theme }) => theme.gray};
@@ -16,12 +19,43 @@ const Close = styled(Button).attrs({ variant: 'link' })`
 
 const DeleteVesting = ({ vesting }) => {
   const [show, setShow] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const { deleteVesting } = useAPI();
+  const { contractAddress } = useContractStateContext();
+  const { setVestings } = useVestingsDispatchContext();
+
   const handleClose = () => {
     setShow(false);
   };
   const handleShow = () => {
     setShow(true);
   };
+  const removeVesting = async (contractID, address) => {
+    try {
+      setIsDeleteLoading(true);
+      await deleteVesting(contractAddress, { address });
+      setVestings((prev) => {
+        const res = [...prev];
+        res.splice(
+          res.indexOf(
+            res.find((vestingIterable) => vestingIterable.address === address),
+          ),
+          1,
+        );
+        return res;
+      });
+      handleClose();
+    } catch (e) {
+      handleError(e);
+    } finally {
+      setIsDeleteLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    return () => setIsDeleteLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -45,12 +79,16 @@ const DeleteVesting = ({ vesting }) => {
         </Modal.Header>
 
         <Modal.Body style={{ padding: '15px 30px' }}>
-          <VestingEditor
-            name={vesting.name}
-            address={vesting.address}
-            balance={vesting.balance}
-            onCancel={handleClose}
-          />
+          Are you sure you would like to delete the vesting contract?
+          <div style={{ marginTop: '40px', textAlign: 'right' }}>
+            <Button
+              variant="danger"
+              disabled={isDeleteLoading}
+              onClick={() => removeVesting(contractAddress, vesting.address)}
+            >
+              Delete
+            </Button>
+          </div>
         </Modal.Body>
       </Modal>
 

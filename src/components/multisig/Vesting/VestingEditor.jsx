@@ -8,6 +8,7 @@ import useAPI from '../../../hooks/useApi';
 import { useContractStateContext } from '../../../store/contractContext';
 import { bs58Validation } from '../../../utils/helpers';
 import { handleError } from '../../../utils/errorsHandler';
+import { useVestingsDispatchContext } from '../../../store/vestingsContext';
 
 const schema = Yup.object({
   name: Yup.string()
@@ -27,9 +28,10 @@ const schema = Yup.object({
     .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
 });
 
-const VestingEditor = ({ isEdit, name, address, onCancel }) => {
+const VestingEditor = ({ isEdit, name, address, onSubmit, onCancel }) => {
   const { addVesting, editVesting } = useAPI();
   const { contractAddress } = useContractStateContext();
+  const { setVestings } = useVestingsDispatchContext();
 
   const manageVesting = async (values, setSubmitting) => {
     try {
@@ -37,10 +39,20 @@ const VestingEditor = ({ isEdit, name, address, onCancel }) => {
 
       if (!isEdit) {
         resp = await addVesting(contractAddress, values);
+        setVestings((prev) => [...prev, resp.data]);
       } else {
         resp = await editVesting(contractAddress, values);
+        setVestings((prev) => {
+          const indexToModify = prev.indexOf(
+            prev.find((asset) => asset.address === resp.data.address),
+          );
+          const res = [...prev];
+          res[indexToModify] = resp.data;
+          return res;
+        });
       }
-      console.log(resp);
+
+      onSubmit();
     } catch (e) {
       handleError(e);
     } finally {
@@ -68,6 +80,7 @@ const VestingEditor = ({ isEdit, name, address, onCancel }) => {
               type="text"
               name="name"
               aria-label="name"
+              autoComplete="off"
               isInvalid={!!errors.name && touched.name}
               isValid={!errors.name && touched.name}
             />
@@ -121,6 +134,7 @@ VestingEditor.propTypes = {
   isEdit: PropTypes.bool,
   name: PropTypes.string,
   address: PropTypes.string,
+  onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };
 VestingEditor.defaultProps = {

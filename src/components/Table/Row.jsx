@@ -8,13 +8,24 @@ const Row = forwardRef(({ cols, row, isCollapsible, collapseContent }, ref) => {
   const theme = useThemeContext();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggle = (e) => {
+    // TODO: Refactor. Stop toggling when the element inside a row is pressed.
     if (
       e.target.tagName === 'BUTTON' ||
       e.target.tagName === 'svg' ||
       e.target.tagName === 'path' ||
-      e.target.classList?.contains('fade')
-    )
+      e.target.tagName === 'FORM' ||
+      e.target.tagName === 'H3' ||
+      e.target.tagName === 'INPUT' ||
+      e.target.tagName === 'LABEL' ||
+      e.target.classList?.contains('modal-header') ||
+      e.target.classList?.contains('modal-body') ||
+      e.target.classList?.contains('modal-content') ||
+      e.target.classList?.contains('fade') ||
+      e.target.parentElement?.tagName === 'FORM' ||
+      e.target.parentElement?.classList?.contains('modal-header')
+    ) {
       return;
+    }
     setIsCollapsed((prev) => !prev);
   };
 

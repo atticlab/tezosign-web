@@ -46,6 +46,7 @@ const schema = Yup.object({
   tokensPerTick: Yup.number()
     .required('Required')
     .min(0.000001, `Minimum amount is ${0.000001} XTZ`),
+  balance: Yup.number().required('Required').min(0, `Minimum amount is 0 XTZ`),
 });
 
 const handleDateChangeRaw = (e) => {
@@ -108,6 +109,7 @@ const NewVestingForm = ({ onCancel }) => {
       timestamp,
       secondsPerTick,
       tokensPerTick,
+      balance,
     },
     setSubmitting,
   ) => {
@@ -124,7 +126,7 @@ const NewVestingForm = ({ onCancel }) => {
       const respStorage = await initVesting(payload);
 
       const script = { code: respCode.data, storage: respStorage.data };
-      await sendOrigination('0', script);
+      await sendOrigination(balance.toString(), script);
     } catch (e) {
       handleError(e);
     } finally {
@@ -140,6 +142,7 @@ const NewVestingForm = ({ onCancel }) => {
         timestamp: '',
         secondsPerTick: '',
         tokensPerTick: '',
+        balance: 0,
       }}
       validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {
@@ -209,11 +212,11 @@ const NewVestingForm = ({ onCancel }) => {
                 }
                 onChangeRaw={handleDateChangeRaw}
                 selected={values.timestamp}
+                autoComplete="off"
                 customInput={
                   <BForm.Control
                     isInvalid={!!errors.timestamp && touched.timestamp}
                     isValid={!errors.timestamp && touched.timestamp}
-                    autocomplete="off"
                   />
                 }
                 onChange={(date) => setFieldValue('timestamp', date)}
@@ -235,7 +238,7 @@ const NewVestingForm = ({ onCancel }) => {
               step="1"
               name="secondsPerTick"
               aria-label="secondsPerTick"
-              autocomplete="off"
+              autoComplete="off"
               isInvalid={!!errors.secondsPerTick && touched.secondsPerTick}
               isValid={!errors.secondsPerTick && touched.secondsPerTick}
               onBlur={(e) => {
@@ -265,6 +268,24 @@ const NewVestingForm = ({ onCancel }) => {
             <ErrorMessage
               component={BForm.Control.Feedback}
               name="tokensPerTick"
+              type="invalid"
+            />
+          </BForm.Group>
+
+          <BForm.Group>
+            <FormLabel>Balance</FormLabel>
+            <Field
+              as={BForm.Control}
+              type="number"
+              name="balance"
+              aria-label="balance"
+              isInvalid={!!errors.balance && touched.balance}
+              isValid={!errors.balance && touched.balance}
+            />
+
+            <ErrorMessage
+              component={BForm.Control.Feedback}
+              name="balance"
               type="invalid"
             />
           </BForm.Group>
