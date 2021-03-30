@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Badge, Button } from 'react-bootstrap';
 import styled from 'styled-components';
@@ -166,6 +166,13 @@ const OperationDetails = ({ operation, resetOperations }) => {
       setIsActionLoading(false);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      setIsActionLoading(false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const signatures = useMemo(() => {
     if (!operation.signatures) return [];
