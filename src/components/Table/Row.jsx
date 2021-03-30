@@ -57,7 +57,8 @@ const Row = forwardRef(({ cols, row, isCollapsible, collapseContent }, ref) => {
         <Tbl.TrCollapsible>
           <Tbl.TdCollapse colSpan="100%">
             <Tbl.Collapse in={isCollapsed}>
-              <div>{collapseContent}</div>
+              {/* <div>{collapseContent}</div> */}
+              <div>{collapseContent(row, isCollapsed)}</div>
             </Tbl.Collapse>
           </Tbl.TdCollapse>
         </Tbl.TrCollapsible>

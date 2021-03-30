@@ -11,6 +11,7 @@ import BtnCopy from '../../BtnCopy';
 import IdentIcon from '../../IdentIcon';
 import ChangeVesting from './ChangeVesting';
 import DeleteVesting from './DeleteVesting';
+import VestingDetails from './VestingDetails';
 import { useContractStateContext } from '../../../store/contractContext';
 import {
   useVestingsDispatchContext,
@@ -94,8 +95,13 @@ const Vesting = () => {
           stickyHeader
           isDataLoading={isVestingsLoading}
           isCollapsible
-          collapseContent={(vesting) => {
-            return <div style={{ height: '200px' }}>{vesting.name}</div>;
+          collapseContent={(vesting, isRowCollapsed) => {
+            return (
+              <VestingDetails
+                vesting={vesting}
+                isRowCollapsed={isRowCollapsed}
+              />
+            );
           }}
         />
 

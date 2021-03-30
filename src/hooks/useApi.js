@@ -217,8 +217,8 @@ const useAPI = () => {
   const sendVestingOperation = (payload) => {
     return API.post(`/${network}/contract/vesting/operation`, payload);
   };
-  const getVestingInfo = (contractID) => {
-    return API.get(`/${network}}/contract/vesting/${contractID}/info`);
+  const getVestingInfo = (vestingContractID) => {
+    return API.get(`/${network}/contract/vesting/${vestingContractID}/info`);
   };
   const getVestings = (contractID) => {
     return API.get(`/${network}/contract/${contractID}/vestings`);
