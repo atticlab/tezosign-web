@@ -61,6 +61,10 @@ const listOperationType = [
     value: 'fa2_transfer',
   },
   {
+    label: 'Income fa transfer',
+    value: 'income_fa_transfer',
+  },
+  {
     label: 'Income transfer',
     value: 'income_transfer',
   },
@@ -157,32 +161,37 @@ const Operations = () => {
     },
     {
       key: 'amount',
-      // TODO: Refactor
       process(operation) {
         const {
           operation_info: {
             amount,
             asset_id: assetId,
             transfer_list: transferList,
+            type,
           },
         } = operation;
+
         // eslint-disable-next-line no-underscore-dangle
         const _amount =
           amount || (transferList && transferList[0].txs[0].amount);
+
+        if (!_amount) return '';
 
         const currAsset = assets?.find((asset) => {
           return asset.address === assetId;
         });
 
-        const ticker = assetId ? currAsset?.ticker || '???' : 'XTZ';
+        if (
+          type === 'income_fa_transfer' ||
+          type === 'fa_transfer' ||
+          type === 'fa2_transfer'
+        ) {
+          return `${
+            currAsset?.scale ? _amount / (10 ** currAsset?.scale || 1) : _amount
+          } ${currAsset?.ticker || '???'}`;
+        }
 
-        return _amount
-          ? `${
-              assetId
-                ? _amount / (10 ** currAsset?.scale || 1)
-                : convertMutezToXTZ(_amount)
-            } ${ticker}`
-          : '';
+        return `${convertMutezToXTZ(_amount)} XTZ`;
       },
     },
     {
