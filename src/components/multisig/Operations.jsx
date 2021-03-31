@@ -181,23 +181,17 @@ const Operations = () => {
           return asset.address === assetId;
         });
 
-        let ticker = 'XTZ';
-        let amountConverted = '';
-
-        switch (type) {
-          case 'income_fa_transfer':
-          case 'fa_transfer':
-          case 'fa2_transfer':
-            ticker = currAsset?.ticker || '???';
-            amountConverted = currAsset?.scale
-              ? _amount / (10 ** currAsset?.scale || 1)
-              : _amount;
-            break;
-          default:
-            amountConverted = convertMutezToXTZ(_amount);
+        if (
+          type === 'income_fa_transfer' ||
+          type === 'fa_transfer' ||
+          type === 'fa2_transfer'
+        ) {
+          return `${
+            currAsset?.scale ? _amount / (10 ** currAsset?.scale || 1) : _amount
+          } ${currAsset?.ticker || '???'}`;
         }
 
-        return `${amountConverted} ${ticker}`;
+        return `${convertMutezToXTZ(_amount)} XTZ`;
       },
     },
     {
