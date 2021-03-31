@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Dropdown } from '../../styled/Dropdown';
 import Modal from '../../styled/Modal';
 import { Title } from '../../styled/Text';
-import { Dropdown } from '../../styled/Dropdown';
-import CreateTx from './CreateTx';
-import CreateDelegation from './CreateDelegation';
-import ContractEditor from './ContractEditor';
+import VestingOperationForm from './VestingOperationForm';
 
-const ContractActions = () => {
+const VestingActions = () => {
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
+  // vesting_vest
+  // vesting_set_delegate
   const [opType, setOpType] = useState('');
 
   const handleClose = () => {
@@ -36,21 +36,15 @@ const ContractActions = () => {
         <Dropdown.Menu align="right">
           <Dropdown.Item
             className="dropdown-item"
-            onClick={() => handleShow('transaction')}
+            onClick={() => handleShow('vesting_vest')}
           >
-            Create transaction
+            Create vesting_vest
           </Dropdown.Item>
           <Dropdown.Item
             className="dropdown-item"
-            onClick={() => handleShow('delegation')}
+            onClick={() => handleShow('vesting_set_delegate')}
           >
-            Create delegation
-          </Dropdown.Item>
-          <Dropdown.Item
-            className="dropdown-item"
-            onClick={() => handleShow('edit')}
-          >
-            Create contract update
+            Create vesting_set_delegate
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
@@ -70,45 +64,26 @@ const ContractActions = () => {
 
             <Title as="h3" style={{ marginBottom: 0 }}>
               {/* eslint-disable-next-line no-nested-ternary */}
-              {opType === 'transaction'
-                ? 'New transaction'
+              {opType === 'vesting_vest'
+                ? 'New vesting_vest'
                 : // eslint-disable-next-line no-nested-ternary
-                opType === 'delegation'
-                ? 'New delegation'
-                : opType === 'edit'
-                ? 'New contract update'
+                opType === 'vesting_set_delegate'
+                ? 'New vesting_set_delegate'
                 : ''}
             </Title>
           </div>
         </Modal.Header>
 
         <Modal.Body style={{ padding: '15px 30px' }}>
-          {(() => {
-            if (opType === 'transaction') {
-              return <CreateTx onCreate={handleClose} onCancel={handleClose} />;
-            }
-
-            if (opType === 'delegation') {
-              return (
-                <CreateDelegation
-                  onCreate={handleClose}
-                  onCancel={handleClose}
-                />
-              );
-            }
-
-            if (opType === 'edit') {
-              return (
-                <ContractEditor onCreate={handleClose} onCancel={handleClose} />
-              );
-            }
-
-            return '';
-          })()}
+          <VestingOperationForm
+            operationType={opType}
+            onSubmit={handleClose}
+            onCancel={handleClose}
+          />
         </Modal.Body>
       </Modal>
     </>
   );
 };
 
-export default ContractActions;
+export default VestingActions;

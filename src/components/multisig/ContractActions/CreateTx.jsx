@@ -9,9 +9,9 @@ import {
   OverlayTrigger,
   Tooltip,
 } from 'react-bootstrap';
-import styled from 'styled-components';
 import { FormLabel, FormSubmit } from '../../styled/Forms';
 import { FlexAlignItemsCenter } from '../../styled/Flex';
+import BtnMax from '../../styled/BtnMax';
 import SelectCustom from '../../SelectCustom';
 import IdentIcon from '../../IdentIcon';
 import useAPI from '../../../hooks/useApi';
@@ -28,21 +28,6 @@ import { useOperationsDispatchContext } from '../../../store/operationsContext';
 import { useAssetsStateContext } from '../../../store/assetsContext';
 import { handleError } from '../../../utils/errorsHandler';
 import XTZ from '../../../assets/img/assets/xtz-256.svg';
-
-const BtnMax = styled(Button).attrs({ variant: 'link' })`
-  padding: 0;
-  margin-right: 5px;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1;
-  color: ${({ theme }) => theme.blue};
-
-  &:hover,
-  &:focus {
-    text-decoration: none;
-    color: #249ac2;
-  }
-`;
 
 const schema = (maxAmount = 30000, minAmount = 0.000001, asset = 'XTZ') => {
   return Yup.object({

@@ -7,12 +7,16 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { DatePickerWrapper } from '../../styled/DatePickerStyles';
-import { FormLabel, FormSubmit } from '../../styled/Forms';
-import useAPI from '../../../hooks/useApi';
-import { bs58Validation, convertXTZToMutez } from '../../../utils/helpers';
-import { handleError } from '../../../utils/errorsHandler';
-import { sendOrigination } from '../../../plugins/beacon';
+import { DatePickerWrapper } from '../../../styled/DatePickerStyles';
+import { FormLabel, FormSubmit } from '../../../styled/Forms';
+import useAPI from '../../../../hooks/useApi';
+import {
+  bs58Validation,
+  convertXTZToMutez,
+  toHHMMSS,
+} from '../../../../utils/helpers';
+import { handleError } from '../../../../utils/errorsHandler';
+import { sendOrigination } from '../../../../plugins/beacon';
 
 dayjs.extend(utc);
 
@@ -80,19 +84,6 @@ const getSecondsFromHHMMSS = (value) => {
   }
 
   return 0;
-};
-
-const toHHMMSS = (secs) => {
-  const secNum = parseInt(secs.toString(), 10);
-  const hours = Math.floor(secNum / 3600);
-  const minutes = Math.floor(secNum / 60) % 60;
-  const seconds = secNum % 60;
-
-  return [hours, minutes, seconds]
-    .map((val) => (val < 10 ? `0${val}` : val))
-    .filter((val, index) => val !== '00' || index > 0)
-    .join(':')
-    .replace(/^0/, '');
 };
 
 const convertInputToTime = (e) => {
@@ -201,7 +192,7 @@ const NewVestingForm = ({ onCancel }) => {
                 name="timestamp"
                 aria-label="timestamp"
                 as={DatePicker}
-                dateFormat="yyyy-MM-dd"
+                dateFormat="yyyy/MM/dd"
                 wrapperClassName={
                   // eslint-disable-next-line no-nested-ternary
                   !!errors.timestamp && touched.timestamp

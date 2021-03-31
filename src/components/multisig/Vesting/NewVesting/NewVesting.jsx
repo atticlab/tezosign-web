@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Modal from '../../styled/Modal';
-import { Title } from '../../styled/Text';
+import Modal from '../../../styled/Modal';
+import { Title } from '../../../styled/Text';
 import NewVestingForm from './NewVestingForm';
 
 const NewVesting = () => {
