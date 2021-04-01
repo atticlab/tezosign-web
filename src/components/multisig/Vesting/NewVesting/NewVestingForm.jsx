@@ -226,7 +226,6 @@ const NewVestingForm = ({ onCancel }) => {
             <Field
               as={BForm.Control}
               type="text"
-              step="1"
               name="secondsPerTick"
               aria-label="secondsPerTick"
               autoComplete="off"

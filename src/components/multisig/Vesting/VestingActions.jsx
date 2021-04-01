@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dropdown } from '../../styled/Dropdown';
 import Modal from '../../styled/Modal';
 import { Title } from '../../styled/Text';
 import VestingOperationForm from './VestingOperationForm';
 
-const VestingActions = () => {
+const VestingActions = ({ vestingAddress }) => {
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
   // vesting_vest
@@ -76,6 +77,7 @@ const VestingActions = () => {
 
         <Modal.Body style={{ padding: '15px 30px' }}>
           <VestingOperationForm
+            vestingAddress={vestingAddress}
             operationType={opType}
             onSubmit={handleClose}
             onCancel={handleClose}
@@ -84,6 +86,10 @@ const VestingActions = () => {
       </Modal>
     </>
   );
+};
+
+VestingActions.propTypes = {
+  vestingAddress: PropTypes.string.isRequired,
 };
 
 export default VestingActions;

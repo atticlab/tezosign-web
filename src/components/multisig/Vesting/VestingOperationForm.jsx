@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Button, Form as BForm, InputGroup } from 'react-bootstrap';
 import { FormLabel, FormSubmit } from '../../styled/Forms';
 import BtnMax from '../../styled/BtnMax';
+import { sendTx } from '../../../plugins/beacon';
+import useAPI from '../../../hooks/useApi';
+import {
+  useUserStateContext,
+  useUserDispatchContext,
+} from '../../../store/userContext';
+import {
+  bs58Validation,
+  convertMutezToXTZ,
+  convertXTZToMutez,
+  limitInputDecimals,
+} from '../../../utils/helpers';
 import { handleError } from '../../../utils/errorsHandler';
-import { bs58Validation, limitInputDecimals } from '../../../utils/helpers';
 
 const schema = (maxAmount = 30000) => {
   return Yup.object({
@@ -27,18 +38,45 @@ const schema = (maxAmount = 30000) => {
   });
 };
 
-const balance = 10;
+// const balance = 10;
 
-const VestingOperationForm = ({ operationType, onSubmit, onCancel }) => {
-  const sendVestingOperation = async (values, setSubmitting) => {
+const VestingOperationForm = ({
+  vestingAddress,
+  operationType,
+  onSubmit,
+  onCancel,
+}) => {
+  const { sendVestingOperation } = useAPI();
+  const { balance: balanceRaw, address } = useUserStateContext();
+  const { getBalance } = useUserDispatchContext();
+
+  useEffect(() => {
+    getBalance(address);
+  }, [getBalance, address]);
+
+  const balance = useMemo(() => {
+    return convertMutezToXTZ(balanceRaw?.balance);
+  }, [balanceRaw]);
+
+  const sendVestingOperationRequest = async (
+    type,
+    { amount, to },
+    setSubmitting,
+  ) => {
     try {
-      console.log('send');
-      console.log(operationType);
-      console.log(values);
-      console.log(setSubmitting);
-      console.log(onSubmit);
+      setSubmitting(true);
+      const resp = await sendVestingOperation({
+        type,
+        amount: Number(convertXTZToMutez(amount)),
+        to,
+      });
+
+      await sendTx(0, vestingAddress, resp.data);
+      onSubmit();
     } catch (e) {
       handleError(e);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -50,7 +88,7 @@ const VestingOperationForm = ({ operationType, onSubmit, onCancel }) => {
       }}
       validationSchema={Yup.lazy(() => schema(balance))}
       onSubmit={(values, { setSubmitting }) => {
-        sendVestingOperation(values, setSubmitting);
+        sendVestingOperationRequest(operationType, values, setSubmitting);
       }}
     >
       {({ errors, touched, isSubmitting, setFieldValue, setFieldTouched }) => (
@@ -65,7 +103,7 @@ const VestingOperationForm = ({ operationType, onSubmit, onCancel }) => {
                 aria-label="amount"
                 isInvalid={!!errors.amount && touched.amount}
                 isValid={!errors.amount && touched.amount}
-                step="0.001"
+                step="0.000001"
                 min="0"
                 onKeyPress={(event) => limitInputDecimals(event, 6)}
               />
@@ -132,6 +170,7 @@ const VestingOperationForm = ({ operationType, onSubmit, onCancel }) => {
 };
 
 VestingOperationForm.propTypes = {
+  vestingAddress: PropTypes.string.isRequired,
   operationType: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,

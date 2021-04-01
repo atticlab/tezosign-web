@@ -253,7 +253,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
                 aria-label="amount"
                 isInvalid={!!errors.amount && touched.amount}
                 isValid={!errors.amount && touched.amount}
-                step="0.001"
+                step={1 / 10 ** values.asset.scale}
                 min="0"
                 onKeyPress={(event) =>
                   limitInputDecimals(event, values.asset.scale)

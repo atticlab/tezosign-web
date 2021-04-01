@@ -193,26 +193,9 @@ const useAPI = () => {
     return API.post(`/${network}/contract/vesting/storage/init`, payload);
   };
   // {
-  //   contract_id: 'KT1...',
-  //   // type: type: 'transfer' || 'fa_transfer' || 'fa2_transfer' || 'income_transfer' || 'delegation' || 'storage_update',
-  //   amount: 0,
-  //   to: 'tz1...',
-  //   // from: 'tz1...',
-  //   asset_id: 'KT1...', // for asset transfers only
-  //   transfer_list: [
-  //     {
-  //       // from: 'tz1...',
-  //       txs: [
-  //         {
-  //           to: 'tz1...', // ?
-  //           token_id: 0,
-  //           amount: 0,
-  //         },
-  //       ],
-  //     },
-  //   ],
-  //   vesting_id: 'string',
-  //   custom_payload: 'string',
+  //   type: 'vesting_vest' || 'vesting_set_delegate',
+  //   amount: 123, // mutez
+  //   to: 'KT1' || 'tz1' || 'tz2' || 'tz3',
   // }
   const sendVestingOperation = (payload) => {
     return API.post(`/${network}/contract/vesting/operation`, payload);
@@ -248,6 +231,9 @@ const useAPI = () => {
       `/${network}/contract/${contractID}/vesting/delete`,
       payload,
     );
+  };
+  const getAddressBalance = (address) => {
+    return API.get(`/${network}/${address}/balance`);
   };
 
   currentTokens = { ...tokens };
@@ -334,6 +320,7 @@ const useAPI = () => {
     addVesting,
     editVesting,
     deleteVesting,
+    getAddressBalance,
   };
 };
 
