@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dropdown } from '../../styled/Dropdown';
-import Modal from '../../styled/Modal';
-import { Title } from '../../styled/Text';
+import { Dropdown } from '../../../styled/Dropdown';
+import Modal from '../../../styled/Modal';
+import { Title } from '../../../styled/Text';
 import VestingOperationForm from './VestingOperationForm';
 
-const VestingActions = ({ vestingAddress }) => {
+const VestingActions = ({ vestingAddress, vestingAdminAddress }) => {
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
   // vesting_vest
@@ -67,8 +67,7 @@ const VestingActions = ({ vestingAddress }) => {
               {/* eslint-disable-next-line no-nested-ternary */}
               {opType === 'vesting_vest'
                 ? 'New vesting_vest'
-                : // eslint-disable-next-line no-nested-ternary
-                opType === 'vesting_set_delegate'
+                : opType === 'vesting_set_delegate'
                 ? 'New vesting_set_delegate'
                 : ''}
             </Title>
@@ -78,6 +77,7 @@ const VestingActions = ({ vestingAddress }) => {
         <Modal.Body style={{ padding: '15px 30px' }}>
           <VestingOperationForm
             vestingAddress={vestingAddress}
+            vestingAdminAddress={vestingAdminAddress}
             operationType={opType}
             onSubmit={handleClose}
             onCancel={handleClose}
@@ -90,6 +90,7 @@ const VestingActions = ({ vestingAddress }) => {
 
 VestingActions.propTypes = {
   vestingAddress: PropTypes.string.isRequired,
+  vestingAdminAddress: PropTypes.string.isRequired,
 };
 
 export default VestingActions;

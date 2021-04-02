@@ -36,7 +36,7 @@ const NewVesting = () => {
         </Modal.Header>
 
         <Modal.Body style={{ padding: '15px 30px' }}>
-          <NewVestingForm onCancel={handleClose} />
+          <NewVestingForm onSubmit={handleClose} onCancel={handleClose} />
         </Modal.Body>
       </Modal>
 

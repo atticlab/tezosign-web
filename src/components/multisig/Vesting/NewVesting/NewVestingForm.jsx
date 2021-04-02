@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import { Button, Form as BForm } from 'react-bootstrap';
+import { Button, Form as BForm, InputGroup } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import DatePicker from 'react-datepicker';
@@ -12,46 +12,57 @@ import { FormLabel, FormSubmit } from '../../../styled/Forms';
 import useAPI from '../../../../hooks/useApi';
 import {
   bs58Validation,
+  convertMutezToXTZ,
   convertXTZToMutez,
+  limitInputDecimals,
   toHHMMSS,
 } from '../../../../utils/helpers';
 import { handleError } from '../../../../utils/errorsHandler';
 import { sendOrigination } from '../../../../plugins/beacon';
+import BtnMax from '../../../styled/BtnMax';
+import {
+  useUserDispatchContext,
+  useUserStateContext,
+} from '../../../../store/userContext';
 
 dayjs.extend(utc);
 
-const schema = Yup.object({
-  vestingAddress: Yup.string()
-    .required('Required')
-    .matches(
-      'tz1|tz2|tz3|KT1',
-      'Tezos address must start with tz1, tz2, tz3 or KT1',
-    )
-    .matches(/^\S+$/, 'No spaces are allowed')
-    .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
-    .length(36, 'Tezos address must be 36 characters long')
-    .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
-  delegateAddress: Yup.string()
-    .required('Required')
-    .matches(
-      'tz1|tz2|tz3|KT1',
-      'Tezos address must start with tz1, tz2, tz3 or KT1',
-    )
-    .matches(/^\S+$/, 'No spaces are allowed')
-    .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
-    .length(36, 'Tezos address must be 36 characters long')
-    .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
-  timestamp: Yup.string().required('Required'),
-  secondsPerTick: Yup.string()
-    .required('Required')
-    .test('secondsCheck', 'Seconds cannot be 0', (val) => {
-      return val !== '0:00';
-    }),
-  tokensPerTick: Yup.number()
-    .required('Required')
-    .min(0.000001, `Minimum amount is ${0.000001} XTZ`),
-  balance: Yup.number().required('Required').min(0, `Minimum amount is 0 XTZ`),
-});
+const schema = (maxAmount = 30000) =>
+  Yup.object({
+    vestingAddress: Yup.string()
+      .required('Required')
+      .matches(
+        'tz1|tz2|tz3|KT1',
+        'Tezos address must start with tz1, tz2, tz3 or KT1',
+      )
+      .matches(/^\S+$/, 'No spaces are allowed')
+      .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
+      .length(36, 'Tezos address must be 36 characters long')
+      .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
+    delegateAddress: Yup.string()
+      .required('Required')
+      .matches(
+        'tz1|tz2|tz3|KT1',
+        'Tezos address must start with tz1, tz2, tz3 or KT1',
+      )
+      .matches(/^\S+$/, 'No spaces are allowed')
+      .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
+      .length(36, 'Tezos address must be 36 characters long')
+      .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
+    timestamp: Yup.string().required('Required'),
+    secondsPerTick: Yup.string()
+      .required('Required')
+      .test('secondsCheck', 'Seconds cannot be 0', (val) => {
+        return val !== '0:00';
+      }),
+    tokensPerTick: Yup.number()
+      .required('Required')
+      .min(0.000001, `Minimum amount is ${0.000001} XTZ`),
+    balance: Yup.number()
+      .required('Required')
+      .max(maxAmount, `Maximum amount is ${maxAmount} XTZ`)
+      .min(0.000001, `Minimum amount is 0.000001 XTZ`),
+  });
 
 const handleDateChangeRaw = (e) => {
   e.preventDefault();
@@ -90,8 +101,17 @@ const convertInputToTime = (e) => {
   return toHHMMSS(Math.max(0, getSecondsFromHHMMSS(e.target.value)));
 };
 
-const NewVestingForm = ({ onCancel }) => {
+const NewVestingForm = ({ onSubmit, onCancel }) => {
   const { getVestingContractCode, initVesting } = useAPI();
+  const { balance: balanceRaw, address } = useUserStateContext();
+  const { getBalance } = useUserDispatchContext();
+  useEffect(() => {
+    getBalance(address);
+  }, [getBalance, address]);
+
+  const balanceConverted = useMemo(() => {
+    return convertMutezToXTZ(balanceRaw?.balance);
+  }, [balanceRaw]);
 
   const createVesting = async (
     {
@@ -118,6 +138,7 @@ const NewVestingForm = ({ onCancel }) => {
 
       const script = { code: respCode.data, storage: respStorage.data };
       await sendOrigination(balance.toString(), script);
+      onSubmit();
     } catch (e) {
       handleError(e);
     } finally {
@@ -135,7 +156,7 @@ const NewVestingForm = ({ onCancel }) => {
         tokensPerTick: '',
         balance: 0,
       }}
-      validationSchema={schema}
+      validationSchema={Yup.lazy(() => schema(balanceConverted))}
       onSubmit={(values, { setSubmitting }) => {
         createVesting(values, setSubmitting);
       }}
@@ -146,6 +167,7 @@ const NewVestingForm = ({ onCancel }) => {
         touched,
         isSubmitting,
         setFieldValue,
+        setFieldTouched,
         handleBlur,
       }) => (
         <Form>
@@ -262,22 +284,45 @@ const NewVestingForm = ({ onCancel }) => {
             />
           </BForm.Group>
 
-          <BForm.Group>
+          <BForm.Group controlId="balance">
             <FormLabel>Balance</FormLabel>
-            <Field
-              as={BForm.Control}
-              type="number"
-              name="balance"
-              aria-label="balance"
-              isInvalid={!!errors.balance && touched.balance}
-              isValid={!errors.balance && touched.balance}
-            />
+            <InputGroup>
+              <Field
+                as={BForm.Control}
+                type="number"
+                name="balance"
+                aria-label="balance"
+                isInvalid={!!errors.balance && touched.balance}
+                isValid={!errors.balance && touched.balance}
+                step="0.000001"
+                min="0"
+                onKeyPress={(event) => limitInputDecimals(event, 6)}
+              />
 
-            <ErrorMessage
-              component={BForm.Control.Feedback}
-              name="balance"
-              type="invalid"
-            />
+              <InputGroup.Append>
+                <InputGroup.Text style={{ paddingTop: 0, paddingBottom: 0 }}>
+                  <span style={{ display: 'flex', alignItems: 'center' }}>
+                    <BtnMax
+                      onClick={() => {
+                        setFieldValue('balance', balanceConverted);
+                        setFieldTouched('balance', true, false);
+                      }}
+                    >
+                      MAX
+                    </BtnMax>
+                    <span style={{ fontSize: '12px', marginBottom: '2px' }}>
+                      {balanceConverted}
+                    </span>
+                  </span>
+                </InputGroup.Text>
+              </InputGroup.Append>
+
+              <ErrorMessage
+                component={BForm.Control.Feedback}
+                name="balance"
+                type="invalid"
+              />
+            </InputGroup>
           </BForm.Group>
 
           <FormSubmit>
@@ -300,6 +345,7 @@ const NewVestingForm = ({ onCancel }) => {
 
 NewVestingForm.propTypes = {
   onCancel: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default NewVestingForm;

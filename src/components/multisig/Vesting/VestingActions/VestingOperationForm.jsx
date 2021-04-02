@@ -3,21 +3,22 @@ import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Button, Form as BForm, InputGroup } from 'react-bootstrap';
-import { FormLabel, FormSubmit } from '../../styled/Forms';
-import BtnMax from '../../styled/BtnMax';
-import { sendTx } from '../../../plugins/beacon';
-import useAPI from '../../../hooks/useApi';
+import { FormLabel, FormSubmit } from '../../../styled/Forms';
+import BtnMax from '../../../styled/BtnMax';
+import { sendTx } from '../../../../plugins/beacon';
+import useAPI from '../../../../hooks/useApi';
 import {
   useUserStateContext,
   useUserDispatchContext,
-} from '../../../store/userContext';
+} from '../../../../store/userContext';
 import {
   bs58Validation,
   convertMutezToXTZ,
   convertXTZToMutez,
   limitInputDecimals,
-} from '../../../utils/helpers';
-import { handleError } from '../../../utils/errorsHandler';
+} from '../../../../utils/helpers';
+import { handleError } from '../../../../utils/errorsHandler';
+import { useContractStateContext } from '../../../../store/contractContext';
 
 const schema = (maxAmount = 30000) => {
   return Yup.object({
@@ -38,10 +39,9 @@ const schema = (maxAmount = 30000) => {
   });
 };
 
-// const balance = 10;
-
 const VestingOperationForm = ({
   vestingAddress,
+  vestingAdminAddress,
   operationType,
   onSubmit,
   onCancel,
@@ -49,6 +49,7 @@ const VestingOperationForm = ({
   const { sendVestingOperation } = useAPI();
   const { balance: balanceRaw, address } = useUserStateContext();
   const { getBalance } = useUserDispatchContext();
+  const { contractAddress } = useContractStateContext();
 
   useEffect(() => {
     getBalance(address);
@@ -71,7 +72,15 @@ const VestingOperationForm = ({
         to,
       });
 
-      await sendTx(0, vestingAddress, resp.data);
+      const params = {
+        ...resp.data,
+        value: { string: resp.data.value },
+      };
+      console.log(vestingAddress);
+      console.log(vestingAdminAddress);
+
+      // await sendTx(0, vestingAddress, resp.data);
+      await sendTx(0, contractAddress, params);
       onSubmit();
     } catch (e) {
       handleError(e);
@@ -171,6 +180,7 @@ const VestingOperationForm = ({
 
 VestingOperationForm.propTypes = {
   vestingAddress: PropTypes.string.isRequired,
+  vestingAdminAddress: PropTypes.string.isRequired,
   operationType: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,

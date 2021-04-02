@@ -2,20 +2,14 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
-import styled from 'styled-components';
+import BtnIcon from '../../styled/BtnIcon';
 import Modal from '../../styled/Modal';
 import { Title } from '../../styled/Text';
 import { handleError } from '../../../utils/errorsHandler';
 import { useVestingsDispatchContext } from '../../../store/vestingsContext';
 import useAPI from '../../../hooks/useApi';
 import { useContractStateContext } from '../../../store/contractContext';
-
-const Close = styled(Button).attrs({ variant: 'link' })`
-  color: ${({ theme }) => theme.gray};
-  &:hover {
-    color: ${({ theme }) => theme.red};
-  }
-`;
+import useThemeContext from '../../../hooks/useThemeContext';
 
 const DeleteVesting = ({ vesting }) => {
   const [show, setShow] = useState(false);
@@ -23,6 +17,7 @@ const DeleteVesting = ({ vesting }) => {
   const { deleteVesting } = useAPI();
   const { contractAddress } = useContractStateContext();
   const { setVestings } = useVestingsDispatchContext();
+  const theme = useThemeContext();
 
   const handleClose = () => {
     setShow(false);
@@ -92,9 +87,9 @@ const DeleteVesting = ({ vesting }) => {
         </Modal.Body>
       </Modal>
 
-      <Close onClick={handleShow}>
+      <BtnIcon hoverColor={theme.red} onClick={handleShow}>
         <FontAwesomeIcon icon="times" />
-      </Close>
+      </BtnIcon>
     </>
   );
 };

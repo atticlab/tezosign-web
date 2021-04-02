@@ -194,7 +194,6 @@ const UserProvider = ({ children }) => {
       setIsBalanceLoading(true);
       const resp = await getAddressBalance(address);
       setBalance(resp.data);
-      // return resp.data;
     } catch (e) {
       handleError(e);
     } finally {

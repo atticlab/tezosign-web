@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button } from 'react-bootstrap';
+import BtnIcon from '../../styled/BtnIcon';
 import Modal from '../../styled/Modal';
 import { Title } from '../../styled/Text';
 import AssetEditor from './AssetEditor';
-
-const Edit = styled(Button).attrs({ variant: 'link' })`
-  color: ${({ theme }) => theme.gray};
-  &:hover {
-    color: ${({ theme }) => theme.green};
-  }
-`;
 
 const ChangeAsset = ({ asset }) => {
   const [show, setShow] = useState(false);
@@ -58,9 +50,9 @@ const ChangeAsset = ({ asset }) => {
         </Modal.Body>
       </Modal>
 
-      <Edit onClick={handleShow}>
+      <BtnIcon onClick={handleShow}>
         <FontAwesomeIcon icon="pen" />
-      </Edit>
+      </BtnIcon>
     </>
   );
 };

@@ -216,7 +216,6 @@ const useAPI = () => {
   // {
   //   address: 'KT1' || 'tz1' || 'tz2' || 'tz3',
   //   name: 'Name',
-  //   balance: 0, // ?
   // }
   const editVesting = (contractID, payload) => {
     return API.post(`/${network}/contract/${contractID}/vesting/edit`, payload);
@@ -224,7 +223,6 @@ const useAPI = () => {
   // {
   //   address: 'KT1' || 'tz1' || 'tz2' || 'tz3',
   //   name: 'Name',
-  //   balance: 0, // ?
   // }
   const deleteVesting = (contractID, payload) => {
     return API.post(

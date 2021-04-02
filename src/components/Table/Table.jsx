@@ -43,7 +43,6 @@ const Table = ({
                     cols={cols}
                     row={row}
                     isCollapsible={isCollapsible}
-                    // collapseContent={collapseContent(row)}
                     collapseContent={collapseContent}
                   />
                 );
@@ -54,7 +53,6 @@ const Table = ({
                   cols={cols}
                   row={row}
                   isCollapsible={isCollapsible}
-                  // collapseContent={collapseContent(row)}
                   collapseContent={collapseContent}
                 />
               );

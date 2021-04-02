@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button } from 'react-bootstrap';
-import styled from 'styled-components';
+import BtnIcon from '../../styled/BtnIcon';
 import Modal from '../../styled/Modal';
 import { Title } from '../../styled/Text';
 import VestingEditor from './VestingEditor';
-
-const Edit = styled(Button).attrs({ variant: 'link' })`
-  color: ${({ theme }) => theme.gray};
-  &:hover {
-    color: ${({ theme }) => theme.green};
-  }
-`;
 
 const ChangeVesting = ({ vesting }) => {
   const [show, setShow] = useState(false);
@@ -55,13 +47,13 @@ const ChangeVesting = ({ vesting }) => {
         </Modal.Body>
       </Modal>
 
-      <Edit
+      <BtnIcon
         onClick={() => {
           handleShow();
         }}
       >
         <FontAwesomeIcon icon="pen" />
-      </Edit>
+      </BtnIcon>
     </>
   );
 };

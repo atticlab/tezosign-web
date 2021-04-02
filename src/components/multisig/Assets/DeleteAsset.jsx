@@ -1,23 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
+import BtnIcon from '../../styled/BtnIcon';
 import Modal from '../../styled/Modal';
 import { Title } from '../../styled/Text';
 import useAPI from '../../../hooks/useApi';
 import { useContractStateContext } from '../../../store/contractContext';
 import { handleError } from '../../../utils/errorsHandler';
 import { useAssetsDispatchContext } from '../../../store/assetsContext';
-
-const Close = styled(Button).attrs({ variant: 'link' })`
-  color: ${({ theme }) => theme.gray};
-  &:hover {
-    color: ${({ theme }) => theme.red};
-  }
-`;
+import useThemeContext from '../../../hooks/useThemeContext';
 
 const DeleteAsset = ({ asset }) => {
+  const theme = useThemeContext();
   const { contractAddress } = useContractStateContext();
   const { deleteAsset } = useAPI();
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
@@ -93,9 +88,9 @@ const DeleteAsset = ({ asset }) => {
         </Modal.Body>
       </Modal>
 
-      <Close onClick={handleShow}>
+      <BtnIcon hoverColor={theme.red} onClick={handleShow}>
         <FontAwesomeIcon icon="times" />
-      </Close>
+      </BtnIcon>
     </>
   );
 };

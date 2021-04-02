@@ -123,7 +123,11 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
             </OperationGeneralInfo>
 
             <div style={{ marginTop: '20px', textAlign: 'left' }}>
-              <VestingActions vestingAddress={vesting.address} />
+              <VestingActions
+                vestingAddress={vesting.address}
+                // vestingAddress={vestingInfo.storage.vesting_address}
+                vestingAdminAddress={vestingInfo.storage.delegate_admin}
+              />
             </div>
           </>
         )
