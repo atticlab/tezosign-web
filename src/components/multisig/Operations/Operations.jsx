@@ -101,6 +101,9 @@ const Operations = () => {
     return ops.filter(
       (elem) =>
         operationType === null ||
+        ((elem.operation_info.transfer_list?.length > 1 ||
+          elem.operation_info.transfer_list?.[0].txs.length > 1) &&
+          operationType.value === 'multi_transfer') ||
         operationType.value === elem.operation_info.type,
     );
   }, [ops, operationType]);
@@ -126,7 +129,13 @@ const Operations = () => {
     {
       key: 'type',
       process(operation) {
-        const opType = operation.operation_info.type;
+        const {
+          operation_info: { type: opType, transfer_list: transferList },
+        } = operation;
+  
+        if (transferList?.length > 1 || transferList?.[0].txs.length > 1) {
+          return capitalize('multi transfer');
+        }
 
         return (
           operationsTypesMap[opType] || capitalize(opType.split('_').join(' '))
@@ -149,9 +158,13 @@ const Operations = () => {
             amount,
             asset_id: assetId,
             transfer_list: transferList,
-            type,
+            type: opType,
           },
         } = operation;
+
+        if (transferList?.length > 1 || transferList?.[0].txs.length > 1) {
+          return 'multiple amounts';
+        }
 
         // eslint-disable-next-line no-underscore-dangle
         const _amount =
@@ -164,9 +177,9 @@ const Operations = () => {
         });
 
         if (
-          type === 'income_fa_transfer' ||
-          type === 'fa_transfer' ||
-          type === 'fa2_transfer'
+          opType === 'income_fa_transfer' ||
+          opType === 'fa_transfer' ||
+          opType === 'fa2_transfer'
         ) {
           return `${
             currAsset?.scale

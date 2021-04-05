@@ -14,6 +14,7 @@ import useAPI from '../../../../hooks/useApi';
 import { useUserStateContext } from '../../../../store/userContext';
 import { useAssetsStateContext } from '../../../../store/assetsContext';
 import { handleError } from '../../../../utils/errorsHandler';
+import OperationDetailsTx from './OperationDetailsTx';
 
 const OperationGeneralInfo = styled.div`
   display: flex;
@@ -290,7 +291,6 @@ const OperationDetails = ({ operation, resetOperations }) => {
           ''
         )}
       </OperationGeneralInfo>
-
       <div>
         {signatures.length ? (
           <Stepper steps={signatures} style={{ marginTop: '30px' }} />
@@ -298,7 +298,6 @@ const OperationDetails = ({ operation, resetOperations }) => {
           ''
         )}
       </div>
-
       {operation.status === 'pending' && isUserOwner && (
         <Actions>
           <div>
@@ -383,6 +382,12 @@ const OperationDetails = ({ operation, resetOperations }) => {
             </div>
           )}
         </Actions>
+      )}
+
+      {operation.operation_info.transfer_list ? (
+        <OperationDetailsTx operation={operation} />
+      ) : (
+        ''
       )}
     </div>
   );
