@@ -19,7 +19,7 @@ import {
 } from '../../../../utils/helpers';
 import { handleError } from '../../../../utils/errorsHandler';
 import { sendOrigination } from '../../../../plugins/beacon';
-import BtnMax from '../../../styled/BtnMax';
+import { BtnMax } from '../../../styled/Btns';
 import {
   useUserDispatchContext,
   useUserStateContext,

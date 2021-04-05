@@ -3,18 +3,21 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { Button } from 'react-bootstrap';
-import { Title, Text } from '../../styled/Text';
-import { FormSubmit } from '../../styled/Forms';
-import OwnersFields from '../../create-multisig/OwnersFields';
-import ThresholdsFields from '../../create-multisig/ThresholdsFields';
-import { ownersSchema, cacheTest } from '../../../utils/schemas/ownersSchema';
-import signaturesSchema from '../../../utils/schemas/signaturesSchema';
-import useAddressRevealCheck from '../../../hooks/useAddressRevealCheck';
-import useAPI from '../../../hooks/useApi';
-import { useContractStateContext } from '../../../store/contractContext';
-import { handleError } from '../../../utils/errorsHandler';
-import { convertHexToPrefixedBase58, isHex } from '../../../utils/helpers';
-import { useOperationsDispatchContext } from '../../../store/operationsContext';
+import { Title, Text } from '../../../styled/Text';
+import { FormSubmit } from '../../../styled/Forms';
+import OwnersFields from '../../../create-multisig/OwnersFields';
+import ThresholdsFields from '../../../create-multisig/ThresholdsFields';
+import {
+  ownersSchema,
+  cacheTest,
+} from '../../../../utils/schemas/ownersSchema';
+import signaturesSchema from '../../../../utils/schemas/signaturesSchema';
+import useAddressRevealCheck from '../../../../hooks/useAddressRevealCheck';
+import useAPI from '../../../../hooks/useApi';
+import { useContractStateContext } from '../../../../store/contractContext';
+import { handleError } from '../../../../utils/errorsHandler';
+import { convertHexToPrefixedBase58, isHex } from '../../../../utils/helpers';
+import { useOperationsDispatchContext } from '../../../../store/operationsContext';
 
 const ContractEditor = ({ onCreate, onCancel }) => {
   const { updateStorage } = useAPI();

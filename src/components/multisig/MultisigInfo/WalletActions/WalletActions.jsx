@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Modal from '../../styled/Modal';
-import { Title } from '../../styled/Text';
-import { Dropdown } from '../../styled/Dropdown';
+import Modal from '../../../styled/Modal';
+import { Title } from '../../../styled/Text';
+import { Dropdown } from '../../../styled/Dropdown';
 import CreateTx from './CreateTx';
 import CreateDelegation from './CreateDelegation';
 import ContractEditor from './ContractEditor';
 
-const ContractActions = () => {
+const WalletActions = () => {
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
   const [opType, setOpType] = useState('');
@@ -111,4 +111,4 @@ const ContractActions = () => {
   );
 };
 
-export default ContractActions;
+export default WalletActions;

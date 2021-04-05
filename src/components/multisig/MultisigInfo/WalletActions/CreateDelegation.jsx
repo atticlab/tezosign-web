@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 import { Form as BForm, InputGroup, Button } from 'react-bootstrap';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-// import SelectCustom from '../../SelectCustom';
-// import { TextAccent, BreakTxt } from '../../styled/Text';
-import { FormLabel, FormSubmit } from '../../styled/Forms';
-import { bs58Validation } from '../../../utils/helpers';
-import useAPI from '../../../hooks/useApi';
-import { useOperationsDispatchContext } from '../../../store/operationsContext';
-import { useContractStateContext } from '../../../store/contractContext';
-import { handleError } from '../../../utils/errorsHandler';
+// import SelectCustom from '../../../SelectCustom';
+// import { TextAccent, BreakTxt } from '../../../styled/Text';
+import { FormLabel, FormSubmit } from '../../../styled/Forms';
+import { bs58Validation } from '../../../../utils/helpers';
+import useAPI from '../../../../hooks/useApi';
+import { useOperationsDispatchContext } from '../../../../store/operationsContext';
+import { useContractStateContext } from '../../../../store/contractContext';
+import { handleError } from '../../../../utils/errorsHandler';
 
 const schema = Yup.object({
   baker: Yup.string()

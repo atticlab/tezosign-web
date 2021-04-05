@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
-import BtnLink from './styled/BtnLink';
+import { BtnLink } from './styled/Btns';
 
 const copy = (msg) => toast.success(msg);
 // eslint-disable-next-line no-unused-vars,react/prop-types

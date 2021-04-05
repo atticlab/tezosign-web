@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styled from 'styled-components';
-import { FlexJustifyBetween, FlexAlignItemsCenter } from '../../styled/Flex';
-import { Red, Green, Bold } from '../../styled/Text';
-import BtnCopy from '../../BtnCopy';
-import { useContractStateContext } from '../../../store/contractContext';
-import { getAddressFromPubKey } from '../../../utils/helpers';
+import { FlexJustifyBetween, FlexAlignItemsCenter } from '../../../styled/Flex';
+import { Red, Green, Bold } from '../../../styled/Text';
+import BtnCopy from '../../../BtnCopy';
+import { useContractStateContext } from '../../../../store/contractContext';
+import { getAddressFromPubKey } from '../../../../utils/helpers';
 
 const Change = styled.ol`
   padding-left: 30px;

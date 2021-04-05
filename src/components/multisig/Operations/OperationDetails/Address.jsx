@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { FlexCenter } from '../../styled/Flex';
-import IdentIcon from '../../IdentIcon';
-import BtnCopy from '../../BtnCopy';
-import { ellipsis } from '../../../utils/helpers';
-import { TextLeft } from '../../styled/Text';
+import { TextLeft } from '../../../styled/Text';
+import { FlexCenter } from '../../../styled/Flex';
+import IdentIcon from '../../../IdentIcon';
+import BtnCopy from '../../../BtnCopy';
+import { ellipsis } from '../../../../utils/helpers';
 
 const AddressStyled = styled.div`
   display: flex;

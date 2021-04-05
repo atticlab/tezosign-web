@@ -9,12 +9,12 @@ import {
   OverlayTrigger,
   Tooltip,
 } from 'react-bootstrap';
-import { FormLabel, FormSubmit } from '../../styled/Forms';
-import { FlexAlignItemsCenter } from '../../styled/Flex';
-import BtnMax from '../../styled/BtnMax';
-import SelectCustom from '../../SelectCustom';
-import IdentIcon from '../../IdentIcon';
-import useAPI from '../../../hooks/useApi';
+import { FormLabel, FormSubmit } from '../../../styled/Forms';
+import { FlexAlignItemsCenter } from '../../../styled/Flex';
+import { BtnMax } from '../../../styled/Btns';
+import SelectCustom from '../../../SelectCustom';
+import IdentIcon from '../../../IdentIcon';
+import useAPI from '../../../../hooks/useApi';
 import {
   bs58Validation,
   convertXTZToMutez,
@@ -22,12 +22,12 @@ import {
   limitInputDecimals,
   convertAssetSubunitToAssetAmount,
   convertAssetAmountToAssetSubunit,
-} from '../../../utils/helpers';
-import { useContractStateContext } from '../../../store/contractContext';
-import { useOperationsDispatchContext } from '../../../store/operationsContext';
-import { useAssetsStateContext } from '../../../store/assetsContext';
-import { handleError } from '../../../utils/errorsHandler';
-import XTZ from '../../../assets/img/assets/xtz-256.svg';
+} from '../../../../utils/helpers';
+import { useContractStateContext } from '../../../../store/contractContext';
+import { useOperationsDispatchContext } from '../../../../store/operationsContext';
+import { useAssetsStateContext } from '../../../../store/assetsContext';
+import { handleError } from '../../../../utils/errorsHandler';
+import XTZ from '../../../../assets/img/assets/xtz-256.svg';
 
 const schema = (maxAmount = 30000, minAmount = 0.000001, asset = 'XTZ') => {
   return Yup.object({

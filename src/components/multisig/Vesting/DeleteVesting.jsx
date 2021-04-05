@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
-import BtnIcon from '../../styled/BtnIcon';
+import { BtnIcon } from '../../styled/Btns';
 import Modal from '../../styled/Modal';
 import { Title } from '../../styled/Text';
 import { handleError } from '../../../utils/errorsHandler';

@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Button, Form as BForm, InputGroup } from 'react-bootstrap';
 import { FormLabel, FormSubmit } from '../../../styled/Forms';
-import BtnMax from '../../../styled/BtnMax';
+import { BtnMax } from '../../../styled/Btns';
 import { sendTx } from '../../../../plugins/beacon';
 import useAPI from '../../../../hooks/useApi';
 import {
