@@ -71,7 +71,7 @@ const VestingEditor = ({ isEdit, name, address, onSubmit, onCancel }) => {
         manageVesting(values, setSubmitting);
       }}
     >
-      {({ errors, touched, isSubmitting }) => (
+      {({ errors, touched, isSubmitting, setFieldTouched, setFieldValue }) => (
         <Form>
           <BForm.Group>
             <FormLabel>Vesting contract name</FormLabel>
@@ -103,6 +103,12 @@ const VestingEditor = ({ isEdit, name, address, onSubmit, onCancel }) => {
               isInvalid={!!errors.address && touched.address}
               isValid={!errors.address && touched.address}
               disabled={isEdit}
+              onBlur={() => {
+                setFieldTouched('address', true);
+                if (isEdit) {
+                  setFieldValue('address', address);
+                }
+              }}
             />
 
             <ErrorMessage
