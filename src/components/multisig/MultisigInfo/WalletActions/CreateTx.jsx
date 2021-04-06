@@ -79,7 +79,7 @@ const formXTZAsset = (balance) => ({
 });
 
 const CreateTx = ({ onCreate, onCancel }) => {
-  const { sendOperation } = useAPI();
+  const { createOperation } = useAPI();
   const { assets } = useAssetsStateContext();
   const { contractAddress, contractInfo } = useContractStateContext();
   const { setOps } = useOperationsDispatchContext();
@@ -151,7 +151,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
         ];
       }
 
-      const newTx = await sendOperation(payload);
+      const newTx = await createOperation(payload);
       await setOps((prev) => {
         return [newTx.data, ...prev];
       });

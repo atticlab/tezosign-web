@@ -30,7 +30,7 @@ const useAPI = () => {
   };
   // {
   //   pub_key: 'Beacon account public key',
-  //   payload: 'string from sendOperation()',
+  //   payload: 'string from createOperation()',
   //   signature: 'signature from Beacon',
   // };
   const login = (payload) => {
@@ -96,7 +96,7 @@ const useAPI = () => {
   //   },
   // ], // for asset transfers only
   // };
-  const sendOperation = (payload) => {
+  const createOperation = (payload) => {
     return API.post(`/${network}/contract/operation`, payload);
   };
   const getOperationPayload = (operationID, params = {}) => {
@@ -297,7 +297,7 @@ const useAPI = () => {
     getContractCode,
     initStorage,
     updateStorage,
-    sendOperation,
+    createOperation,
     getOperationPayload,
     sendSignature,
     buildOperation,
