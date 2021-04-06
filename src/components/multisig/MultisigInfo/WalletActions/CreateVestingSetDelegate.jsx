@@ -8,24 +8,19 @@ import { useContractStateContext } from '../../../store/contractContext';
 import { bs58Validation } from '../../../utils/helpers';
 import useAPI from '../../../hooks/useApi';
 import { handleError } from '../../../utils/errorsHandler';
+import { useOperationsDispatchContext } from '../../../store/operationsContext';
 
 const schema = Yup.object({
   vestingAddress: Yup.string()
     .required('Required')
-    .matches(
-      'tz1|tz2|tz3|KT1',
-      'Tezos address must start with tz1, tz2, tz3, KT1',
-    )
+    .matches('KT1', 'Tezos contract address must start with KT1')
     .matches(/^\S+$/, 'No spaces are allowed')
     .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
     .length(36, 'Tezos address must be 36 characters long')
     .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
   to: Yup.string()
     .required('Required')
-    .matches(
-      'tz1|tz2|tz3|KT1',
-      'Tezos address must start with tz1, tz2, tz3, KT1',
-    )
+    .matches('tz1|tz2|tz3', 'Tezos address must start with tz1, tz2, tz3')
     .matches(/^\S+$/, 'No spaces are allowed')
     .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
     .length(36, 'Tezos address must be 36 characters long')
@@ -33,7 +28,9 @@ const schema = Yup.object({
 });
 
 const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
+  // eslint-disable-next-line no-unused-vars
   const { contractAddress } = useContractStateContext();
+  const { setOps } = useOperationsDispatchContext();
   const { createOperation } = useAPI();
 
   const createVestingSetDelegate = async (
@@ -48,6 +45,9 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
         to,
       });
       console.log(resp);
+      await setOps((prev) => {
+        return [resp.data, ...prev];
+      });
       onCreate();
     } catch (e) {
       handleError(e);

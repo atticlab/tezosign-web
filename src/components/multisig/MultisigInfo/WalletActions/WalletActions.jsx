@@ -6,6 +6,7 @@ import { Dropdown } from '../../../styled/Dropdown';
 import CreateTx from './CreateTx';
 import CreateDelegation from './CreateDelegation';
 import ContractEditor from './ContractEditor';
+import CreateVestingVest from './CreateVestingVest';
 import CreateVestingSetDelegate from './CreateVestingSetDelegate';
 
 const WalletActions = () => {
@@ -55,6 +56,12 @@ const WalletActions = () => {
           </Dropdown.Item>
           <Dropdown.Item
             className="dropdown-item"
+            onClick={() => handleShow('vesting_vest')}
+          >
+            Create vesting_vest
+          </Dropdown.Item>
+          <Dropdown.Item
+            className="dropdown-item"
             onClick={() => handleShow('vesting_set_delegate')}
           >
             Create vesting_set_delegate
@@ -85,6 +92,9 @@ const WalletActions = () => {
                 : // eslint-disable-next-line no-nested-ternary
                 opType === 'edit'
                 ? 'New contract update'
+                : // eslint-disable-next-line no-nested-ternary
+                opType === 'vesting_vest'
+                ? 'Vesting_vest'
                 : opType === 'vesting_set_delegate'
                 ? 'Vesting_set_delegate'
                 : ''}
@@ -110,6 +120,15 @@ const WalletActions = () => {
             if (opType === 'edit') {
               return (
                 <ContractEditor onCreate={handleClose} onCancel={handleClose} />
+              );
+            }
+
+            if (opType === 'vesting_vest') {
+              return (
+                <CreateVestingVest
+                  onCreate={handleClose}
+                  onCancel={handleClose}
+                />
               );
             }
 
