@@ -92,7 +92,7 @@ const Operations = () => {
   const [operationType, setOperationType] = useState(null);
   const { lastItem, pageNumber, setHasMore, setPageNumber } = useInfiniteScroll(
     isOpsLoading,
-    operationType,
+    !operationType,
   );
 
   const resetOperations = useCallback(async () => {
@@ -194,7 +194,7 @@ const Operations = () => {
         ) {
           return `${
             currAsset?.scale
-              ? convertAssetSubunitToAssetAmount(_amount, currAsset?.scale) || 1
+              ? convertAssetSubunitToAssetAmount(_amount, currAsset?.scale)
               : _amount
           } ${currAsset?.ticker || '???'}`;
         }
