@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 
-const useInfiniteScroll = (isLoading) => {
+const useInfiniteScroll = (isLoading, filterOpr) => {
   const [pageNumber, setPageNumber] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
@@ -12,14 +12,14 @@ const useInfiniteScroll = (isLoading) => {
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
+        if (entries[0].isIntersecting && hasMore && !filterOpr) {
           setPageNumber((prevPageNumber) => prevPageNumber + 1);
         }
       });
 
       if (node) observer.current.observe(node);
     },
-    [isLoading, hasMore],
+    [isLoading, hasMore, filterOpr],
   );
 
   return { setHasMore, lastItem, pageNumber, setPageNumber };

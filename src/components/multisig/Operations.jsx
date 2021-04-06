@@ -92,6 +92,7 @@ const Operations = () => {
   const [operationType, setOperationType] = useState(null);
   const { lastItem, pageNumber, setHasMore, setPageNumber } = useInfiniteScroll(
     isOpsLoading,
+    operationType,
   );
 
   const resetOperations = useCallback(async () => {
@@ -115,6 +116,7 @@ const Operations = () => {
     };
 
     loadOps();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);
 
