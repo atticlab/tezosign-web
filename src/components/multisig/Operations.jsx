@@ -21,7 +21,11 @@ import {
   useOperationsDispatchContext,
   useOperationsStateContext,
 } from '../../store/operationsContext';
-import { convertMutezToXTZ, capitalize } from '../../utils/helpers';
+import {
+  convertMutezToXTZ,
+  capitalize,
+  convertAssetSubunitToAssetAmount,
+} from '../../utils/helpers';
 import { dateFormat } from '../../utils/constants';
 
 dayjs.extend(utc);
@@ -187,7 +191,9 @@ const Operations = () => {
           type === 'fa2_transfer'
         ) {
           return `${
-            currAsset?.scale ? _amount / (10 ** currAsset?.scale || 1) : _amount
+            currAsset?.scale
+              ? convertAssetSubunitToAssetAmount(_amount, currAsset?.scale) || 1
+              : _amount
           } ${currAsset?.ticker || '???'}`;
         }
 
