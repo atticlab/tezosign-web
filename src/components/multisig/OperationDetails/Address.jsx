@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Ellipsis } from '../../styled/Text';
-import { FlexCenter } from '../../styled/Flex';
+// import { Ellipsis } from '../../styled/Text';
+import { FlexBetweenAndCenter } from '../../styled/Flex';
 import IdentIcon from '../../IdentIcon';
 import BtnCopy from '../../BtnCopy';
+import { ellipsis } from '../../../utils/helpers';
 
 const AddressStyled = styled.div`
   display: flex;
@@ -18,10 +19,13 @@ const Address = ({ address }) => (
     <div>
       <IdentIcon address={address} />
     </div>
-    <FlexCenter>
-      <Ellipsis style={{ fontSize: '14px' }}>{address}</Ellipsis>
-      <BtnCopy textToCopy={address} style={{ padding: 0 }} />
-    </FlexCenter>
+    <FlexBetweenAndCenter>
+      <span style={{ fontSize: '14px' }}>{ellipsis(address)}</span>
+      <BtnCopy
+        textToCopy={address}
+        style={{ padding: 0, paddingLeft: '10px' }}
+      />
+    </FlexBetweenAndCenter>
   </AddressStyled>
 );
 

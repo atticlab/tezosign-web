@@ -17,10 +17,8 @@ const Text = styled.p`
 `;
 
 const Ellipsis = styled.span`
-  display: inline-block;
-  max-width: ${({ maxWidth }) => maxWidth || '100px'};
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex;
+  width: 100%;
 `;
 
 const TextAccent = styled.span`
@@ -48,9 +46,9 @@ export {
   TitleStyles,
   Text,
   TextAccent,
-  Ellipsis,
   BreakTxt,
   Bold,
   Green,
   Red,
+  Ellipsis,
 };

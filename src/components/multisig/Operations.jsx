@@ -25,6 +25,7 @@ import {
   convertMutezToXTZ,
   capitalize,
   convertAssetSubunitToAssetAmount,
+  ellipsis,
 } from '../../utils/helpers';
 import { dateFormat } from '../../utils/constants';
 
@@ -139,7 +140,7 @@ const Operations = () => {
 
         return (
           <FlexCenter>
-            <Ellipsis maxWidth="70px">{id}</Ellipsis>
+            <span maxWidth="70px">{ellipsis(id)}</span>
             <BtnCopy
               textToCopy={id}
               style={{ paddingTop: 0, paddingBottom: 0 }}
@@ -216,11 +217,8 @@ const Operations = () => {
             <div style={{ marginRight: '5px' }}>
               <IndentIcon address={to} scale={4} />
             </div>
-            <Ellipsis>{to}</Ellipsis>
-            <BtnCopy
-              textToCopy={to}
-              style={{ paddingTop: 0, paddingBottom: 0 }}
-            />
+            <span>{ellipsis(to)}</span>
+            <BtnCopy textToCopy={to} style={{ padding: 0 }} />
           </FlexCenter>
         ) : (
           ''

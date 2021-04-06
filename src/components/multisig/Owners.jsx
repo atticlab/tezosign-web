@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from '../styled/Card';
-import { FlexCenter } from '../styled/Flex';
+import { FlexBetweenAndCenter } from '../styled/Flex';
 import { Ellipsis, TextAccent } from '../styled/Text';
 import { TblGenInfo } from '../styled/Tbl';
 import Table from '../Table';
@@ -9,6 +9,7 @@ import BtnCopy from '../BtnCopy';
 import IndentIcon from '../IdentIcon';
 import { useContractStateContext } from '../../store/contractContext';
 import useThemeContext from '../../hooks/useThemeContext';
+import { ellipsis } from '../../utils/helpers';
 
 const Owners = () => {
   const theme = useThemeContext();
@@ -21,18 +22,15 @@ const Owners = () => {
         const { address } = operation;
 
         return (
-          <FlexCenter>
-            <div style={{ marginRight: '5px' }}>
+          <FlexBetweenAndCenter maxWidth="180px">
+            <div style={{ marginRight: '10px' }}>
               <IndentIcon address={address} scale={4} />
             </div>
 
-            <Ellipsis maxWidth="200px">{address}</Ellipsis>
+            <Ellipsis>{ellipsis(address)}</Ellipsis>
 
-            <BtnCopy
-              textToCopy={address}
-              style={{ paddingTop: 0, paddingBottom: 0 }}
-            />
-          </FlexCenter>
+            <BtnCopy textToCopy={address} style={{ padding: 0 }} />
+          </FlexBetweenAndCenter>
         );
       },
     },
@@ -43,14 +41,11 @@ const Owners = () => {
         const pubKey = operation.pub_key;
 
         return (
-          <FlexCenter>
-            <Ellipsis maxWidth="200px">{pubKey}</Ellipsis>
+          <FlexBetweenAndCenter maxWidth="140px">
+            <Ellipsis>{ellipsis(pubKey)}</Ellipsis>
 
-            <BtnCopy
-              textToCopy={pubKey}
-              style={{ paddingTop: 0, paddingBottom: 0 }}
-            />
-          </FlexCenter>
+            <BtnCopy textToCopy={pubKey} style={{ padding: 0 }} />
+          </FlexBetweenAndCenter>
         );
       },
     },

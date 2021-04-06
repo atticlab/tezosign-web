@@ -7,6 +7,7 @@ import { Ellipsis } from '../styled/Text';
 import beaconLogo from '../../assets/img/beacon-logo.svg';
 import IdentIcon from '../IdentIcon';
 import { useUserDispatchContext } from '../../store/userContext';
+import { ellipsis } from '../../utils/helpers';
 
 const DDwnToggle = styled(Dropdown.Toggle)`
   color: ${({ theme }) => theme.black};
@@ -51,7 +52,7 @@ const UserDropdown = ({ address }) => {
           </div>
           <div style={{ marginRight: '5px' }}>
             <div>Connected as:</div>
-            <Address>{address}</Address>
+            <Address>{ellipsis(address)}</Address>
           </div>
           <div style={{ fontSize: '14px' }}>
             <FontAwesomeIcon
