@@ -92,6 +92,7 @@ const Operations = () => {
   const [operationType, setOperationType] = useState(null);
   const { lastItem, pageNumber, setHasMore, setPageNumber } = useInfiniteScroll(
     isOpsLoading,
+    !operationType,
   );
 
   const resetOperations = useCallback(async () => {
@@ -115,6 +116,7 @@ const Operations = () => {
     };
 
     loadOps();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);
 
@@ -192,7 +194,7 @@ const Operations = () => {
         ) {
           return `${
             currAsset?.scale
-              ? convertAssetSubunitToAssetAmount(_amount, currAsset?.scale) || 1
+              ? convertAssetSubunitToAssetAmount(_amount, currAsset?.scale)
               : _amount
           } ${currAsset?.ticker || '???'}`;
         }
