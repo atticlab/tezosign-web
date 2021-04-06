@@ -20,6 +20,8 @@ import {
   convertXTZToMutez,
   convertMutezToXTZ,
   limitInputDecimals,
+  convertAssetSubunitToAssetAmount,
+  convertAssetAmountToAssetSubunit,
 } from '../../../utils/helpers';
 import { useContractStateContext } from '../../../store/contractContext';
 import { useOperationsDispatchContext } from '../../../store/operationsContext';
@@ -118,7 +120,12 @@ const CreateTx = ({ onCreate, onCancel }) => {
         ),
         balance:
           asset.balances && asset.balances.length
-            ? asset.balances[0].balance / 10 ** asset.scale
+            ? Number(
+                convertAssetSubunitToAssetAmount(
+                  asset.balances[0].balance,
+                  asset.scale,
+                ),
+              )
             : 0,
       })),
     );
@@ -148,7 +155,9 @@ const CreateTx = ({ onCreate, onCancel }) => {
             // from
             txs: [
               {
-                amount: amount * 10 ** asset.scale,
+                amount: Number(
+                  convertAssetAmountToAssetSubunit(amount, asset.scale),
+                ),
                 to,
                 token_id: tokenID || undefined,
               },
@@ -176,7 +185,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
       validationSchema={Yup.lazy((values) =>
         schema(
           values.asset.balance,
-          1 / 10 ** values.asset.scale,
+          convertAssetSubunitToAssetAmount(1, values.asset.scale),
           values.asset.ticker,
         ),
       )}

@@ -15,6 +15,7 @@ import {
   useAssetsStateContext,
 } from '../../../store/assetsContext';
 import { useContractStateContext } from '../../../store/contractContext';
+import { convertAssetSubunitToAssetAmount } from '../../../utils/helpers';
 
 const Assets = () => {
   const { assets, isAssetsLoading } = useAssetsStateContext();
@@ -56,7 +57,10 @@ const Assets = () => {
       label: 'Balance',
       process({ balances, scale, ticker }) {
         return balances && balances.length
-          ? `${balances[0].balance / 10 ** scale} ${ticker}`
+          ? `${convertAssetSubunitToAssetAmount(
+              balances[0].balance,
+              scale,
+            )} ${ticker}`
           : '';
       },
     },

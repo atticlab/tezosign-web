@@ -26,6 +26,18 @@ const bs58Validation = (value) => {
   }
 };
 
+const pow10 = (exponent) => {
+  return 10 ** exponent;
+};
+
+const convertAssetAmountToAssetSubunit = (amount, scale) => {
+  return `${Number(amount) * pow10(scale)}`;
+};
+
+const convertAssetSubunitToAssetAmount = (amount, scale) => {
+  return `${Number(amount) / pow10(scale)}`;
+};
+
 const capitalize = (string) => {
   if (!string) return '';
   return `${string[0].toUpperCase()}${string.slice(1)}`;
@@ -125,4 +137,6 @@ export {
   isHex,
   limitInputDecimals,
   getAddressFromPubKey,
+  convertAssetSubunitToAssetAmount,
+  convertAssetAmountToAssetSubunit,
 };
