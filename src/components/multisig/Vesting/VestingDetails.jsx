@@ -92,7 +92,8 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
               <OperationGeneralInfo.Item>
                 <Bold>Activation date:</Bold>{' '}
                 {dayjs
-                  .utc(vestingInfo.storage.timestamp)
+                  .unix(vestingInfo.storage.timestamp)
+                  .utc()
                   .format(dateFormat.split(' ')[0])}
               </OperationGeneralInfo.Item>
               <OperationGeneralInfo.Item>

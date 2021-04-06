@@ -130,7 +130,7 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
       const payload = {
         vesting_address: vestingAddress,
         delegate_admin: delegateAddress,
-        timestamp: dayjs.utc(timestamp).valueOf(),
+        timestamp: dayjs.utc(timestamp).unix().valueOf(),
         seconds_per_tick: getSecondsFromHHMMSS(secondsPerTick),
         tokens_per_tick: Number(convertXTZToMutez(tokensPerTick)),
       };

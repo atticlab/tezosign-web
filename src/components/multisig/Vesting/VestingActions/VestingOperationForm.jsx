@@ -14,6 +14,7 @@ import {
 import {
   bs58Validation,
   convertMutezToXTZ,
+  // eslint-disable-next-line no-unused-vars
   convertXTZToMutez,
   limitInputDecimals,
 } from '../../../../utils/helpers';
@@ -49,6 +50,7 @@ const VestingOperationForm = ({
   const { sendVestingOperation } = useAPI();
   const { balance: balanceRaw, address } = useUserStateContext();
   const { getBalance } = useUserDispatchContext();
+  // eslint-disable-next-line no-unused-vars
   const { contractAddress } = useContractStateContext();
 
   useEffect(() => {
@@ -61,6 +63,7 @@ const VestingOperationForm = ({
 
   const sendVestingOperationRequest = async (
     type,
+    // eslint-disable-next-line no-unused-vars
     { amount, to },
     setSubmitting,
   ) => {
@@ -68,19 +71,21 @@ const VestingOperationForm = ({
       setSubmitting(true);
       const resp = await sendVestingOperation({
         type,
-        amount: Number(convertXTZToMutez(amount)),
+        // amount: Number(convertXTZToMutez(amount)),
         to,
       });
 
       const params = {
         ...resp.data,
-        value: { string: resp.data.value },
+        // value: { string: resp.data.value },
+        value: JSON.parse(resp.data.value),
       };
       console.log(vestingAddress);
       console.log(vestingAdminAddress);
 
       // await sendTx(0, vestingAddress, resp.data);
       await sendTx(0, contractAddress, params);
+      // await sendTx(0, vestingAddress, params);
       onSubmit();
     } catch (e) {
       handleError(e);
