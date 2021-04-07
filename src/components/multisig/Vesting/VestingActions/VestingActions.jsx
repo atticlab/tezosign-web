@@ -4,9 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dropdown } from '../../../styled/Dropdown';
 import Modal from '../../../styled/Modal';
 import { Title } from '../../../styled/Text';
-import VestingOperationForm from './VestingOperationForm';
+import VestingVestForm from './VestingVestForm';
+import VestingSetDelegateForm from './VestingSetDelegateForm';
 
-const VestingActions = ({ vestingAddress, vestingAdminAddress }) => {
+const VestingActions = ({ vestingAddress, vestingBalance }) => {
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
   // vesting_vest
@@ -39,13 +40,13 @@ const VestingActions = ({ vestingAddress, vestingAdminAddress }) => {
             className="dropdown-item"
             onClick={() => handleShow('vesting_vest')}
           >
-            Create vesting_vest
+            Withdraw from vesting
           </Dropdown.Item>
           <Dropdown.Item
             className="dropdown-item"
             onClick={() => handleShow('vesting_set_delegate')}
           >
-            Create vesting_set_delegate
+            Set new vesting delegate
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
@@ -66,22 +67,39 @@ const VestingActions = ({ vestingAddress, vestingAdminAddress }) => {
             <Title as="h3" style={{ marginBottom: 0 }}>
               {/* eslint-disable-next-line no-nested-ternary */}
               {opType === 'vesting_vest'
-                ? 'New vesting_vest'
+                ? 'Withdraw from vesting'
                 : opType === 'vesting_set_delegate'
-                ? 'New vesting_set_delegate'
+                ? 'Set new vesting delegate'
                 : ''}
             </Title>
           </div>
         </Modal.Header>
 
         <Modal.Body style={{ padding: '15px 30px' }}>
-          <VestingOperationForm
-            vestingAddress={vestingAddress}
-            vestingAdminAddress={vestingAdminAddress}
-            operationType={opType}
-            onSubmit={handleClose}
-            onCancel={handleClose}
-          />
+          {(() => {
+            if (opType === 'vesting_vest') {
+              return (
+                <VestingVestForm
+                  vestingAddress={vestingAddress}
+                  vestingBalance={vestingBalance}
+                  onSubmit={handleClose}
+                  onCancel={handleClose}
+                />
+              );
+            }
+
+            if (opType === 'vesting_set_delegate') {
+              return (
+                <VestingSetDelegateForm
+                  vestingAddress={vestingAddress}
+                  onSubmit={handleClose}
+                  onCancel={handleClose}
+                />
+              );
+            }
+
+            return '';
+          })()}
         </Modal.Body>
       </Modal>
     </>
@@ -90,7 +108,7 @@ const VestingActions = ({ vestingAddress, vestingAdminAddress }) => {
 
 VestingActions.propTypes = {
   vestingAddress: PropTypes.string.isRequired,
-  vestingAdminAddress: PropTypes.string.isRequired,
+  vestingBalance: PropTypes.number.isRequired,
 };
 
 export default VestingActions;

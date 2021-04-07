@@ -126,8 +126,7 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
             <div style={{ marginTop: '20px', textAlign: 'left' }}>
               <VestingActions
                 vestingAddress={vesting.address}
-                // vestingAddress={vestingInfo.storage.vesting_address}
-                vestingAdminAddress={vestingInfo.storage.delegate_admin}
+                vestingBalance={vesting.balance}
               />
             </div>
           </>

@@ -188,7 +188,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
       }) => (
         <Form>
           <BForm.Group>
-            <FormLabel>Select Asset</FormLabel>
+            <FormLabel>Select asset</FormLabel>
             <SelectCustom
               options={assetsOptions}
               defaultValue={XTZAsset}
@@ -223,7 +223,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
                 </Tooltip>
               }
             >
-              <FormLabel>Enter Token ID</FormLabel>
+              <FormLabel>Enter token ID</FormLabel>
             </OverlayTrigger>
             <Field
               as={BForm.Control}
@@ -244,7 +244,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
           </BForm.Group>
 
           <BForm.Group controlId="amount">
-            <FormLabel>Enter Amount</FormLabel>
+            <FormLabel>Enter amount</FormLabel>
             <InputGroup>
               <Field
                 as={BForm.Control}
