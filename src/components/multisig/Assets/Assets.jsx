@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { FlexCenter } from '../../styled/Flex';
 import Card from '../../styled/Card';
 import { TblGenInfo } from '../../styled/Tbl';
-import { Ellipsis } from '../../styled/Text';
 import NewAsset from './NewAsset';
 import IdentIcon from '../../IdentIcon';
 import Table from '../../Table';
@@ -15,7 +14,11 @@ import {
   useAssetsStateContext,
 } from '../../../store/assetsContext';
 import { useContractStateContext } from '../../../store/contractContext';
-import { convertAssetSubunitToAssetAmount } from '../../../utils/helpers';
+import {
+  convertAssetSubunitToAssetAmount,
+  ellipsis,
+} from '../../../utils/helpers';
+import { TextLeft } from '../../styled/Text';
 
 const Assets = () => {
   const { assets, isAssetsLoading } = useAssetsStateContext();
@@ -42,11 +45,8 @@ const Assets = () => {
             <div style={{ marginRight: '10px' }}>
               <IdentIcon address={assetContractAddress} scale={4} />
             </div>
-            <Ellipsis maxWidth="100px">{assetContractAddress}</Ellipsis>
-            <BtnCopy
-              textToCopy={assetContractAddress}
-              style={{ paddingTop: 0, paddingBottom: 0 }}
-            />
+            <TextLeft>{ellipsis(assetContractAddress)}</TextLeft>
+            <BtnCopy textToCopy={assetContractAddress} style={{ padding: 0 }} />
           </FlexCenter>
         );
       },

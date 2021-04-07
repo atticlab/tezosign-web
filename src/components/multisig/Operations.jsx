@@ -5,7 +5,7 @@ import utc from 'dayjs/plugin/utc';
 import { Form as BForm } from 'react-bootstrap';
 import Card from '../styled/Card';
 import { FlexCenter } from '../styled/Flex';
-import { Ellipsis, TextAccent } from '../styled/Text';
+import { TextAccent, TextLeft } from '../styled/Text';
 import { TblGenInfo } from '../styled/Tbl';
 import { FormLabel } from '../styled/Forms';
 import Table from '../Table';
@@ -25,6 +25,7 @@ import {
   convertMutezToXTZ,
   capitalize,
   convertAssetSubunitToAssetAmount,
+  ellipsis,
 } from '../../utils/helpers';
 import { dateFormat } from '../../utils/constants';
 
@@ -139,7 +140,7 @@ const Operations = () => {
 
         return (
           <FlexCenter>
-            <Ellipsis maxWidth="70px">{id}</Ellipsis>
+            <TextLeft width="105px">{ellipsis(id)}</TextLeft>
             <BtnCopy
               textToCopy={id}
               style={{ paddingTop: 0, paddingBottom: 0 }}
@@ -213,14 +214,11 @@ const Operations = () => {
 
         return to ? (
           <FlexCenter>
-            <div style={{ marginRight: '5px' }}>
+            <div style={{ marginRight: '10px' }}>
               <IndentIcon address={to} scale={4} />
             </div>
-            <Ellipsis>{to}</Ellipsis>
-            <BtnCopy
-              textToCopy={to}
-              style={{ paddingTop: 0, paddingBottom: 0 }}
-            />
+            <TextLeft>{ellipsis(to)}</TextLeft>
+            <BtnCopy textToCopy={to} style={{ padding: 0 }} />
           </FlexCenter>
         ) : (
           ''

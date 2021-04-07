@@ -1,7 +1,7 @@
 import React from 'react';
 import Card from '../styled/Card';
 import { FlexCenter } from '../styled/Flex';
-import { Ellipsis, TextAccent } from '../styled/Text';
+import { TextAccent, TextLeft } from '../styled/Text';
 import { TblGenInfo } from '../styled/Tbl';
 import Table from '../Table';
 import Spinner from '../Spinner';
@@ -9,6 +9,7 @@ import BtnCopy from '../BtnCopy';
 import IndentIcon from '../IdentIcon';
 import { useContractStateContext } from '../../store/contractContext';
 import useThemeContext from '../../hooks/useThemeContext';
+import { ellipsis } from '../../utils/helpers';
 
 const Owners = () => {
   const theme = useThemeContext();
@@ -22,16 +23,13 @@ const Owners = () => {
 
         return (
           <FlexCenter>
-            <div style={{ marginRight: '5px' }}>
+            <div style={{ marginRight: '10px' }}>
               <IndentIcon address={address} scale={4} />
             </div>
 
-            <Ellipsis maxWidth="200px">{address}</Ellipsis>
+            <TextLeft>{ellipsis(address)}</TextLeft>
 
-            <BtnCopy
-              textToCopy={address}
-              style={{ paddingTop: 0, paddingBottom: 0 }}
-            />
+            <BtnCopy textToCopy={address} style={{ padding: 0 }} />
           </FlexCenter>
         );
       },
@@ -44,12 +42,9 @@ const Owners = () => {
 
         return (
           <FlexCenter>
-            <Ellipsis maxWidth="200px">{pubKey}</Ellipsis>
+            <TextLeft>{ellipsis(pubKey)}</TextLeft>
 
-            <BtnCopy
-              textToCopy={pubKey}
-              style={{ paddingTop: 0, paddingBottom: 0 }}
-            />
+            <BtnCopy textToCopy={pubKey} style={{ padding: 0 }} />
           </FlexCenter>
         );
       },

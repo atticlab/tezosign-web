@@ -16,13 +16,6 @@ const Text = styled.p`
   font-size: ${({ fs, theme }) => fs || theme.fs16};
 `;
 
-const Ellipsis = styled.span`
-  display: inline-block;
-  max-width: ${({ maxWidth }) => maxWidth || '100px'};
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
 const TextAccent = styled.span`
   color: ${({ color, theme }) => color || theme.green};
   font-weight: 700;
@@ -43,14 +36,19 @@ const Red = styled.span`
   color: ${({ theme }) => theme.red};
 `;
 
+const TextLeft = styled.span`
+  width: ${({ width }) => width || '120px'};
+  text-align: left;
+`;
+
 export {
   Title,
   TitleStyles,
   Text,
   TextAccent,
-  Ellipsis,
   BreakTxt,
   Bold,
   Green,
   Red,
+  TextLeft,
 };
