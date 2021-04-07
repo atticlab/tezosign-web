@@ -14,7 +14,11 @@ import {
   useAssetsStateContext,
 } from '../../../store/assetsContext';
 import { useContractStateContext } from '../../../store/contractContext';
-import { convertAssetSubunitToAssetAmount, ellipsis } from '../../../utils/helpers';
+import {
+  convertAssetSubunitToAssetAmount,
+  ellipsis,
+} from '../../../utils/helpers';
+import { TextLeft } from '../../styled/Text';
 
 const Assets = () => {
   const { assets, isAssetsLoading } = useAssetsStateContext();
@@ -41,7 +45,7 @@ const Assets = () => {
             <div style={{ marginRight: '10px' }}>
               <IdentIcon address={assetContractAddress} scale={4} />
             </div>
-            <span>{ellipsis(assetContractAddress)}</span>
+            <TextLeft>{ellipsis(assetContractAddress)}</TextLeft>
             <BtnCopy textToCopy={assetContractAddress} style={{ padding: 0 }} />
           </FlexCenter>
         );

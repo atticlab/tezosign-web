@@ -43,9 +43,9 @@ const capitalize = (string) => {
   return `${string[0].toUpperCase()}${string.slice(1)}`;
 };
 
-const ellipsis = (string, start = 7, end = 4) => {
+const ellipsis = (string, start = 7, end = -4) => {
   if (!string) return '';
-  return `${string.substr(0, start)}...${string.substr(-end)}`;
+  return `${string.substr(0, start)}...${string.substr(end)}`;
 };
 
 const isHex = (string) => {

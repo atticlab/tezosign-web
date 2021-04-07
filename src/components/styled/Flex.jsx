@@ -16,17 +16,4 @@ const FlexCenter = styled(FlexAlignItemsCenter)`
   justify-content: center;
 `;
 
-const FlexBetweenAndCenter = styled(FlexAlignItemsCenter)`
-  justify-content: space-between;
-  max-width: ${({ maxWidth }) => maxWidth || '170px'};
-  margin: 0 auto;
-  text-align: left;
-`;
-
-export {
-  Flex,
-  FlexAlignItemsCenter,
-  FlexJustifyBetween,
-  FlexCenter,
-  FlexBetweenAndCenter,
-};
+export { Flex, FlexAlignItemsCenter, FlexJustifyBetween, FlexCenter };

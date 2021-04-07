@@ -1,7 +1,7 @@
 import React from 'react';
 import Card from '../styled/Card';
-import { FlexBetweenAndCenter } from '../styled/Flex';
-import { TextAccent } from '../styled/Text';
+import { FlexCenter } from '../styled/Flex';
+import { TextAccent, TextLeft } from '../styled/Text';
 import { TblGenInfo } from '../styled/Tbl';
 import Table from '../Table';
 import Spinner from '../Spinner';
@@ -22,15 +22,15 @@ const Owners = () => {
         const { address } = operation;
 
         return (
-          <FlexBetweenAndCenter maxWidth="180px">
+          <FlexCenter>
             <div style={{ marginRight: '10px' }}>
               <IndentIcon address={address} scale={4} />
             </div>
 
-            <span style={{ width: '100%' }}>{ellipsis(address)}</span>
+            <TextLeft>{ellipsis(address)}</TextLeft>
 
             <BtnCopy textToCopy={address} style={{ padding: 0 }} />
-          </FlexBetweenAndCenter>
+          </FlexCenter>
         );
       },
     },
@@ -41,11 +41,11 @@ const Owners = () => {
         const pubKey = operation.pub_key;
 
         return (
-          <FlexBetweenAndCenter maxWidth="140px">
-            <span>{ellipsis(pubKey)}</span>
+          <FlexCenter>
+            <TextLeft>{ellipsis(pubKey)}</TextLeft>
 
             <BtnCopy textToCopy={pubKey} style={{ padding: 0 }} />
-          </FlexBetweenAndCenter>
+          </FlexCenter>
         );
       },
     },

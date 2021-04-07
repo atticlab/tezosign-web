@@ -7,6 +7,7 @@ import beaconLogo from '../../assets/img/beacon-logo.svg';
 import IdentIcon from '../IdentIcon';
 import { useUserDispatchContext } from '../../store/userContext';
 import { ellipsis } from '../../utils/helpers';
+import { Bold } from '../styled/Text';
 
 const DDwnToggle = styled(Dropdown.Toggle)`
   color: ${({ theme }) => theme.black};
@@ -34,10 +35,6 @@ const DDwnMenu = styled(Dropdown.Menu)`
   border: 0;
 `;
 
-const Address = styled.span`
-  font-weight: 700;
-`;
-
 const UserDropdown = ({ address }) => {
   const [open, setOpen] = useState(false);
   const { disconnect } = useUserDispatchContext();
@@ -51,7 +48,7 @@ const UserDropdown = ({ address }) => {
           </div>
           <div style={{ marginRight: '5px' }}>
             <div>Connected as:</div>
-            <Address>{ellipsis(address)}</Address>
+            <Bold>{ellipsis(address)}</Bold>
           </div>
           <div style={{ fontSize: '14px' }}>
             <FontAwesomeIcon

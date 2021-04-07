@@ -36,4 +36,19 @@ const Red = styled.span`
   color: ${({ theme }) => theme.red};
 `;
 
-export { Title, TitleStyles, Text, TextAccent, BreakTxt, Bold, Green, Red };
+const TextLeft = styled.span`
+  width: ${({ width }) => width || '120px'};
+  text-align: left;
+`;
+
+export {
+  Title,
+  TitleStyles,
+  Text,
+  TextAccent,
+  BreakTxt,
+  Bold,
+  Green,
+  Red,
+  TextLeft,
+};
