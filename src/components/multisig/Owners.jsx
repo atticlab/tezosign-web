@@ -1,7 +1,7 @@
 import React from 'react';
 import Card from '../styled/Card';
 import { FlexBetweenAndCenter } from '../styled/Flex';
-import { Ellipsis, TextAccent } from '../styled/Text';
+import { TextAccent } from '../styled/Text';
 import { TblGenInfo } from '../styled/Tbl';
 import Table from '../Table';
 import Spinner from '../Spinner';
@@ -27,7 +27,7 @@ const Owners = () => {
               <IndentIcon address={address} scale={4} />
             </div>
 
-            <Ellipsis>{ellipsis(address)}</Ellipsis>
+            <span style={{ width: '100%' }}>{ellipsis(address)}</span>
 
             <BtnCopy textToCopy={address} style={{ padding: 0 }} />
           </FlexBetweenAndCenter>
@@ -42,7 +42,7 @@ const Owners = () => {
 
         return (
           <FlexBetweenAndCenter maxWidth="140px">
-            <Ellipsis>{ellipsis(pubKey)}</Ellipsis>
+            <span>{ellipsis(pubKey)}</span>
 
             <BtnCopy textToCopy={pubKey} style={{ padding: 0 }} />
           </FlexBetweenAndCenter>

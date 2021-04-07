@@ -16,11 +16,6 @@ const Text = styled.p`
   font-size: ${({ fs, theme }) => fs || theme.fs16};
 `;
 
-const Ellipsis = styled.span`
-  display: flex;
-  width: 100%;
-`;
-
 const TextAccent = styled.span`
   color: ${({ color, theme }) => color || theme.green};
   font-weight: 700;
@@ -41,14 +36,4 @@ const Red = styled.span`
   color: ${({ theme }) => theme.red};
 `;
 
-export {
-  Title,
-  TitleStyles,
-  Text,
-  TextAccent,
-  BreakTxt,
-  Bold,
-  Green,
-  Red,
-  Ellipsis,
-};
+export { Title, TitleStyles, Text, TextAccent, BreakTxt, Bold, Green, Red };

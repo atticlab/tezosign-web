@@ -5,7 +5,7 @@ import utc from 'dayjs/plugin/utc';
 import { Form as BForm } from 'react-bootstrap';
 import Card from '../styled/Card';
 import { FlexCenter } from '../styled/Flex';
-import { Ellipsis, TextAccent } from '../styled/Text';
+import { TextAccent } from '../styled/Text';
 import { TblGenInfo } from '../styled/Tbl';
 import { FormLabel } from '../styled/Forms';
 import Table from '../Table';

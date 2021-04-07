@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Dropdown, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Ellipsis } from '../styled/Text';
 import beaconLogo from '../../assets/img/beacon-logo.svg';
 import IdentIcon from '../IdentIcon';
 import { useUserDispatchContext } from '../../store/userContext';
@@ -35,7 +34,7 @@ const DDwnMenu = styled(Dropdown.Menu)`
   border: 0;
 `;
 
-const Address = styled(Ellipsis)`
+const Address = styled.span`
   font-weight: 700;
 `;
 
