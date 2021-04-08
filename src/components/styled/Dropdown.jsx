@@ -31,6 +31,11 @@ Dropdown.Menu = styled(Dropdown.Menu)`
       background-color: rgba(34, 211, 105, 0.5);
       outline: rgba(38, 210, 129, 0.5) auto 1px;
     }
+
+    &.disabled {
+      background-color: ${({ theme }) => theme.lightGray};
+      color: ${({ theme }) => theme.gray};
+    }
   }
 `;
 

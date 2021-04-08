@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Dropdown } from '../../../styled/Dropdown';
 import Modal from '../../../styled/Modal';
 import { Title } from '../../../styled/Text';
 import VestingVestForm from './VestingVestForm';
 import VestingSetDelegateForm from './VestingSetDelegateForm';
+import { useUserStateContext } from '../../../../store/userContext';
 
-const VestingActions = ({ vestingAddress, vestingBalance }) => {
+const VestingActions = ({
+  vestingAddress,
+  vestingBalance,
+  vestingDelegateAdmin,
+}) => {
+  const { address } = useUserStateContext();
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
   // vesting_vest
   // vesting_set_delegate
   const [opType, setOpType] = useState('');
+
+  const isUserDelegateAdmin = useMemo(() => {
+    return vestingDelegateAdmin === address;
+  }, [vestingDelegateAdmin, address]);
 
   const handleClose = () => {
     setShow(false);
@@ -37,17 +48,34 @@ const VestingActions = ({ vestingAddress, vestingBalance }) => {
 
         <Dropdown.Menu align="right">
           <Dropdown.Item
+            as="button"
             className="dropdown-item"
             onClick={() => handleShow('vesting_vest')}
           >
             Withdraw from vesting
           </Dropdown.Item>
-          <Dropdown.Item
-            className="dropdown-item"
-            onClick={() => handleShow('vesting_set_delegate')}
+          <OverlayTrigger
+            overlay={
+              !isUserDelegateAdmin ? (
+                <Tooltip>
+                  Available only for the delegate admin of the vesting contract.
+                </Tooltip>
+              ) : (
+                <span />
+              )
+            }
           >
-            Set new vesting delegate
-          </Dropdown.Item>
+            <span>
+              <Dropdown.Item
+                as="button"
+                className="dropdown-item"
+                disabled={!isUserDelegateAdmin}
+                onClick={() => handleShow('vesting_set_delegate')}
+              >
+                Set new vesting delegate
+              </Dropdown.Item>
+            </span>
+          </OverlayTrigger>
         </Dropdown.Menu>
       </Dropdown>
 
@@ -109,6 +137,7 @@ const VestingActions = ({ vestingAddress, vestingBalance }) => {
 VestingActions.propTypes = {
   vestingAddress: PropTypes.string.isRequired,
   vestingBalance: PropTypes.number.isRequired,
+  vestingDelegateAdmin: PropTypes.string.isRequired,
 };
 
 export default VestingActions;
