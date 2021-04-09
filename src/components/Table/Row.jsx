@@ -70,12 +70,12 @@ Row.propTypes = {
   cols: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.objectOf(PropTypes.any).isRequired,
   isCollapsible: PropTypes.bool,
-  collapseContent: PropTypes.node,
+  collapseContent: PropTypes.func,
 };
 
 Row.defaultProps = {
   isCollapsible: false,
-  collapseContent: <div />,
+  collapseContent: () => null,
 };
 
 Row.displayName = 'Row';

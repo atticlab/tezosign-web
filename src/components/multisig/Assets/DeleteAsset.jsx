@@ -88,7 +88,7 @@ const DeleteAsset = ({ asset }) => {
         </Modal.Body>
       </Modal>
 
-      <BtnIcon hoverColor={theme.red} onClick={handleShow}>
+      <BtnIcon $hoverColor={theme.red} onClick={handleShow}>
         <FontAwesomeIcon icon="times" />
       </BtnIcon>
     </>
