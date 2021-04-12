@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TblWrap, Tbl } from '../styled/Tbl';
 import Row from './Row';
+import useSortableData from '../../hooks/useSortableData';
 
 const Table = ({
   cols,
@@ -14,13 +15,21 @@ const Table = ({
   isCollapsible,
   collapseContent,
 }) => {
+  const { listRows, requestSort } = useSortableData(rows);
+
   return (
     <TblWrap maxHeight={maxHeight}>
       <Tbl responsive>
         <thead>
           <tr>
             {cols.map((col) => (
-              <Tbl.Th key={col.key} stickyHeader={stickyHeader}>
+              <Tbl.Th
+                key={col.key}
+                stickyHeader={stickyHeader}
+                onClick={() => {
+                  requestSort(col.key);
+                }}
+              >
                 {col.label ? col.label : col.key}
               </Tbl.Th>
             ))}
@@ -29,13 +38,13 @@ const Table = ({
         </thead>
 
         <tbody>
-          {(!rows || !rows.length) && !isDataLoading ? (
+          {(!listRows || !listRows.length) && !isDataLoading ? (
             <tr>
               <td colSpan="100%">No data</td>
             </tr>
           ) : (
-            rows.map((row, index) => {
-              if (rows.length === index + 1) {
+            listRows.map((row, index) => {
+              if (listRows.length === index + 1) {
                 return (
                   <Row
                     ref={lastItem}

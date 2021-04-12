@@ -32,6 +32,7 @@ const Tbl = styled(BTable)`
 `;
 
 Tbl.Th = styled.th`
+  cursor: pointer;
   text-transform: uppercase;
   border: none !important;
   background-color: white;
