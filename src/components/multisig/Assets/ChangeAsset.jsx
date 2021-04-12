@@ -39,7 +39,7 @@ const ChangeAsset = ({ asset }) => {
             </Modal.Close>
 
             <Title as="h3" style={{ marginBottom: 0 }}>
-              Edit Asset
+              Edit asset
             </Title>
           </div>
         </Modal.Header>

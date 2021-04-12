@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { Title, Text } from '../components/styled/Text';

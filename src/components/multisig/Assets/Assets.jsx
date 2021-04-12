@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { FlexCenter } from '../../styled/Flex';
 import Card from '../../styled/Card';
 import { TblGenInfo } from '../../styled/Tbl';
-import NewAsset from './NewAsset';
+import AddAsset from './AddAsset';
 import IdentIcon from '../../IdentIcon';
 import Table from '../../Table';
 import Spinner from '../../Spinner';
@@ -82,7 +82,7 @@ const Assets = () => {
     <section>
       <TblGenInfo style={{ marginBottom: '20px', justifyContent: 'flex-end' }}>
         <TblGenInfo.Item style={{ margin: 0 }}>
-          {isUserOwner && <NewAsset />}
+          {isUserOwner && <AddAsset />}
         </TblGenInfo.Item>
       </TblGenInfo>
 
