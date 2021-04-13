@@ -157,7 +157,7 @@ const useAPI = () => {
   //   scale: 0;
   //   ticker: 'asd';
   // }
-  const createAsset = (contractID, payload) => {
+  const addAsset = (contractID, payload) => {
     return API.post(`/${network}/contract/${contractID}/asset`, payload);
   };
   // {
@@ -252,7 +252,7 @@ const useAPI = () => {
     isAddressRevealed,
     getAssets,
     getAssetsRates,
-    createAsset,
+    addAsset,
     editAsset,
     deleteAsset,
     getOriginatedContract,

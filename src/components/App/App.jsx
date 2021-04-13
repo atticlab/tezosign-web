@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 // import { Normalize } from 'styled-normalize';
 import { Container } from 'react-bootstrap';
+import { HelmetProvider } from 'react-helmet-async';
 import GlobalStyles from '../styled/GlobalStyles';
 import theme from '../../utils/theme';
 import AppWrapper from './AppWrapper';
@@ -26,42 +27,44 @@ const SpinnerWrapper = styled.div`
 const App = () => {
   return (
     <Router>
-      <ThemeProvider theme={theme}>
-        <GlobalStyles />
-        {/* <Normalize /> */}
+      <HelmetProvider>
+        <ThemeProvider theme={theme}>
+          <GlobalStyles />
+          {/* <Normalize /> */}
 
-        <UserProvider>
-          <UserStateConsumer>
-            {(value) =>
-              value.isRestoreLoading ? (
-                <SpinnerWrapper>
-                  <Spinner />
-                </SpinnerWrapper>
-              ) : (
-                <AppWrapper>
-                  <AppHeader />
-                  <AppWrapper.Content>
-                    <Container>
-                      <ContractProvider>
-                        <Routes />
-                      </ContractProvider>
-                    </Container>
-                  </AppWrapper.Content>
-                  <AppFooter />
-                </AppWrapper>
-              )
-            }
-          </UserStateConsumer>
-        </UserProvider>
-        <Toastr
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar
-          closeOnClick
-          pauseOnHover={false}
-          draggable={false}
-        />
-      </ThemeProvider>
+          <UserProvider>
+            <UserStateConsumer>
+              {(value) =>
+                value.isRestoreLoading ? (
+                  <SpinnerWrapper>
+                    <Spinner />
+                  </SpinnerWrapper>
+                ) : (
+                  <AppWrapper>
+                    <AppHeader />
+                    <AppWrapper.Content>
+                      <Container>
+                        <ContractProvider>
+                          <Routes />
+                        </ContractProvider>
+                      </Container>
+                    </AppWrapper.Content>
+                    <AppFooter />
+                  </AppWrapper>
+                )
+              }
+            </UserStateConsumer>
+          </UserProvider>
+          <Toastr
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar
+            closeOnClick
+            pauseOnHover={false}
+            draggable={false}
+          />
+        </ThemeProvider>
+      </HelmetProvider>
     </Router>
   );
 };

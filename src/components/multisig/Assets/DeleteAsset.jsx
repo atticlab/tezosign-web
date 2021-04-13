@@ -74,7 +74,7 @@ const DeleteAsset = ({ asset }) => {
             </Modal.Close>
 
             <Title as="h3" style={{ marginBottom: 0 }}>
-              Delete Asset
+              Delete asset
             </Title>
           </div>
         </Modal.Header>

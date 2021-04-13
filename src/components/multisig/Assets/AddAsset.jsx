@@ -5,7 +5,7 @@ import Modal from '../../styled/Modal';
 import { Title } from '../../styled/Text';
 import AssetEditor from './AssetEditor';
 
-const NewAsset = () => {
+const AddAsset = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => {
     setShow(false);
@@ -30,7 +30,7 @@ const NewAsset = () => {
             </Modal.Close>
 
             <Title as="h3" style={{ marginBottom: 0 }}>
-              New Asset
+              Add asset
             </Title>
           </div>
         </Modal.Header>
@@ -40,9 +40,9 @@ const NewAsset = () => {
         </Modal.Body>
       </Modal>
 
-      <Button onClick={handleShow}>New Asset</Button>
+      <Button onClick={handleShow}>Add asset</Button>
     </>
   );
 };
 
-export default NewAsset;
+export default AddAsset;

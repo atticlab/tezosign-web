@@ -27,7 +27,8 @@ const schema = Yup.object({
   contractType: Yup.string().required('Required'),
   scale: Yup.number()
     .required('Required')
-    .min(1, 'Minimum scale is 1')
+    .integer('Decimals must be an integer')
+    .min(0, 'Minimum scale is 0')
     .max(10, 'Maximum scale is 10'),
   ticker: Yup.string()
     .required('Required')
@@ -41,6 +42,16 @@ const contractTypes = [
   { value: 'FA2', label: 'FA2' },
 ];
 
+const formAssetPayload = ({ name, contractType, address, scale, ticker }) => {
+  return {
+    name,
+    contract_type: contractType,
+    address,
+    scale,
+    ticker,
+  };
+};
+
 const AssetEditor = ({
   isEdit,
   name,
@@ -52,42 +63,46 @@ const AssetEditor = ({
   onCancel,
 }) => {
   const { contractAddress } = useContractStateContext();
-  const { createAsset, editAsset } = useAPI();
+  const { addAsset, editAsset } = useAPI();
   const { setAssets } = useAssetsDispatchContext();
 
-  const addAsset = async (contractID, assetFields, setSubmitting) => {
+  const addAssetReq = async (contractID, assetFields, setSubmitting) => {
     try {
-      setSubmitting(true);
-      const payload = {
-        name: assetFields.name,
-        contract_type: assetFields.contractType,
-        address: assetFields.address,
-        scale: assetFields.scale,
-        ticker: assetFields.ticker,
-      };
-      let resp;
-
-      if (!isEdit) {
-        resp = await createAsset(contractID, payload);
-        setAssets((prev) => [...prev, resp.data]);
-      } else {
-        resp = await editAsset(contractID, payload);
-        setAssets((prev) => {
-          const indexToModify = prev.indexOf(
-            prev.find((asset) => asset.address === resp.data.address),
-          );
-          const res = [...prev];
-          res[indexToModify] = resp.data;
-          return res;
-        });
-      }
-
+      const resp = await addAsset(contractID, formAssetPayload(assetFields));
+      setAssets((prev) => [...prev, resp.data]);
       onSubmit();
     } catch (e) {
       handleError(e);
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const editAssetReq = async (contractID, assetFields, setSubmitting) => {
+    try {
+      const resp = await editAsset(contractID, formAssetPayload(assetFields));
+      setAssets((prev) => {
+        const indexToModify = prev.indexOf(
+          prev.find((asset) => asset.address === resp.data.address),
+        );
+        const res = [...prev];
+        res[indexToModify] = resp.data;
+        return res;
+      });
+      onSubmit();
+    } catch (e) {
+      handleError(e);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const addOrCreateAsset = (contractID, assetFields, setSubmitting) => {
+    if (!isEdit) {
+      return addAssetReq(contractID, assetFields, setSubmitting);
+    }
+
+    return editAssetReq(contractID, assetFields, setSubmitting);
   };
 
   return (
@@ -101,7 +116,7 @@ const AssetEditor = ({
       }}
       validationSchema={schema}
       onSubmit={async (values, { setSubmitting }) => {
-        return addAsset(contractAddress, values, setSubmitting);
+        return addOrCreateAsset(contractAddress, values, setSubmitting);
       }}
     >
       {({ errors, touched, setFieldValue, setFieldTouched, isSubmitting }) => (
@@ -113,6 +128,7 @@ const AssetEditor = ({
               type="text"
               name="name"
               aria-label="name"
+              autoComplete="off"
               isInvalid={!!errors.name && touched.name}
               isValid={!errors.name && touched.name}
             />
@@ -124,7 +140,7 @@ const AssetEditor = ({
             />
           </BForm.Group>
           <BForm.Group>
-            <FormLabel>Contract address</FormLabel>
+            <FormLabel>Asset contract address</FormLabel>
 
             <Field
               as={BForm.Control}
@@ -132,6 +148,7 @@ const AssetEditor = ({
               name="address"
               aria-label="address"
               disabled={isEdit}
+              autoComplete="off"
               isInvalid={!!errors.address && touched.address}
               isValid={!errors.address && touched.address}
               onBlur={() => {
@@ -150,7 +167,7 @@ const AssetEditor = ({
           </BForm.Group>
 
           <BForm.Group>
-            <FormLabel>Contract type</FormLabel>
+            <FormLabel>Asset contract type</FormLabel>
 
             <SelectCustom
               options={contractTypes}
@@ -183,7 +200,7 @@ const AssetEditor = ({
             />
           </BForm.Group>
           <BForm.Group>
-            <FormLabel>Scale</FormLabel>
+            <FormLabel>Decimals</FormLabel>
 
             <Field
               as={BForm.Control}
@@ -203,13 +220,14 @@ const AssetEditor = ({
             />
           </BForm.Group>
           <BForm.Group>
-            <FormLabel>Ticker</FormLabel>
+            <FormLabel>Symbol</FormLabel>
 
             <Field
               as={BForm.Control}
               type="text"
               name="ticker"
               aria-label="ticker"
+              autoComplete="off"
               isInvalid={!!errors.ticker && touched.ticker}
               isValid={!errors.ticker && touched.ticker}
             />

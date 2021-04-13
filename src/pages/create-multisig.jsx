@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled, { css } from 'styled-components';
 import { Accordion } from 'react-bootstrap';
