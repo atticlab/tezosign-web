@@ -12,7 +12,9 @@ import { useUserStateContext } from '../../../../store/userContext';
 const VestingActions = ({
   vestingAddress,
   vestingBalance,
+  vestingOpenedBalance,
   vestingDelegateAdmin,
+  tokensPerTIck,
 }) => {
   const { address } = useUserStateContext();
   const [open, setOpen] = useState(false);
@@ -110,6 +112,8 @@ const VestingActions = ({
                 <VestingVestForm
                   vestingAddress={vestingAddress}
                   vestingBalance={vestingBalance}
+                  vestingOpenedBalance={vestingOpenedBalance}
+                  tokensPerTick={tokensPerTIck}
                   onSubmit={handleClose}
                   onCancel={handleClose}
                 />
@@ -137,7 +141,9 @@ const VestingActions = ({
 VestingActions.propTypes = {
   vestingAddress: PropTypes.string.isRequired,
   vestingBalance: PropTypes.number.isRequired,
+  vestingOpenedBalance: PropTypes.number.isRequired,
   vestingDelegateAdmin: PropTypes.string.isRequired,
+  tokensPerTIck: PropTypes.number.isRequired,
 };
 
 export default VestingActions;

@@ -20,30 +20,40 @@ const schema = (maxAmount = 0) => {
       .required('Required')
       .max(maxAmount, `Maximum amount is ${maxAmount} XTZ`)
       .min(0.000001, `Minimum amount is 0.000001 XTZ`),
+    batches: Yup.number()
+      .required('Required')
+      .integer('Batches must be an integer')
+      .min(1, `Minimum number of batches is 1`),
   });
 };
 
 const VestingVestForm = ({
   vestingAddress,
   vestingBalance,
+  vestingOpenedBalance,
+  tokensPerTick,
   onSubmit,
   onCancel,
 }) => {
   const { sendVestingOperation } = useAPI();
   const balance = useMemo(() => {
-    return convertMutezToXTZ(vestingBalance);
-  }, [vestingBalance]);
+    if (vestingBalance < vestingOpenedBalance) {
+      const int = Math.floor(vestingBalance - (vestingBalance % tokensPerTick));
+      return convertMutezToXTZ(int);
+    }
+    return convertMutezToXTZ(vestingOpenedBalance);
+  }, [vestingBalance, vestingOpenedBalance, tokensPerTick]);
 
   const sendVestingOperationRequest = async (
     type,
-    { amount },
+    { batches },
     setSubmitting,
   ) => {
     try {
       setSubmitting(true);
       const resp = await sendVestingOperation({
         type,
-        amount: Number(convertXTZToMutez(amount)),
+        amount: batches,
       });
 
       const params = {
@@ -64,35 +74,85 @@ const VestingVestForm = ({
     <Formik
       initialValues={{
         amount: '',
+        batches: '',
       }}
       validationSchema={Yup.lazy(() => schema(balance))}
       onSubmit={(values, { setSubmitting }) => {
         sendVestingOperationRequest('vesting_vest', values, setSubmitting);
       }}
     >
-      {({ errors, touched, isSubmitting, setFieldValue, setFieldTouched }) => (
+      {({
+        values,
+        errors,
+        touched,
+        isSubmitting,
+        setFieldValue,
+        setFieldTouched,
+        handleBlur,
+      }) => (
         <Form>
+          <BForm.Group controlId="batches">
+            <FormLabel>Ticks</FormLabel>
+            <Field
+              as={BForm.Control}
+              type="number"
+              name="batches"
+              aria-label="batches"
+              min="0"
+              isInvalid={!!errors.batches && touched.batches}
+              isValid={!errors.batches && touched.batches}
+              onBlur={(e) => {
+                handleBlur(e);
+                setFieldValue(
+                  'amount',
+                  convertMutezToXTZ(values.batches * tokensPerTick),
+                );
+                setFieldTouched('amount', true, false);
+              }}
+            />
+
+            <ErrorMessage
+              component={BForm.Control.Feedback}
+              name="batches"
+              type="invalid"
+            />
+          </BForm.Group>
+
           <BForm.Group controlId="amount">
-            <FormLabel>Enter amount</FormLabel>
+            <FormLabel>Amount</FormLabel>
             <InputGroup>
               <Field
                 as={BForm.Control}
                 type="number"
                 name="amount"
                 aria-label="amount"
+                step={convertMutezToXTZ(tokensPerTick)}
+                min="0"
+                autoComplete="off"
                 isInvalid={!!errors.amount && touched.amount}
                 isValid={!errors.amount && touched.amount}
-                step="0.000001"
-                min="0"
                 onKeyPress={(event) => limitInputDecimals(event, 6)}
+                onBlur={(e) => {
+                  handleBlur(e);
+                  setFieldValue(
+                    'batches',
+                    convertXTZToMutez(values.amount) / tokensPerTick,
+                  );
+                  setFieldTouched('batches', true, false);
+                }}
               />
 
               <InputGroup.Append>
                 <InputGroup.Text style={{ paddingTop: 0, paddingBottom: 0 }}>
                   <span style={{ display: 'flex', alignItems: 'center' }}>
                     <BtnMax
-                      onClick={() => {
-                        setFieldValue('amount', balance);
+                      onClick={async () => {
+                        await setFieldValue(
+                          'batches',
+                          convertXTZToMutez(balance) / tokensPerTick,
+                        );
+                        await setFieldTouched('batches', true, false);
+                        await setFieldValue('amount', balance);
                         setFieldTouched('amount', true, false);
                       }}
                     >
@@ -135,6 +195,8 @@ const VestingVestForm = ({
 VestingVestForm.propTypes = {
   vestingAddress: PropTypes.string.isRequired,
   vestingBalance: PropTypes.number.isRequired,
+  vestingOpenedBalance: PropTypes.number.isRequired,
+  tokensPerTick: PropTypes.number.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };

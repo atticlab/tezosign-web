@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { TblGenInfo } from '../../styled/Tbl';
 import Card from '../../styled/Card';
 import { FlexCenter } from '../../styled/Flex';
-import { Ellipsis } from '../../styled/Text';
+import { TextLeft } from '../../styled/Text';
 import NewVesting from './NewVesting';
 import AddVesting from './AddVesting';
 import Table from '../../Table';
@@ -17,7 +17,7 @@ import {
   useVestingsDispatchContext,
   useVestingsStateContext,
 } from '../../../store/vestingsContext';
-import { convertMutezToXTZ } from '../../../utils/helpers';
+import { convertMutezToXTZ, ellipsis } from '../../../utils/helpers';
 
 const Vesting = () => {
   const { isUserOwner } = useContractStateContext();
@@ -42,7 +42,7 @@ const Vesting = () => {
             <div style={{ marginRight: '10px' }}>
               <IdentIcon address={vestingAddress} scale={4} />
             </div>
-            <Ellipsis maxWidth="100px">{vestingAddress}</Ellipsis>
+            <TextLeft>{ellipsis(vestingAddress)}</TextLeft>
             <BtnCopy
               textToCopy={vestingAddress}
               style={{ paddingTop: 0, paddingBottom: 0 }}

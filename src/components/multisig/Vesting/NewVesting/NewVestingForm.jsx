@@ -101,6 +101,8 @@ const convertInputToTime = (e) => {
   return toHHMMSS(Math.max(0, getSecondsFromHHMMSS(e.target.value)));
 };
 
+const today = dayjs().startOf('day').toDate();
+
 const NewVestingForm = ({ onSubmit, onCancel }) => {
   const { getVestingContractCode, initVesting } = useAPI();
   const { balance: balanceRaw, address } = useUserStateContext();
@@ -178,6 +180,7 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
               type="text"
               name="vestingAddress"
               aria-label="vestingAddress"
+              autoComplete="off"
               isInvalid={!!errors.vestingAddress && touched.vestingAddress}
               isValid={!errors.vestingAddress && touched.vestingAddress}
             />
@@ -196,6 +199,7 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
               type="text"
               name="delegateAddress"
               aria-label="delegateAddress"
+              autoComplete="off"
               isInvalid={!!errors.delegateAddress && touched.delegateAddress}
               isValid={!errors.delegateAddress && touched.delegateAddress}
             />
@@ -215,6 +219,7 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
                 aria-label="timestamp"
                 as={DatePicker}
                 dateFormat="yyyy/MM/dd"
+                minDate={today}
                 wrapperClassName={
                   // eslint-disable-next-line no-nested-ternary
                   !!errors.timestamp && touched.timestamp
@@ -273,8 +278,12 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
               type="number"
               name="tokensPerTick"
               aria-label="tokensPerTick"
+              min="0"
+              step="0.000001"
+              autoComplete="off"
               isInvalid={!!errors.tokensPerTick && touched.tokensPerTick}
               isValid={!errors.tokensPerTick && touched.tokensPerTick}
+              onKeyPress={(event) => limitInputDecimals(event, 6)}
             />
 
             <ErrorMessage
@@ -292,6 +301,7 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
                 type="number"
                 name="balance"
                 aria-label="balance"
+                autoComplete="off"
                 isInvalid={!!errors.balance && touched.balance}
                 isValid={!errors.balance && touched.balance}
                 step="0.000001"

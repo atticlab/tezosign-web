@@ -127,7 +127,9 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
               <VestingActions
                 vestingAddress={vesting.address}
                 vestingDelegateAdmin={vestingInfo.storage.delegate_admin}
-                vestingBalance={vesting.balance}
+                vestingBalance={vestingInfo.balance}
+                vestingOpenedBalance={vestingInfo.opened_balance}
+                tokensPerTIck={vestingInfo.storage.tokens_per_tick}
               />
             </div>
           </>

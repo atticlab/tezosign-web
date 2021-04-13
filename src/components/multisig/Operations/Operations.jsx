@@ -21,8 +21,12 @@ import {
   useOperationsDispatchContext,
   useOperationsStateContext,
 } from '../../../store/operationsContext';
-import { convertMutezToXTZ, capitalize, convertAssetSubunitToAssetAmount,
-  ellipsis } from '../../../utils/helpers';
+import {
+  convertMutezToXTZ,
+  capitalize,
+  convertAssetSubunitToAssetAmount,
+  ellipsis,
+} from '../../../utils/helpers';
 import { dateFormat } from '../../../utils/constants';
 
 dayjs.extend(utc);

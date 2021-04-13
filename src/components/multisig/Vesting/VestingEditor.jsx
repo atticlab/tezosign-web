@@ -93,13 +93,14 @@ const VestingEditor = ({ isEdit, name, address, onSubmit, onCancel }) => {
           </BForm.Group>
 
           <BForm.Group>
-            <FormLabel>Contract address</FormLabel>
+            <FormLabel>Vesting contract address</FormLabel>
 
             <Field
               as={BForm.Control}
               type="text"
               name="address"
               aria-label="address"
+              autoComplete="off"
               isInvalid={!!errors.address && touched.address}
               isValid={!errors.address && touched.address}
               disabled={isEdit}
