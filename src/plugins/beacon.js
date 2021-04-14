@@ -1,6 +1,7 @@
 import {
   DAppClient,
   NetworkType,
+  SigningType,
   TezosOperationType,
 } from '@airgap/beacon-sdk';
 import { convertXTZToMutez } from '../utils/helpers';
@@ -62,9 +63,10 @@ const sendOrigination = async (balance = '0', script) => {
   });
 };
 
-const requestSignPayload = (payload) => {
+const requestSignPayload = (payload, signingType = SigningType.MICHELINE) => {
   return client.requestSignPayload({
     payload,
+    signingType,
     // sourceAddress
   });
 };
