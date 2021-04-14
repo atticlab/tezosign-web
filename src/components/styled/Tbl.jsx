@@ -32,7 +32,7 @@ const Tbl = styled(BTable)`
 `;
 
 Tbl.Th = styled.th`
-  cursor: pointer;
+  cursor: ${({ isSortable }) => (isSortable ? 'pointer' : 'default')};
   text-transform: uppercase;
   border: none !important;
   background-color: white;

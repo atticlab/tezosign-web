@@ -33,10 +33,11 @@ const Assets = () => {
   }, []);
 
   const cols = [
-    { key: 'name', label: 'asset' },
+    { key: 'name', label: 'asset', isSortable: true },
     {
       key: 'address',
       label: 'contract',
+      isSortable: true,
       process(asset) {
         const assetContractAddress = asset[this.key];
 
@@ -51,11 +52,12 @@ const Assets = () => {
         );
       },
     },
-    { key: 'contract_type', label: 'contract type' },
+    { key: 'contract_type', label: 'contract type', isSortable: true },
     { key: 'token_id', label: 'token ID' },
     {
       key: 'balances',
       label: 'Balance',
+      isSortable: false,
       process({ balances, scale, ticker }) {
         return balances && balances.length
           ? `${convertAssetSubunitToAssetAmount(
@@ -67,6 +69,7 @@ const Assets = () => {
     },
     {
       key: 'Actions',
+      isSortable: false,
       process(asset) {
         return (
           !asset.is_global && (
@@ -95,6 +98,7 @@ const Assets = () => {
           maxHeight="600px"
           stickyHeader
           isDataLoading={isAssetsLoading}
+          additionalProp="balance"
         />
 
         {isAssetsLoading && (

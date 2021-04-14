@@ -1,13 +1,18 @@
 import { useMemo, useState } from 'react';
 
-const useSortableData = (items) => {
-  const [sortConfig, setSortConfig] = useState(null);
+const useSortableData = (items, nestedObjectKey) => {
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: null,
+  });
 
   const sortedItems = useMemo(() => {
-    if (sortConfig !== null) {
-      items.sort((a, b) => {
-        const x = a[sortConfig.key] || a.operation_info[sortConfig.key] || 0;
-        const y = b[sortConfig.key] || b.operation_info[sortConfig.key] || 0;
+    const sortableItems = [...items];
+
+    if (sortConfig.direction !== null) {
+      sortableItems.sort((a, b) => {
+        const x = a[sortConfig.key] || a[nestedObjectKey][sortConfig.key] || 0;
+        const y = b[sortConfig.key] || b[nestedObjectKey][sortConfig.key] || 0;
 
         if (x < y) {
           return sortConfig.direction === 'ascending' ? -1 : 1;
@@ -19,17 +24,13 @@ const useSortableData = (items) => {
       });
     }
 
-    return items;
-  }, [items, sortConfig]);
+    return sortableItems;
+  }, [items, sortConfig, nestedObjectKey]);
 
   const requestSort = (key) => {
     let direction = 'ascending';
 
-    if (
-      sortConfig &&
-      sortConfig.key === key &&
-      sortConfig.direction === 'ascending'
-    ) {
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
       direction = 'descending';
     }
     setSortConfig({ key, direction });

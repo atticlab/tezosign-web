@@ -18,6 +18,7 @@ const Owners = () => {
     {
       key: 'address',
       label: 'Account',
+      isSortable: true,
       process(operation) {
         const { address } = operation;
 
@@ -37,6 +38,7 @@ const Owners = () => {
     {
       key: 'pub_key',
       label: 'Public key',
+      isSortable: true,
       process(operation) {
         const pubKey = operation.pub_key;
 

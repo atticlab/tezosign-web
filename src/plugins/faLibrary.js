@@ -16,6 +16,8 @@ import {
   faRetweet,
   faDollarSign,
   faKey,
+  faCaretUp,
+  faCaretDown,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -35,4 +37,6 @@ library.add(
   faRetweet,
   faDollarSign,
   faKey,
+  faCaretUp,
+  faCaretDown,
 );
