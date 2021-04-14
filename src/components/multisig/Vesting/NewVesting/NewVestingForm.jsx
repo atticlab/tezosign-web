@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
@@ -24,10 +24,11 @@ import {
   useUserDispatchContext,
   useUserStateContext,
 } from '../../../../store/userContext';
+import useThemeContext from '../../../../hooks/useThemeContext';
 
 dayjs.extend(utc);
 
-const schema = (maxAmount = 30000) =>
+const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
   Yup.object({
     vestingAddress: Yup.string()
       .required('Required')
@@ -57,11 +58,12 @@ const schema = (maxAmount = 30000) =>
       }),
     tokensPerTick: Yup.number()
       .required('Required')
+      .max(maxTokensPerTick, `Maximum amount is ${maxTokensPerTick} XTZ`)
       .min(0.000001, `Minimum amount is ${0.000001} XTZ`),
     balance: Yup.number()
       .required('Required')
       .max(maxAmount, `Maximum amount is ${maxAmount} XTZ`)
-      .min(0.000001, `Minimum amount is 0.000001 XTZ`),
+      .min(minAmount, `Minimum amount is ${minAmount} XTZ`),
   });
 
 const handleDateChangeRaw = (e) => {
@@ -103,17 +105,36 @@ const convertInputToTime = (e) => {
 
 const today = dayjs().startOf('day').toDate();
 
+const calcMaxAllowedBalance = (balance, tokensPerTick) => {
+  console.log(balance);
+  console.log(tokensPerTick);
+  return Math.floor(balance / tokensPerTick) * tokensPerTick;
+  // return Math.floor((balance / tokensPerTick) * tokensPerTick);
+};
+
 const NewVestingForm = ({ onSubmit, onCancel }) => {
+  const theme = useThemeContext();
   const { getVestingContractCode, initVesting } = useAPI();
   const { balance: balanceRaw, address } = useUserStateContext();
   const { getBalance } = useUserDispatchContext();
+  const [currentTokensPerTick, setCurrentTokensPerTick] = useState(null);
+
   useEffect(() => {
     getBalance(address);
   }, [getBalance, address]);
 
-  const balanceConverted = useMemo(() => {
+  const balanceInXTZ = useMemo(() => {
     return convertMutezToXTZ(balanceRaw?.balance);
   }, [balanceRaw]);
+
+  const balanceConverted = useMemo(() => {
+    const bal = balanceRaw?.balance;
+    if (!currentTokensPerTick || currentTokensPerTick > bal) {
+      return balanceInXTZ;
+    }
+
+    return convertMutezToXTZ(calcMaxAllowedBalance(bal, currentTokensPerTick));
+  }, [balanceRaw, currentTokensPerTick, balanceInXTZ]);
 
   const createVesting = async (
     {
@@ -156,9 +177,11 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
         timestamp: '',
         secondsPerTick: '',
         tokensPerTick: '',
-        balance: 0,
+        balance: '',
       }}
-      validationSchema={Yup.lazy(() => schema(balanceConverted))}
+      validationSchema={Yup.lazy((values) =>
+        schema(balanceConverted, balanceInXTZ, values.tokensPerTick),
+      )}
       onSubmit={(values, { setSubmitting }) => {
         createVesting(values, setSubmitting);
       }}
@@ -193,7 +216,7 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
           </BForm.Group>
 
           <BForm.Group>
-            <FormLabel>Delegate address</FormLabel>
+            <FormLabel>Delegate admin address</FormLabel>
             <Field
               as={BForm.Control}
               type="text"
@@ -273,24 +296,96 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
 
           <BForm.Group>
             <FormLabel>XTZ per tick</FormLabel>
-            <Field
-              as={BForm.Control}
-              type="number"
-              name="tokensPerTick"
-              aria-label="tokensPerTick"
-              min="0"
-              step="0.000001"
-              autoComplete="off"
-              isInvalid={!!errors.tokensPerTick && touched.tokensPerTick}
-              isValid={!errors.tokensPerTick && touched.tokensPerTick}
-              onKeyPress={(event) => limitInputDecimals(event, 6)}
-            />
+            <InputGroup>
+              <Field
+                as={BForm.Control}
+                type="number"
+                name="tokensPerTick"
+                aria-label="tokensPerTick"
+                min="0"
+                step="0.000001"
+                autoComplete="off"
+                isInvalid={!!errors.tokensPerTick && touched.tokensPerTick}
+                isValid={!errors.tokensPerTick && touched.tokensPerTick}
+                onKeyPress={(event) => limitInputDecimals(event, 6)}
+                onBlur={(e) => {
+                  handleBlur(e);
 
-            <ErrorMessage
-              component={BForm.Control.Feedback}
-              name="tokensPerTick"
-              type="invalid"
-            />
+                  const val = Number(e.target.value);
+                  setCurrentTokensPerTick(Number(convertXTZToMutez(val)));
+
+                  if (val && values.balance) {
+                    setFieldValue(
+                      'balance',
+                      calcMaxAllowedBalance(values.balance, val),
+                    );
+                  }
+                }}
+              />
+
+              <InputGroup.Append>
+                <InputGroup.Text style={{ paddingTop: 0, paddingBottom: 0 }}>
+                  <span style={{ display: 'flex', alignItems: 'center' }}>
+                    <BtnMax
+                      onClick={() => {
+                        setFieldValue('tokensPerTick', balanceInXTZ);
+                        setCurrentTokensPerTick(
+                          Number(convertXTZToMutez(balanceInXTZ)),
+                        );
+                        setFieldTouched('tokensPerTick', true, false);
+                      }}
+                    >
+                      MAX
+                    </BtnMax>
+                    <span style={{ fontSize: '12px', marginBottom: '2px' }}>
+                      {balanceInXTZ}
+                    </span>
+                  </span>
+                </InputGroup.Text>
+              </InputGroup.Append>
+
+              {!!values.tokensPerTick && (
+                <BForm.Text>
+                  <div
+                    style={{
+                      color: theme.yellow,
+                      padding: '10px',
+                      border: `1px solid ${theme.yellow}`,
+                      borderRadius: '5px',
+                      marginTop: '10px',
+                    }}
+                  >
+                    Attention! To avoid any problems with your vesting contract
+                    check the following points:
+                    <ul>
+                      <li>
+                        Make sure the balance on your vesting contract has the
+                        same number of decimals as your &quot;XTZ per tick&quot;
+                        field. Otherwise, you will not be able to withdraw all
+                        the tokens from the contract.
+                      </li>
+                      <li>
+                        Make sure the balance on your vesting contract is not
+                        less than your &quot;XTZ per tick&quot; field.
+                        Otherwise, you will not be able to withdraw any tokens
+                        from the contract.
+                      </li>
+                      <li>
+                        The least number of tokens you can withdraw from your
+                        vesting contract equals the &quot;XTZ per tick&quot;
+                        field. You cannot withdraw less.
+                      </li>
+                    </ul>
+                  </div>
+                </BForm.Text>
+              )}
+
+              <ErrorMessage
+                component={BForm.Control.Feedback}
+                name="tokensPerTick"
+                type="invalid"
+              />
+            </InputGroup>
           </BForm.Group>
 
           <BForm.Group controlId="balance">
@@ -307,6 +402,17 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
                 step="0.000001"
                 min="0"
                 onKeyPress={(event) => limitInputDecimals(event, 6)}
+                onBlur={(e) => {
+                  handleBlur(e);
+
+                  const val = e.target.value;
+                  const { tokensPerTick } = values;
+                  if (val && tokensPerTick)
+                    setFieldValue(
+                      'balance',
+                      calcMaxAllowedBalance(val, tokensPerTick),
+                    );
+                }}
               />
 
               <InputGroup.Append>

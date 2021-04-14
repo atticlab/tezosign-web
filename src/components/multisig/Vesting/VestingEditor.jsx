@@ -18,10 +18,7 @@ const schema = Yup.object({
     .matches(/^[\w]+( [\w]+)*$/, 'Unnecessary spaces'),
   address: Yup.string()
     .required('Required')
-    .matches(
-      'tz1|tz2|tz3|KT1',
-      'Tezos contract address must start with tz1, tz2, tz3 or KT1',
-    )
+    .matches('KT1', 'Tezos contract address must start with KT1')
     .matches(/^\S+$/, 'No spaces are allowed')
     .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
     .length(36, 'Tezos address must be 36 characters long')
