@@ -2,7 +2,13 @@ import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import { Button, Form as BForm, InputGroup } from 'react-bootstrap';
+import {
+  Button,
+  Form as BForm,
+  InputGroup,
+  OverlayTrigger,
+  Tooltip,
+} from 'react-bootstrap';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import DatePicker from 'react-datepicker';
@@ -28,13 +34,22 @@ import {
 
 dayjs.extend(utc);
 
+const WarningBox = styled.div`
+  color: ${({ theme }) => theme.yellow};
+  font-size: 12px;
+`;
+
 const Check = styled(BForm.Check)`
   font-size: 12px;
-  color: ${({ theme }) => theme.yellow};
   cursor: pointer;
 
   .custom-control-label {
     cursor: pointer;
+
+    &:before,
+    &:after {
+      top: 0.05rem;
+    }
   }
 `;
 
@@ -206,7 +221,16 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
       }) => (
         <Form>
           <BForm.Group>
-            <FormLabel>Vesting address</FormLabel>
+            <OverlayTrigger
+              overlay={
+                <Tooltip>
+                  The address where a withdrawn amount of XTZ from a vesting
+                  contract is sent.
+                </Tooltip>
+              }
+            >
+              <FormLabel>Withdrawal address</FormLabel>
+            </OverlayTrigger>
             <Field
               as={BForm.Control}
               type="text"
@@ -225,7 +249,16 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
           </BForm.Group>
 
           <BForm.Group>
-            <FormLabel>Delegate admin address</FormLabel>
+            <OverlayTrigger
+              overlay={
+                <Tooltip>
+                  The address that can set and change a delegate of a vesting
+                  contract. No other address is allowed to do this action.
+                </Tooltip>
+              }
+            >
+              <FormLabel>Delegate admin address</FormLabel>
+            </OverlayTrigger>
             <Field
               as={BForm.Control}
               type="text"
@@ -281,7 +314,16 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
           </BForm.Group>
 
           <BForm.Group>
-            <FormLabel>Seconds per tick</FormLabel>
+            <OverlayTrigger
+              overlay={
+                <Tooltip>
+                  The interval of time needed for a certain amount of XTZ (XTZ
+                  per tick) to become available for a withdrawal.
+                </Tooltip>
+              }
+            >
+              <FormLabel>Seconds per tick</FormLabel>
+            </OverlayTrigger>
             <Field
               as={BForm.Control}
               type="text"
@@ -304,7 +346,16 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
           </BForm.Group>
 
           <BForm.Group>
-            <FormLabel>XTZ per tick</FormLabel>
+            <OverlayTrigger
+              overlay={
+                <Tooltip>
+                  The amount of XTZ that becomes available for a withdrawal
+                  every tick.
+                </Tooltip>
+              }
+            >
+              <FormLabel>XTZ per tick</FormLabel>
+            </OverlayTrigger>
             <InputGroup>
               <Field
                 as={BForm.Control}
@@ -367,6 +418,28 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
           </BForm.Group>
 
           <BForm.Group controlId="check">
+            <WarningBox>
+              Attention! To avoid any problems with your vesting contract check
+              the following points:
+              <ul>
+                <li>
+                  Make sure the balance on your vesting contract has not a
+                  greater number of decimals as your &quot;XTZ per tick&quot;
+                  field. Otherwise, you will not be able to withdraw all the
+                  tokens from the contract.
+                </li>
+                <li>
+                  Make sure the balance on your vesting contract is not less
+                  than your &quot;XTZ per tick&quot; field. Otherwise, you will
+                  not be able to withdraw any tokens from the contract.
+                </li>
+                <li>
+                  The least number of tokens you can withdraw from your vesting
+                  contract equals the &quot;XTZ per tick&quot; field. You cannot
+                  withdraw less.
+                </li>
+              </ul>
+            </WarningBox>
             <Field
               as={Check}
               type="checkbox"
@@ -384,26 +457,7 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
                 onBlur={handleBlur}
               />
               <BForm.Check.Label>
-                Attention! To avoid any problems with your vesting contract
-                check the following points:
-                <ul>
-                  <li>
-                    Make sure the balance on your vesting contract has not a
-                    greater number of decimals as your &quot;XTZ per tick&quot;
-                    field. Otherwise, you will not be able to withdraw all the
-                    tokens from the contract.
-                  </li>
-                  <li>
-                    Make sure the balance on your vesting contract is not less
-                    than your &quot;XTZ per tick&quot; field. Otherwise, you
-                    will not be able to withdraw any tokens from the contract.
-                  </li>
-                  <li>
-                    The least number of tokens you can withdraw from your
-                    vesting contract equals the &quot;XTZ per tick&quot; field.
-                    You cannot withdraw less.
-                  </li>
-                </ul>
+                I have read and understood all the points above.
               </BForm.Check.Label>
               <ErrorMessage
                 component={BForm.Control.Feedback}
@@ -414,7 +468,17 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
           </BForm.Group>
 
           <BForm.Group controlId="balance">
-            <FormLabel>Balance</FormLabel>
+            <OverlayTrigger
+              overlay={
+                <Tooltip>
+                  The balance field is recalculated to a maximum allowed number
+                  every time it cannot be evenly divided by &quot;XTZ per
+                  tick&quot;.
+                </Tooltip>
+              }
+            >
+              <FormLabel>Balance</FormLabel>
+            </OverlayTrigger>
             <InputGroup>
               <Field
                 as={BForm.Control}
@@ -424,8 +488,8 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
                 autoComplete="off"
                 isInvalid={!!errors.balance && touched.balance}
                 isValid={!errors.balance && touched.balance}
-                step="0.000001"
-                min="0"
+                step={values.tokensPerTick}
+                min={values.tokensPerTick}
                 onKeyPress={(event) => limitInputDecimals(event, 6)}
                 onBlur={(e) => {
                   handleBlur(e);

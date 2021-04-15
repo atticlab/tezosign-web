@@ -74,7 +74,12 @@ const DeleteVesting = ({ vesting }) => {
         </Modal.Header>
 
         <Modal.Body style={{ padding: '15px 30px' }}>
-          Are you sure you would like to delete the vesting contract?
+          <p>
+            You are going to remove the vesting contract from the wallet vesting
+            list. It will not affect the vesting contract itself. You can add it
+            back later whenever you want.
+          </p>
+          <p>Are you sure you would like to precede?</p>
           <div style={{ marginTop: '40px', textAlign: 'right' }}>
             <Button
               variant="danger"

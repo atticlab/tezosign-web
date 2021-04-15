@@ -32,6 +32,7 @@ const Vesting = () => {
   }, []);
 
   const cols = [
+    { key: 'name' },
     {
       key: 'address',
       process(vesting) {
@@ -51,7 +52,6 @@ const Vesting = () => {
         );
       },
     },
-    { key: 'name' },
     {
       key: 'balance',
       process(vesting) {

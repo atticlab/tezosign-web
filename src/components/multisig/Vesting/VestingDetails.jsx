@@ -67,19 +67,41 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                 <Bold>Delegate:</Bold> {vestingInfo.delegate}
               </OperationGeneralInfo.Item>
               <OperationGeneralInfo.Item>
-                <Bold>Opened balance:</Bold>{' '}
-                {`${convertMutezToXTZ(vestingInfo.opened_balance)} XTZ`}
-              </OperationGeneralInfo.Item>
-              <OperationGeneralInfo.Item>
-                <Bold>Delegate admin:</Bold>{' '}
-                {vestingInfo.storage.delegate_admin}
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip>
+                      The limit of XTZ available for a withdrawal.
+                    </Tooltip>
+                  }
+                >
+                  <span>
+                    <Bold>Withdrawal limit:</Bold>{' '}
+                    {`${convertMutezToXTZ(vestingInfo.opened_balance)} XTZ`}
+                  </span>
+                </OverlayTrigger>
               </OperationGeneralInfo.Item>
               <OperationGeneralInfo.Item>
                 <OverlayTrigger
                   overlay={
                     <Tooltip>
-                      The interval of time needed for tokens to become available
-                      for a withdrawal
+                      The address that can set and change a delegate of a
+                      vesting contract. No other address is allowed to do this
+                      action.
+                    </Tooltip>
+                  }
+                >
+                  <span>
+                    <Bold>Delegate admin:</Bold>{' '}
+                    {vestingInfo.storage.delegate_admin}
+                  </span>
+                </OverlayTrigger>
+              </OperationGeneralInfo.Item>
+              <OperationGeneralInfo.Item>
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip>
+                      The interval of time needed for a certain amount of XTZ
+                      (XTZ per tick) to become available for a withdrawal.
                     </Tooltip>
                   }
                 >
@@ -100,13 +122,13 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                 <OverlayTrigger
                   overlay={
                     <Tooltip>
-                      The amount of tokens that becomes available for a
-                      withdrawal
+                      The amount of XTZ that becomes available for a withdrawal
+                      every tick.
                     </Tooltip>
                   }
                 >
                   <span>
-                    <Bold>Tokens per tick:</Bold>{' '}
+                    <Bold>XTZ per tick:</Bold>{' '}
                     {`${convertMutezToXTZ(
                       vestingInfo.storage.tokens_per_tick,
                     )} XTZ`}
@@ -118,12 +140,23 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                 {`${convertMutezToXTZ(vestingInfo.storage.vested_amount)} XTZ`}
               </OperationGeneralInfo.Item>
               <OperationGeneralInfo.Item>
-                <Bold>Vesting address: </Bold>{' '}
-                {vestingInfo.storage.vesting_address}
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip>
+                      The address where a withdrawn amount of XTZ from a vesting
+                      contract is sent.
+                    </Tooltip>
+                  }
+                >
+                  <span>
+                    <Bold>Withdrawal address: </Bold>{' '}
+                    {vestingInfo.storage.vesting_address}
+                  </span>
+                </OverlayTrigger>
               </OperationGeneralInfo.Item>
             </OperationGeneralInfo>
 
-            <div style={{ marginTop: '20px', textAlign: 'left' }}>
+            <div style={{ marginTop: '20px', textAlign: 'right' }}>
               <VestingActions
                 vestingAddress={vesting.address}
                 vestingDelegateAdmin={vestingInfo.storage.delegate_admin}

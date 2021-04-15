@@ -71,12 +71,12 @@ const VestingSetDelegateForm = ({ vestingAddress, onSubmit, onCancel }) => {
             <OverlayTrigger
               overlay={
                 <Tooltip>
-                  Recipient must be a valid baker address. Otherwise, a
+                  Delegate must be a valid baker address. Otherwise, a
                   transaction will fail.
                 </Tooltip>
               }
             >
-              <FormLabel>Recipient</FormLabel>
+              <FormLabel>Delegate address</FormLabel>
             </OverlayTrigger>
             <Field
               as={BForm.Control}

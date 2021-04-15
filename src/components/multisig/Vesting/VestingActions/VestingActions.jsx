@@ -39,8 +39,8 @@ const VestingActions = ({
   return (
     <>
       <Dropdown onToggle={() => setOpen(!open)}>
-        <Dropdown.Toggle>
-          <span style={{ marginRight: '5px' }}>Actions</span>
+        <Dropdown.Toggle variant="info">
+          <span style={{ marginRight: '5px' }}>Direct vesting actions</span>
           <FontAwesomeIcon
             icon="chevron-down"
             rotation={open ? 180 : 0}
