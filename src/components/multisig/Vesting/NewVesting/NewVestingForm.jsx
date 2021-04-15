@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import styled from 'styled-components';
 import { DatePickerWrapper } from '../../../styled/DatePickerStyles';
 import { FormLabel, FormSubmit } from '../../../styled/Forms';
 import useAPI from '../../../../hooks/useApi';
@@ -24,9 +25,18 @@ import {
   useUserDispatchContext,
   useUserStateContext,
 } from '../../../../store/userContext';
-import useThemeContext from '../../../../hooks/useThemeContext';
 
 dayjs.extend(utc);
+
+const Check = styled(BForm.Check)`
+  font-size: 12px;
+  color: ${({ theme }) => theme.yellow};
+  cursor: pointer;
+
+  .custom-control-label {
+    cursor: pointer;
+  }
+`;
 
 const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
   Yup.object({
@@ -60,6 +70,7 @@ const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
       .required('Required')
       .max(maxTokensPerTick, `Maximum amount is ${maxTokensPerTick} XTZ`)
       .min(0.000001, `Minimum amount is ${0.000001} XTZ`),
+    check: Yup.bool().oneOf([true], 'The terms must be accepted'),
     balance: Yup.number()
       .required('Required')
       .max(maxAmount, `Maximum amount is ${maxAmount} XTZ`)
@@ -106,14 +117,10 @@ const convertInputToTime = (e) => {
 const today = dayjs().startOf('day').toDate();
 
 const calcMaxAllowedBalance = (balance, tokensPerTick) => {
-  console.log(balance);
-  console.log(tokensPerTick);
   return Math.floor(balance / tokensPerTick) * tokensPerTick;
-  // return Math.floor((balance / tokensPerTick) * tokensPerTick);
 };
 
 const NewVestingForm = ({ onSubmit, onCancel }) => {
-  const theme = useThemeContext();
   const { getVestingContractCode, initVesting } = useAPI();
   const { balance: balanceRaw, address } = useUserStateContext();
   const { getBalance } = useUserDispatchContext();
@@ -177,6 +184,7 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
         timestamp: '',
         secondsPerTick: '',
         tokensPerTick: '',
+        check: false,
         balance: '',
       }}
       validationSchema={Yup.lazy((values) =>
@@ -194,6 +202,7 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
         setFieldValue,
         setFieldTouched,
         handleBlur,
+        handleChange,
       }) => (
         <Form>
           <BForm.Group>
@@ -311,14 +320,19 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
                 onBlur={(e) => {
                   handleBlur(e);
 
-                  const val = Number(e.target.value);
-                  setCurrentTokensPerTick(Number(convertXTZToMutez(val)));
+                  const tokensInMutez = Number(
+                    convertXTZToMutez(e.target.value),
+                  );
+                  const balanceInMutez = Number(
+                    convertXTZToMutez(values.balance),
+                  );
+                  setCurrentTokensPerTick(tokensInMutez);
 
-                  if (val && values.balance) {
-                    setFieldValue(
-                      'balance',
-                      calcMaxAllowedBalance(values.balance, val),
+                  if (tokensInMutez && balanceInMutez) {
+                    const maxAllowedBalanceInXTZ = convertMutezToXTZ(
+                      calcMaxAllowedBalance(balanceInMutez, tokensInMutez),
                     );
+                    setFieldValue('balance', maxAllowedBalanceInXTZ);
                   }
                 }}
               />
@@ -344,48 +358,59 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
                 </InputGroup.Text>
               </InputGroup.Append>
 
-              {!!values.tokensPerTick && (
-                <BForm.Text>
-                  <div
-                    style={{
-                      color: theme.yellow,
-                      padding: '10px',
-                      border: `1px solid ${theme.yellow}`,
-                      borderRadius: '5px',
-                      marginTop: '10px',
-                    }}
-                  >
-                    Attention! To avoid any problems with your vesting contract
-                    check the following points:
-                    <ul>
-                      <li>
-                        Make sure the balance on your vesting contract has the
-                        same number of decimals as your &quot;XTZ per tick&quot;
-                        field. Otherwise, you will not be able to withdraw all
-                        the tokens from the contract.
-                      </li>
-                      <li>
-                        Make sure the balance on your vesting contract is not
-                        less than your &quot;XTZ per tick&quot; field.
-                        Otherwise, you will not be able to withdraw any tokens
-                        from the contract.
-                      </li>
-                      <li>
-                        The least number of tokens you can withdraw from your
-                        vesting contract equals the &quot;XTZ per tick&quot;
-                        field. You cannot withdraw less.
-                      </li>
-                    </ul>
-                  </div>
-                </BForm.Text>
-              )}
-
               <ErrorMessage
                 component={BForm.Control.Feedback}
                 name="tokensPerTick"
                 type="invalid"
               />
             </InputGroup>
+          </BForm.Group>
+
+          <BForm.Group controlId="check">
+            <Field
+              as={Check}
+              type="checkbox"
+              name="check"
+              custom
+              id="check"
+              aria-label="check"
+            >
+              <BForm.Check.Input
+                id="check"
+                type="checkbox"
+                isInvalid={!!errors.check && touched.check}
+                isValid={!errors.check && touched.check}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              <BForm.Check.Label>
+                Attention! To avoid any problems with your vesting contract
+                check the following points:
+                <ul>
+                  <li>
+                    Make sure the balance on your vesting contract has not a
+                    greater number of decimals as your &quot;XTZ per tick&quot;
+                    field. Otherwise, you will not be able to withdraw all the
+                    tokens from the contract.
+                  </li>
+                  <li>
+                    Make sure the balance on your vesting contract is not less
+                    than your &quot;XTZ per tick&quot; field. Otherwise, you
+                    will not be able to withdraw any tokens from the contract.
+                  </li>
+                  <li>
+                    The least number of tokens you can withdraw from your
+                    vesting contract equals the &quot;XTZ per tick&quot; field.
+                    You cannot withdraw less.
+                  </li>
+                </ul>
+              </BForm.Check.Label>
+              <ErrorMessage
+                component={BForm.Control.Feedback}
+                name="check"
+                type="invalid"
+              />
+            </Field>
           </BForm.Group>
 
           <BForm.Group controlId="balance">
@@ -405,13 +430,19 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
                 onBlur={(e) => {
                   handleBlur(e);
 
-                  const val = e.target.value;
-                  const { tokensPerTick } = values;
-                  if (val && tokensPerTick)
-                    setFieldValue(
-                      'balance',
-                      calcMaxAllowedBalance(val, tokensPerTick),
+                  const tokensInMutez = Number(
+                    convertXTZToMutez(values.tokensPerTick),
+                  );
+                  const balanceInMutez = Number(
+                    convertXTZToMutez(e.target.value),
+                  );
+
+                  if (balanceInMutez && tokensInMutez) {
+                    const maxAllowedBalanceInXTZ = convertMutezToXTZ(
+                      calcMaxAllowedBalance(balanceInMutez, tokensInMutez),
                     );
+                    setFieldValue('balance', maxAllowedBalanceInXTZ);
+                  }
                 }}
               />
 
