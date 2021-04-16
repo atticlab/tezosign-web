@@ -185,17 +185,17 @@ const useAPI = () => {
   // {
   //   vesting_address: 'KT1' || 'tz1' || 'tz2' || 'tz3',
   //   delegate_admin: 'KT1' || 'tz1' || 'tz2' || 'tz3',
-  //   timestamp: 1616678669,
+  //   timestamp: 1616678669, // seconds only
   //   seconds_per_tick: 10,
-  //   tokens_per_tick: 1,
+  //   tokens_per_tick: 1, // mutez
   // }
   const initVesting = (payload) => {
     return API.post(`/${network}/contract/vesting/storage/init`, payload);
   };
   // {
   //   type: 'vesting_vest' || 'vesting_set_delegate',
-  //   amount: 123, // mutez
-  //   to: 'KT1' || 'tz1' || 'tz2' || 'tz3',
+  //   amount: 123, // batches/ticks, only for 'vesting_vest'
+  //   to: 'tz1' || 'tz2' || 'tz3', // onnly for 'vesting_set_delegate'
   // }
   const sendVestingOperation = (payload) => {
     return API.post(`/${network}/contract/vesting/operation`, payload);
@@ -222,7 +222,6 @@ const useAPI = () => {
   };
   // {
   //   address: 'KT1' || 'tz1' || 'tz2' || 'tz3',
-  //   name: 'Name',
   // }
   const deleteVesting = (contractID, payload) => {
     return API.post(

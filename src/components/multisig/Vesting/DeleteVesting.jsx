@@ -77,7 +77,7 @@ const DeleteVesting = ({ vesting }) => {
           <p>
             You are going to remove the vesting contract from the wallet vesting
             list. It will not affect the vesting contract itself. You can add it
-            back later whenever you want.
+            back later.
           </p>
           <p>Are you sure you would like to precede?</p>
           <div style={{ marginTop: '40px', textAlign: 'right' }}>

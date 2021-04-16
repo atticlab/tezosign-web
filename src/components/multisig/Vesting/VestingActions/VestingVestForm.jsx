@@ -2,7 +2,13 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Button, Form as BForm, InputGroup } from 'react-bootstrap';
+import {
+  Button,
+  Form as BForm,
+  InputGroup,
+  OverlayTrigger,
+  Tooltip,
+} from 'react-bootstrap';
 import { FormLabel, FormSubmit } from '../../../styled/Forms';
 import { BtnMax } from '../../../styled/Btns';
 import { sendTx } from '../../../../plugins/beacon';
@@ -14,12 +20,12 @@ import {
 } from '../../../../utils/helpers';
 import { handleError } from '../../../../utils/errorsHandler';
 
-const schema = (maxAmount = 0) => {
+const schema = (maxAmount = 0, tokensPerTick) => {
   return Yup.object({
     amount: Yup.number()
       .required('Required')
       .max(maxAmount, `Maximum amount is ${maxAmount} XTZ`)
-      .min(0.000001, `Minimum amount is 0.000001 XTZ`),
+      .min(tokensPerTick, `Minimum amount is ${tokensPerTick} XTZ`),
     batches: Yup.number()
       .required('Required')
       .integer('Batches must be an integer')
@@ -43,6 +49,9 @@ const VestingVestForm = ({
     }
     return convertMutezToXTZ(vestingOpenedBalance);
   }, [vestingBalance, vestingOpenedBalance, tokensPerTick]);
+  const tokensPerTickInXTZ = useMemo(() => {
+    return convertMutezToXTZ(tokensPerTick);
+  }, [tokensPerTick]);
 
   const sendVestingOperationRequest = async (
     type,
@@ -76,7 +85,7 @@ const VestingVestForm = ({
         amount: '',
         batches: '',
       }}
-      validationSchema={Yup.lazy(() => schema(balance))}
+      validationSchema={Yup.lazy(() => schema(balance, tokensPerTickInXTZ))}
       onSubmit={(values, { setSubmitting }) => {
         sendVestingOperationRequest('vesting_vest', values, setSubmitting);
       }}
@@ -92,7 +101,17 @@ const VestingVestForm = ({
       }) => (
         <Form>
           <BForm.Group controlId="batches">
-            <FormLabel>Ticks</FormLabel>
+            <OverlayTrigger
+              overlay={
+                <Tooltip>
+                  Single unlock iteration of a certain amount of XTZ. The period
+                  is defined by &quot;Seconds per tick&quot;, the amount of XTZ
+                  is defined by &quot;XTZ per tick&quot;.
+                </Tooltip>
+              }
+            >
+              <FormLabel>Ticks</FormLabel>
+            </OverlayTrigger>
             <Field
               as={BForm.Control}
               type="number"
@@ -119,15 +138,29 @@ const VestingVestForm = ({
           </BForm.Group>
 
           <BForm.Group controlId="amount">
-            <FormLabel>Amount</FormLabel>
+            <OverlayTrigger
+              overlay={
+                <Tooltip>
+                  Withdrawal amount. It must be evenly divided by &quot;XTZ per
+                  tick&quot;, so that ticks are always an integer. The minimum
+                  equals &quot;XTZ per tick&quot;. Usually, the maximum equals
+                  the withdrawal limit. In case the withdrawal limit is greater
+                  than the balance on the vesting contract, the allowed maximum
+                  is the closest to the balance number which is evenly divided
+                  by &quot;XTZ per tick&quot;.
+                </Tooltip>
+              }
+            >
+              <FormLabel>Amount</FormLabel>
+            </OverlayTrigger>
             <InputGroup>
               <Field
                 as={BForm.Control}
                 type="number"
                 name="amount"
                 aria-label="amount"
-                step={convertMutezToXTZ(tokensPerTick)}
-                min="0"
+                step={tokensPerTickInXTZ}
+                min={tokensPerTickInXTZ}
                 autoComplete="off"
                 isInvalid={!!errors.amount && touched.amount}
                 isValid={!errors.amount && touched.amount}

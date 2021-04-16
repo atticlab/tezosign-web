@@ -16,7 +16,9 @@ import { handleError } from '../../../../utils/errorsHandler';
 
 const schema = Yup.object({
   to: Yup.string()
-    .required('Required')
+    .required(
+      `This field cannot be empty. If you want to undelegate, click the button 'Undelegate'.`,
+    )
     .matches('tz1|tz2|tz3', 'Tezos address must start with tz1, tz2, tz3')
     .matches(/^\S+$/, 'No spaces are allowed')
     .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
@@ -65,7 +67,7 @@ const VestingSetDelegateForm = ({ vestingAddress, onSubmit, onCancel }) => {
         );
       }}
     >
-      {({ errors, touched, isSubmitting }) => (
+      {({ errors, touched, isSubmitting, setSubmitting }) => (
         <Form>
           <BForm.Group controlId="to">
             <OverlayTrigger
@@ -100,6 +102,21 @@ const VestingSetDelegateForm = ({ vestingAddress, onSubmit, onCancel }) => {
               onClick={onCancel}
             >
               Cancel
+            </Button>
+
+            <Button
+              variant="info"
+              style={{ marginRight: '10px' }}
+              disabled={isSubmitting}
+              onClick={() =>
+                sendVestingOperationRequest(
+                  'vesting_set_delegate',
+                  { to: '' },
+                  setSubmitting,
+                )
+              }
+            >
+              Undelegate
             </Button>
 
             <Button type="submit" disabled={isSubmitting}>
