@@ -28,7 +28,7 @@ const schema = (maxAmount = 0, tokensPerTick) => {
       .min(tokensPerTick, `Minimum amount is ${tokensPerTick} XTZ`),
     batches: Yup.number()
       .required('Required')
-      .integer('Batches must be an integer')
+      .integer('Ticks must be an integer')
       .min(1, `Minimum number of batches is 1`),
   });
 };

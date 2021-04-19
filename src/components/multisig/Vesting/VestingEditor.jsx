@@ -36,7 +36,7 @@ const VestingEditor = ({ isEdit, name, address, onSubmit, onCancel }) => {
 
       if (!isEdit) {
         resp = await addVesting(contractAddress, values);
-        setVestings((prev) => [...prev, resp.data]);
+        setVestings((prev) => [resp.data, ...prev]);
       } else {
         resp = await editVesting(contractAddress, values);
         setVestings((prev) => {
