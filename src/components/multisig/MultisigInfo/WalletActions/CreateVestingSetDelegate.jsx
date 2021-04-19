@@ -2,13 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { Button, Form as BForm } from 'react-bootstrap';
-import { FormLabel, FormSubmit } from '../../styled/Forms';
-import { useContractStateContext } from '../../../store/contractContext';
-import { bs58Validation } from '../../../utils/helpers';
-import useAPI from '../../../hooks/useApi';
-import { handleError } from '../../../utils/errorsHandler';
-import { useOperationsDispatchContext } from '../../../store/operationsContext';
+import {
+  Button,
+  Form as BForm,
+  OverlayTrigger,
+  Tooltip,
+} from 'react-bootstrap';
+import VestingsSelect from './VestingsSelect';
+import { FormLabel, FormSubmit } from '../../../styled/Forms';
+import { useContractStateContext } from '../../../../store/contractContext';
+import { bs58Validation } from '../../../../utils/helpers';
+import useAPI from '../../../../hooks/useApi';
+import { handleError } from '../../../../utils/errorsHandler';
+import { useOperationsDispatchContext } from '../../../../store/operationsContext';
 
 const schema = Yup.object({
   vestingAddress: Yup.string()
@@ -19,7 +25,9 @@ const schema = Yup.object({
     .length(36, 'Tezos address must be 36 characters long')
     .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
   to: Yup.string()
-    .required('Required')
+    .required(
+      `This field cannot be empty. If you want to undelegate, click the button 'Undelegate'.`,
+    )
     .matches('tz1|tz2|tz3', 'Tezos address must start with tz1, tz2, tz3')
     .matches(/^\S+$/, 'No spaces are allowed')
     .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
@@ -28,7 +36,6 @@ const schema = Yup.object({
 });
 
 const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
-  // eslint-disable-next-line no-unused-vars
   const { contractAddress } = useContractStateContext();
   const { setOps } = useOperationsDispatchContext();
   const { createOperation } = useAPI();
@@ -64,20 +71,34 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
       }}
       validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {
+        console.log('ss');
         createVestingSetDelegate(values, setSubmitting);
       }}
     >
-      {({ errors, touched, isSubmitting }) => (
+      {/* eslint-disable-next-line no-unused-vars */}
+      {({
+        values,
+        errors,
+        touched,
+        isSubmitting,
+        setSubmitting,
+        setFieldValue,
+        setFieldTouched,
+      }) => (
         <Form>
           <BForm.Group controlId="vestingAddress">
             <FormLabel>Vesting address</FormLabel>
-            <Field
-              as={BForm.Control}
-              type="text"
-              name="vestingAddress"
-              aria-label="vestingAddress"
+            <VestingsSelect
+              isTouched={touched.vestingAddress}
               isInvalid={!!errors.vestingAddress && touched.vestingAddress}
               isValid={!errors.vestingAddress && touched.vestingAddress}
+              onChange={(value) => {
+                setFieldValue('vestingAddress', value.value);
+                setFieldTouched('vestingAddress', true);
+              }}
+              onBlur={() => {
+                setFieldTouched('vestingAddress', true);
+              }}
             />
             <ErrorMessage
               component={BForm.Control.Feedback}
@@ -85,13 +106,24 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
               type="invalid"
             />
           </BForm.Group>
+
           <BForm.Group controlId="to">
-            <FormLabel>Recipient</FormLabel>
+            <OverlayTrigger
+              overlay={
+                <Tooltip>
+                  Delegate must be a valid baker address. Otherwise, a
+                  transaction will fail.
+                </Tooltip>
+              }
+            >
+              <FormLabel>Delegate address</FormLabel>
+            </OverlayTrigger>
             <Field
               as={BForm.Control}
               type="text"
               name="to"
               aria-label="to"
+              autoComplete="off"
               isInvalid={!!errors.to && touched.to}
               isValid={!errors.to && touched.to}
             />
@@ -109,6 +141,23 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
               onClick={onCancel}
             >
               Cancel
+            </Button>
+
+            <Button
+              type="submit"
+              variant="info"
+              style={{ marginRight: '10px' }}
+              disabled={isSubmitting}
+              onClick={() => {
+                if (!errors.vestingAddress && touched.vestingAddress) {
+                  createVestingSetDelegate(
+                    { ...values, to: '' },
+                    setSubmitting,
+                  );
+                }
+              }}
+            >
+              Undelegate
             </Button>
 
             <Button type="submit" disabled={isSubmitting}>

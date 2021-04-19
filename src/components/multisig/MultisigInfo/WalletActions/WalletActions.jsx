@@ -58,13 +58,13 @@ const WalletActions = () => {
             className="dropdown-item"
             onClick={() => handleShow('vesting_vest')}
           >
-            Create vesting_vest
+            Create vesting withdrawal
           </Dropdown.Item>
           <Dropdown.Item
             className="dropdown-item"
             onClick={() => handleShow('vesting_set_delegate')}
           >
-            Create vesting_set_delegate
+            Create vesting delegation
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
@@ -85,18 +85,18 @@ const WalletActions = () => {
             <Title as="h3" style={{ marginBottom: 0 }}>
               {/* eslint-disable-next-line no-nested-ternary */}
               {opType === 'transaction'
-                ? 'New transaction'
+                ? 'Create transaction'
                 : // eslint-disable-next-line no-nested-ternary
                 opType === 'delegation'
-                ? 'New delegation'
+                ? 'Create delegation'
                 : // eslint-disable-next-line no-nested-ternary
                 opType === 'edit'
-                ? 'New contract update'
+                ? 'Create contract update'
                 : // eslint-disable-next-line no-nested-ternary
                 opType === 'vesting_vest'
-                ? 'Vesting_vest'
+                ? 'Create vesting withdrawal'
                 : opType === 'vesting_set_delegate'
-                ? 'Vesting_set_delegate'
+                ? 'Create vesting delegation'
                 : ''}
             </Title>
           </div>
