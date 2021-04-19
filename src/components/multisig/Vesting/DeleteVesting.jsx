@@ -1,39 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
 import { BtnIcon } from '../../styled/Btns';
 import Modal from '../../styled/Modal';
 import { Title } from '../../styled/Text';
+import { handleError } from '../../../utils/errorsHandler';
+import { useVestingsDispatchContext } from '../../../store/vestingsContext';
 import useAPI from '../../../hooks/useApi';
 import { useContractStateContext } from '../../../store/contractContext';
-import { handleError } from '../../../utils/errorsHandler';
-import { useAssetsDispatchContext } from '../../../store/assetsContext';
 import useThemeContext from '../../../hooks/useThemeContext';
 
-const DeleteAsset = ({ asset }) => {
-  const theme = useThemeContext();
-  const { contractAddress } = useContractStateContext();
-  const { deleteAsset } = useAPI();
-  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-  const { setAssets } = useAssetsDispatchContext();
+const DeleteVesting = ({ vesting }) => {
   const [show, setShow] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const { deleteVesting } = useAPI();
+  const { contractAddress } = useContractStateContext();
+  const { setVestings } = useVestingsDispatchContext();
+  const theme = useThemeContext();
+
   const handleClose = () => {
     setShow(false);
   };
   const handleShow = () => {
     setShow(true);
   };
-
-  const removeAsset = async (contractID, address) => {
+  const removeVesting = async (contractID, address) => {
     try {
       setIsDeleteLoading(true);
-      await deleteAsset(contractID, { address });
-      setAssets((prev) => {
+      await deleteVesting(contractAddress, { address });
+      setVestings((prev) => {
         const res = [...prev];
         res.splice(
           res.indexOf(
-            res.find((assetIterable) => assetIterable.address === address),
+            res.find((vestingIterable) => vestingIterable.address === address),
           ),
           1,
         );
@@ -48,10 +48,9 @@ const DeleteAsset = ({ asset }) => {
   };
 
   useEffect(() => {
-    return () => {
-      setIsDeleteLoading(false);
-    };
-  });
+    return () => setIsDeleteLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -69,18 +68,23 @@ const DeleteAsset = ({ asset }) => {
             </Modal.Close>
 
             <Title as="h3" style={{ marginBottom: 0 }}>
-              Delete asset
+              Delete vesting
             </Title>
           </div>
         </Modal.Header>
 
         <Modal.Body style={{ padding: '15px 30px' }}>
-          Are you sure you would like to delete the asset?
+          <p>
+            You are going to remove the vesting contract from the wallet vesting
+            list. It will not affect the vesting contract itself. You can add it
+            back later.
+          </p>
+          <p>Are you sure you would like to precede?</p>
           <div style={{ marginTop: '40px', textAlign: 'right' }}>
             <Button
               variant="danger"
               disabled={isDeleteLoading}
-              onClick={() => removeAsset(contractAddress, asset.address)}
+              onClick={() => removeVesting(contractAddress, vesting.address)}
             >
               Delete
             </Button>
@@ -95,8 +99,8 @@ const DeleteAsset = ({ asset }) => {
   );
 };
 
-DeleteAsset.propTypes = {
-  asset: PropTypes.objectOf(PropTypes.any).isRequired,
+DeleteVesting.propTypes = {
+  vesting: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default DeleteAsset;
+export default DeleteVesting;

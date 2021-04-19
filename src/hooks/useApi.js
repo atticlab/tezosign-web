@@ -79,7 +79,7 @@ const useAPI = () => {
   };
   // {
   //   contract_id: 'contract address',
-  //   type: 'transfer' || 'fa_transfer' || 'fa2_transfer' || 'delegation',
+  //   type: 'transfer' || 'fa_transfer' || 'fa2_transfer' || 'income_transfer' || 'delegation' || 'storage_update',
   //   amount: 1 // for transfers only: mutez
   //   to: 'tezos address',
   //   asset_id: 'asset contract address', // for asset transfers only
@@ -179,6 +179,59 @@ const useAPI = () => {
   const getOriginatedContract = (txID) => {
     return API.get(`/${network}/origination/${txID}`);
   };
+  const getVestingContractCode = () => {
+    return API.get('/static/vesting.json');
+  };
+  // {
+  //   vesting_address: 'KT1' || 'tz1' || 'tz2' || 'tz3',
+  //   delegate_admin: 'KT1' || 'tz1' || 'tz2' || 'tz3',
+  //   timestamp: 1616678669, // seconds only
+  //   seconds_per_tick: 10,
+  //   tokens_per_tick: 1, // mutez
+  // }
+  const initVesting = (payload) => {
+    return API.post(`/${network}/contract/vesting/storage/init`, payload);
+  };
+  // {
+  //   type: 'vesting_vest' || 'vesting_set_delegate',
+  //   amount: 123, // batches/ticks, only for 'vesting_vest'
+  //   to: 'tz1' || 'tz2' || 'tz3', // onnly for 'vesting_set_delegate'
+  // }
+  const sendVestingOperation = (payload) => {
+    return API.post(`/${network}/contract/vesting/operation`, payload);
+  };
+  const getVestingInfo = (vestingContractID) => {
+    return API.get(`/${network}/contract/vesting/${vestingContractID}/info`);
+  };
+  const getVestings = (contractID) => {
+    return API.get(`/${network}/contract/${contractID}/vestings`);
+  };
+  // {
+  //   address: 'KT1' || 'tz1' || 'tz2' || 'tz3',
+  //   name: 'Name',
+  // }
+  const addVesting = (contractID, payload) => {
+    return API.post(`/${network}/contract/${contractID}/vesting`, payload);
+  };
+  // {
+  //   address: 'KT1' || 'tz1' || 'tz2' || 'tz3',
+  //   name: 'Name',
+  // }
+  const editVesting = (contractID, payload) => {
+    return API.post(`/${network}/contract/${contractID}/vesting/edit`, payload);
+  };
+  // {
+  //   address: 'KT1' || 'tz1' || 'tz2' || 'tz3',
+  // }
+  const deleteVesting = (contractID, payload) => {
+    return API.post(
+      `/${network}/contract/${contractID}/vesting/delete`,
+      payload,
+    );
+  };
+  const getAddressBalance = (address) => {
+    return API.get(`/${network}/${address}/balance`);
+  };
 
   currentTokens = { ...tokens };
 
@@ -256,6 +309,15 @@ const useAPI = () => {
     editAsset,
     deleteAsset,
     getOriginatedContract,
+    getVestingContractCode,
+    initVesting,
+    sendVestingOperation,
+    getVestingInfo,
+    getVestings,
+    addVesting,
+    editVesting,
+    deleteVesting,
+    getAddressBalance,
   };
 };
 

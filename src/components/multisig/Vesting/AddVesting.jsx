@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { BtnIcon } from '../../styled/Btns';
 import Modal from '../../styled/Modal';
 import { Title } from '../../styled/Text';
-import AssetEditor from './AssetEditor';
+import VestingEditor from './VestingEditor';
 
-const ChangeAsset = ({ asset }) => {
+const AddVesting = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => {
     setShow(false);
@@ -31,34 +30,19 @@ const ChangeAsset = ({ asset }) => {
             </Modal.Close>
 
             <Title as="h3" style={{ marginBottom: 0 }}>
-              Edit asset
+              Add vesting
             </Title>
           </div>
         </Modal.Header>
 
         <Modal.Body style={{ padding: '15px 30px' }}>
-          <AssetEditor
-            isEdit
-            name={asset.name}
-            address={asset.address}
-            contractType={asset.contract_type}
-            scale={asset.scale}
-            ticker={asset.ticker}
-            onSubmit={handleClose}
-            onCancel={handleClose}
-          />
+          <VestingEditor onSubmit={handleClose} onCancel={handleClose} />
         </Modal.Body>
       </Modal>
 
-      <BtnIcon onClick={handleShow}>
-        <FontAwesomeIcon icon="pen" />
-      </BtnIcon>
+      <Button onClick={handleShow}>Add vesting</Button>
     </>
   );
 };
 
-ChangeAsset.propTypes = {
-  asset: PropTypes.objectOf(PropTypes.any).isRequired,
-};
-
-export default ChangeAsset;
+export default AddVesting;

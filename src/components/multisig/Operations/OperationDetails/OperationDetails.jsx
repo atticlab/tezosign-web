@@ -2,17 +2,17 @@ import React, { useMemo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Badge, Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import { Green, Red, Bold } from '../../styled/Text';
-import { FlexCenter } from '../../styled/Flex';
-import Stepper from '../../Stepper';
+import { Green, Red, Bold } from '../../../styled/Text';
+import { FlexCenter } from '../../../styled/Flex';
+import Stepper from '../../../Stepper';
 import Address from './Address';
 import ContractChanges from './ContractChanges';
-import BtnCopy from '../../BtnCopy';
-import { useContractStateContext } from '../../../store/contractContext';
-import { requestSignPayload, sendTx } from '../../../plugins/beacon';
-import useAPI from '../../../hooks/useApi';
-import { useUserStateContext } from '../../../store/userContext';
-import { useAssetsStateContext } from '../../../store/assetsContext';
+import BtnCopy from '../../../BtnCopy';
+import { useContractStateContext } from '../../../../store/contractContext';
+import { requestSignPayload, sendTx } from '../../../../plugins/beacon';
+import useAPI from '../../../../hooks/useApi';
+import { useUserStateContext } from '../../../../store/userContext';
+import { useAssetsStateContext } from '../../../../store/assetsContext';
 
 const OperationGeneralInfo = styled.div`
   display: flex;

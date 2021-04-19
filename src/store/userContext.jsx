@@ -81,12 +81,15 @@ const UserProvider = ({ children }) => {
   const [isRestoreLoading, setIsRestoreLoading] = useState(true);
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
   const [tokens, setTokens] = useState(null);
+  const [balance, setBalance] = useState(null);
+  const [isBalanceLoading, setIsBalanceLoading] = useState(false);
   const {
     loginRequest,
     login,
     refreshSession,
     restoreSession,
     logout,
+    getAddressBalance,
   } = useAPI();
   const isLoggedIn = useMemo(() => {
     return Boolean(
@@ -186,6 +189,18 @@ const UserProvider = ({ children }) => {
     }
   };
 
+  const getBalance = async (address) => {
+    try {
+      setIsBalanceLoading(true);
+      const resp = await getAddressBalance(address);
+      setBalance(resp.data);
+    } catch (e) {
+      handleError(e);
+    } finally {
+      setIsBalanceLoading(false);
+    }
+  };
+
   useEffect(() => {
     restore();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -212,9 +227,19 @@ const UserProvider = ({ children }) => {
         ? convertHexToPrefixedBase58(publicKey)
         : publicKey,
       tokens,
+      balance,
+      isBalanceLoading,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [permissions, isPermissionsLoading, isRestoreLoading, isLoggedIn, tokens]);
+  }, [
+    permissions,
+    isPermissionsLoading,
+    isRestoreLoading,
+    isLoggedIn,
+    tokens,
+    balance,
+    isBalanceLoading,
+  ]);
 
   const dispatchValue = useMemo(
     () => ({
@@ -224,6 +249,7 @@ const UserProvider = ({ children }) => {
       connect,
       disconnect,
       refreshTokens,
+      getBalance,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],

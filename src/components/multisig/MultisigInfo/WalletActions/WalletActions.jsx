@@ -1,47 +1,13 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Modal from '../../styled/Modal';
-import { Title } from '../../styled/Text';
+import Modal from '../../../styled/Modal';
+import { Title } from '../../../styled/Text';
+import { Dropdown } from '../../../styled/Dropdown';
 import CreateTx from './CreateTx';
 import CreateDelegation from './CreateDelegation';
 import ContractEditor from './ContractEditor';
 
-const DDwnToggle = styled(Dropdown.Toggle)`
-  &:after {
-    display: none;
-  }
-`;
-
-const DDwnMenu = styled(Dropdown.Menu)`
-  padding: 0;
-  border: 0;
-  box-shadow: ${({ theme }) => theme.borderShadow};
-
-  .dropdown-item {
-    transition: color, background-color 0.15s;
-    font-size: 14px;
-    padding: 4px 10px;
-    color: ${({ theme }) => theme.black};
-
-    &:hover {
-      background-color: rgba(34, 211, 105, 0.25);
-    }
-
-    &:active {
-      background-color: rgba(34, 211, 105, 0.5);
-      color: ${({ theme }) => theme.black};
-    }
-
-    &:focus {
-      background-color: rgba(34, 211, 105, 0.5);
-      outline: rgba(38, 210, 129, 0.5) auto 1px;
-    }
-  }
-`;
-
-const ContractActions = () => {
+const WalletActions = () => {
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
   const [opType, setOpType] = useState('');
@@ -58,16 +24,16 @@ const ContractActions = () => {
   return (
     <>
       <Dropdown onToggle={() => setOpen(!open)}>
-        <DDwnToggle>
+        <Dropdown.Toggle>
           <span style={{ marginRight: '5px' }}>Actions</span>
           <FontAwesomeIcon
             icon="chevron-down"
             rotation={open ? 180 : 0}
             style={{ transition: 'all 0.15s ease' }}
           />
-        </DDwnToggle>
+        </Dropdown.Toggle>
 
-        <DDwnMenu align="right">
+        <Dropdown.Menu align="right">
           <Dropdown.Item
             className="dropdown-item"
             onClick={() => handleShow('transaction')}
@@ -86,7 +52,7 @@ const ContractActions = () => {
           >
             Create contract update
           </Dropdown.Item>
-        </DDwnMenu>
+        </Dropdown.Menu>
       </Dropdown>
 
       <Modal
@@ -145,4 +111,4 @@ const ContractActions = () => {
   );
 };
 
-export default ContractActions;
+export default WalletActions;

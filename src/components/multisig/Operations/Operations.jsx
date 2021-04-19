@@ -3,31 +3,31 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Form as BForm } from 'react-bootstrap';
-import Card from '../styled/Card';
-import { FlexCenter } from '../styled/Flex';
-import { TextAccent, TextLeft } from '../styled/Text';
-import { TblGenInfo } from '../styled/Tbl';
-import { FormLabel } from '../styled/Forms';
-import Table from '../Table';
-import BtnCopy from '../BtnCopy';
-import Spinner from '../Spinner';
+import Card from '../../styled/Card';
+import { FlexCenter } from '../../styled/Flex';
+import { TextLeft, TextAccent } from '../../styled/Text';
+import { TblGenInfo } from '../../styled/Tbl';
+import { FormLabel } from '../../styled/Forms';
+import Table from '../../Table';
+import BtnCopy from '../../BtnCopy';
+import Spinner from '../../Spinner';
 import OperationDetails from './OperationDetails';
-import SelectCustom from '../SelectCustom';
-import IndentIcon from '../IdentIcon';
-import useThemeContext from '../../hooks/useThemeContext';
-import useInfiniteScroll from '../../hooks/useInfiniteScroll';
-import { useAssetsStateContext } from '../../store/assetsContext';
+import SelectCustom from '../../SelectCustom';
+import IndentIcon from '../../IdentIcon';
+import useThemeContext from '../../../hooks/useThemeContext';
+import useInfiniteScroll from '../../../hooks/useInfiniteScroll';
+import { useAssetsStateContext } from '../../../store/assetsContext';
 import {
   useOperationsDispatchContext,
   useOperationsStateContext,
-} from '../../store/operationsContext';
+} from '../../../store/operationsContext';
 import {
   convertMutezToXTZ,
   capitalize,
   convertAssetSubunitToAssetAmount,
   ellipsis,
-} from '../../utils/helpers';
-import { dateFormat } from '../../utils/constants';
+} from '../../../utils/helpers';
+import { dateFormat } from '../../../utils/constants';
 
 dayjs.extend(utc);
 

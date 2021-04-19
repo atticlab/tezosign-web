@@ -9,12 +9,12 @@ import {
   OverlayTrigger,
   Tooltip,
 } from 'react-bootstrap';
-import styled from 'styled-components';
-import { FormLabel, FormSubmit } from '../../styled/Forms';
-import { FlexAlignItemsCenter } from '../../styled/Flex';
-import SelectCustom from '../../SelectCustom';
-import IdentIcon from '../../IdentIcon';
-import useAPI from '../../../hooks/useApi';
+import { FormLabel, FormSubmit } from '../../../styled/Forms';
+import { FlexAlignItemsCenter } from '../../../styled/Flex';
+import { BtnMax } from '../../../styled/Btns';
+import SelectCustom from '../../../SelectCustom';
+import IdentIcon from '../../../IdentIcon';
+import useAPI from '../../../../hooks/useApi';
 import {
   bs58Validation,
   convertXTZToMutez,
@@ -22,27 +22,12 @@ import {
   limitInputDecimals,
   convertAssetSubunitToAssetAmount,
   convertAssetAmountToAssetSubunit,
-} from '../../../utils/helpers';
-import { useContractStateContext } from '../../../store/contractContext';
-import { useOperationsDispatchContext } from '../../../store/operationsContext';
-import { useAssetsStateContext } from '../../../store/assetsContext';
-import { handleError } from '../../../utils/errorsHandler';
-import XTZ from '../../../assets/img/assets/xtz-256.svg';
-
-const BtnMax = styled(Button).attrs({ variant: 'link' })`
-  padding: 0;
-  margin-right: 5px;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1;
-  color: ${({ theme }) => theme.blue};
-
-  &:hover,
-  &:focus {
-    text-decoration: none;
-    color: #249ac2;
-  }
-`;
+} from '../../../../utils/helpers';
+import { useContractStateContext } from '../../../../store/contractContext';
+import { useOperationsDispatchContext } from '../../../../store/operationsContext';
+import { useAssetsStateContext } from '../../../../store/assetsContext';
+import { handleError } from '../../../../utils/errorsHandler';
+import XTZ from '../../../../assets/img/assets/xtz-256.svg';
 
 const schema = (maxAmount = 30000, minAmount = 0.000001, asset = 'XTZ') => {
   return Yup.object({
@@ -203,7 +188,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
       }) => (
         <Form>
           <BForm.Group>
-            <FormLabel>Select Asset</FormLabel>
+            <FormLabel>Select asset</FormLabel>
             <SelectCustom
               options={assetsOptions}
               defaultValue={XTZAsset}
@@ -238,7 +223,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
                 </Tooltip>
               }
             >
-              <FormLabel>Enter Token ID</FormLabel>
+              <FormLabel>Enter token ID</FormLabel>
             </OverlayTrigger>
             <Field
               as={BForm.Control}
@@ -259,7 +244,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
           </BForm.Group>
 
           <BForm.Group controlId="amount">
-            <FormLabel>Enter Amount</FormLabel>
+            <FormLabel>Enter amount</FormLabel>
             <InputGroup>
               <Field
                 as={BForm.Control}
@@ -268,7 +253,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
                 aria-label="amount"
                 isInvalid={!!errors.amount && touched.amount}
                 isValid={!errors.amount && touched.amount}
-                step="0.001"
+                step={1 / 10 ** values.asset.scale}
                 min="0"
                 onKeyPress={(event) =>
                   limitInputDecimals(event, values.asset.scale)

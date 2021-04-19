@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import BtnTransparent from './styled/BtnTransparent';
+import { BtnTransparent } from './styled/Btns';
 
 const BtnBack = () => (
   <div style={{ marginBottom: '36px' }}>

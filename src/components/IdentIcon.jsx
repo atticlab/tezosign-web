@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
-import styled, { ThemeContext } from 'styled-components';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { createIcon } from '@download/blockies';
+import useThemeContext from '../hooks/useThemeContext';
 
 const ImgIcon = styled.img`
   display: inline-block;
@@ -9,7 +10,7 @@ const ImgIcon = styled.img`
 `;
 
 const IdentIcon = ({ address, scale }) => {
-  const theme = useContext(ThemeContext);
+  const theme = useThemeContext();
   const [icon, setIcon] = useState(null);
 
   useEffect(() => {

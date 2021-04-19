@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BtnIcon } from '../../styled/Btns';
 import Modal from '../../styled/Modal';
 import { Title } from '../../styled/Text';
-import AssetEditor from './AssetEditor';
+import VestingEditor from './VestingEditor';
 
-const ChangeAsset = ({ asset }) => {
+const ChangeVesting = ({ vesting }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => {
     setShow(false);
@@ -31,34 +31,35 @@ const ChangeAsset = ({ asset }) => {
             </Modal.Close>
 
             <Title as="h3" style={{ marginBottom: 0 }}>
-              Edit asset
+              Edit vesting
             </Title>
           </div>
         </Modal.Header>
 
         <Modal.Body style={{ padding: '15px 30px' }}>
-          <AssetEditor
+          <VestingEditor
             isEdit
-            name={asset.name}
-            address={asset.address}
-            contractType={asset.contract_type}
-            scale={asset.scale}
-            ticker={asset.ticker}
+            name={vesting.name}
+            address={vesting.address}
             onSubmit={handleClose}
             onCancel={handleClose}
           />
         </Modal.Body>
       </Modal>
 
-      <BtnIcon onClick={handleShow}>
+      <BtnIcon
+        onClick={() => {
+          handleShow();
+        }}
+      >
         <FontAwesomeIcon icon="pen" />
       </BtnIcon>
     </>
   );
 };
 
-ChangeAsset.propTypes = {
-  asset: PropTypes.objectOf(PropTypes.any).isRequired,
+ChangeVesting.propTypes = {
+  vesting: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default ChangeAsset;
+export default ChangeVesting;

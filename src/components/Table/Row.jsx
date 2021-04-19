@@ -8,7 +8,24 @@ const Row = forwardRef(({ cols, row, isCollapsible, collapseContent }, ref) => {
   const theme = useThemeContext();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggle = (e) => {
-    if (e.target.type) return;
+    // TODO: Refactor. Stop toggling when the element inside a row is pressed.
+    if (
+      e.target.tagName === 'BUTTON' ||
+      e.target.tagName === 'svg' ||
+      e.target.tagName === 'path' ||
+      e.target.tagName === 'FORM' ||
+      e.target.tagName === 'H3' ||
+      e.target.tagName === 'INPUT' ||
+      e.target.tagName === 'LABEL' ||
+      e.target.classList?.contains('modal-header') ||
+      e.target.classList?.contains('modal-body') ||
+      e.target.classList?.contains('modal-content') ||
+      e.target.classList?.contains('fade') ||
+      e.target.parentElement?.tagName === 'FORM' ||
+      e.target.parentElement?.classList?.contains('modal-header')
+    ) {
+      return;
+    }
     setIsCollapsed((prev) => !prev);
   };
 
@@ -40,7 +57,7 @@ const Row = forwardRef(({ cols, row, isCollapsible, collapseContent }, ref) => {
         <Tbl.TrCollapsible>
           <Tbl.TdCollapse colSpan="100%">
             <Tbl.Collapse in={isCollapsed}>
-              <div>{collapseContent}</div>
+              <div>{collapseContent(row, isCollapsed)}</div>
             </Tbl.Collapse>
           </Tbl.TdCollapse>
         </Tbl.TrCollapsible>
@@ -53,12 +70,12 @@ Row.propTypes = {
   cols: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.objectOf(PropTypes.any).isRequired,
   isCollapsible: PropTypes.bool,
-  collapseContent: PropTypes.node,
+  collapseContent: PropTypes.func,
 };
 
 Row.defaultProps = {
   isCollapsible: false,
-  collapseContent: <div />,
+  collapseContent: () => null,
 };
 
 Row.displayName = 'Row';

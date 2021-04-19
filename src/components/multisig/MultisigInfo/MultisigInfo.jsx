@@ -2,14 +2,14 @@ import React, { useMemo } from 'react';
 import { Badge } from 'react-bootstrap';
 import styled from 'styled-components';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ContractActions from './ContractActions';
-import IdentIcon from '../IdentIcon';
-// import BtnLink from '../styled/BtnLink';
-import { Title, Text, TextAccent, BreakTxt } from '../styled/Text';
-import BtnCopy from '../BtnCopy';
-import { useContractStateContext } from '../../store/contractContext';
-import useThemeContext from '../../hooks/useThemeContext';
-import { formatXTZ, convertMutezToXTZ } from '../../utils/helpers';
+import WalletActions from './WalletActions';
+import IdentIcon from '../../IdentIcon';
+// import { BtnLink } from '../styled/Btns';
+import { Title, Text, TextAccent, BreakTxt } from '../../styled/Text';
+import BtnCopy from '../../BtnCopy';
+import { useContractStateContext } from '../../../store/contractContext';
+import useThemeContext from '../../../hooks/useThemeContext';
+import { formatXTZ, convertMutezToXTZ } from '../../../utils/helpers';
 
 const SectionMultisigInfo = styled.section`
   display: flex;
@@ -119,7 +119,7 @@ const MultisigInfo = () => {
         </ContractManagement.Address>
       </ContractManagement>
 
-      {isUserOwner && <ContractActions />}
+      {isUserOwner && <WalletActions />}
     </SectionMultisigInfo>
   );
 };
