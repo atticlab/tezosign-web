@@ -3,9 +3,9 @@ import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../../styled/Modal';
 import { Title } from '../../../styled/Text';
-import NewVestingForm from './NewVestingForm';
+import CreateVestingForm from './CreateVestingForm';
 
-const NewVesting = () => {
+const CreateVesting = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => {
     setShow(false);
@@ -36,7 +36,7 @@ const NewVesting = () => {
         </Modal.Header>
 
         <Modal.Body style={{ padding: '15px 30px' }}>
-          <NewVestingForm onSubmit={handleClose} onCancel={handleClose} />
+          <CreateVestingForm onSubmit={handleClose} onCancel={handleClose} />
         </Modal.Body>
       </Modal>
 
@@ -47,4 +47,4 @@ const NewVesting = () => {
   );
 };
 
-export default NewVesting;
+export default CreateVesting;

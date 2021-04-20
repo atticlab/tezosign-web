@@ -41,6 +41,7 @@ const OwnersFields = ({
                   }
                   as={BForm.Control}
                   size="sm"
+                  autoComplete="off"
                   isInvalid={
                     errors.entities &&
                     touched.entities &&

@@ -54,10 +54,10 @@ const Owners = () => {
   return (
     <section>
       <TblGenInfo>
-        <TblGenInfo.Item style={{ marginTop: 0 }}>
-          Total Owners:{' '}
+        <TblGenInfo.Item style={{ marginTop: 0, textTransform: 'initial' }}>
+          Total owners:{' '}
           <TextAccent color={theme.blue}>
-            {contractInfo?.threshold || 0}
+            {contractInfo?.owners.length || 0}
           </TextAccent>
         </TblGenInfo.Item>
       </TblGenInfo>

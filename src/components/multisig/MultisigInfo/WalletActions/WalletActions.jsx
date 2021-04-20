@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Modal from '../../../styled/Modal';
 import { Title } from '../../../styled/Text';
 import { Dropdown } from '../../../styled/Dropdown';
@@ -8,11 +9,16 @@ import CreateDelegation from './CreateDelegation';
 import ContractEditor from './ContractEditor';
 import CreateVestingVest from './CreateVestingVest';
 import CreateVestingSetDelegate from './CreateVestingSetDelegate';
+import { useVestingsStateContext } from '../../../../store/vestingsContext';
 
 const WalletActions = () => {
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
   const [opType, setOpType] = useState('');
+  const { vestings, isVestingsLoading } = useVestingsStateContext();
+  const isVestingContractsAvailable = useMemo(() => {
+    return vestings && vestings.length && !isVestingsLoading;
+  }, [vestings, isVestingsLoading]);
 
   const handleClose = () => {
     setShow(false);
@@ -37,35 +43,72 @@ const WalletActions = () => {
 
         <Dropdown.Menu align="right">
           <Dropdown.Item
+            as="button"
             className="dropdown-item"
             onClick={() => handleShow('transaction')}
           >
             Create transaction
           </Dropdown.Item>
           <Dropdown.Item
+            as="button"
             className="dropdown-item"
             onClick={() => handleShow('delegation')}
           >
             Create delegation
           </Dropdown.Item>
           <Dropdown.Item
+            as="button"
             className="dropdown-item"
             onClick={() => handleShow('edit')}
           >
             Create contract update
           </Dropdown.Item>
-          <Dropdown.Item
-            className="dropdown-item"
-            onClick={() => handleShow('vesting_vest')}
+          <OverlayTrigger
+            overlay={
+              !isVestingContractsAvailable ? (
+                <Tooltip>
+                  Available only if there are vesting contracts added to the
+                  wallet.
+                </Tooltip>
+              ) : (
+                <span />
+              )
+            }
           >
-            Create vesting withdrawal
-          </Dropdown.Item>
-          <Dropdown.Item
-            className="dropdown-item"
-            onClick={() => handleShow('vesting_set_delegate')}
+            <span>
+              <Dropdown.Item
+                as="button"
+                className="dropdown-item"
+                disabled={!isVestingContractsAvailable}
+                onClick={() => handleShow('vesting_vest')}
+              >
+                Create vesting withdrawal
+              </Dropdown.Item>
+            </span>
+          </OverlayTrigger>
+          <OverlayTrigger
+            overlay={
+              !isVestingContractsAvailable ? (
+                <Tooltip>
+                  Available only if there are vesting contracts added to the
+                  wallet.
+                </Tooltip>
+              ) : (
+                <span />
+              )
+            }
           >
-            Create vesting delegation
-          </Dropdown.Item>
+            <span>
+              <Dropdown.Item
+                as="button"
+                className="dropdown-item"
+                disabled={!isVestingContractsAvailable}
+                onClick={() => handleShow('vesting_set_delegate')}
+              >
+                Create vesting delegation
+              </Dropdown.Item>
+            </span>
+          </OverlayTrigger>
         </Dropdown.Menu>
       </Dropdown>
 

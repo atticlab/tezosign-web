@@ -23,17 +23,19 @@ const VestingsSelect = ({
       options={vestingsOpts}
       placeholder="KT1..."
       isSearchable={false}
-      // defaultValue={{
-      //   label: values.address,
-      //   value: values.address,
-      // }}
       isInvalid={isInvalid}
       isValid={isValid}
       isTouched={isTouched}
       isLoading={isVestingsLoading}
       menuWidth="100%"
       height="38px"
-      // disabled={!vestings || !vestings.length}
+      disabled={!vestings || !vestings.length}
+      styles={{
+        singleValue: (provided) => ({
+          ...provided,
+          fontSize: '1rem',
+        }),
+      }}
       onChange={(value) => {
         onChange(value);
       }}

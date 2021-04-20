@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -15,43 +15,63 @@ import { bs58Validation } from '../../../../utils/helpers';
 import useAPI from '../../../../hooks/useApi';
 import { handleError } from '../../../../utils/errorsHandler';
 import { useOperationsDispatchContext } from '../../../../store/operationsContext';
+import useRequest from '../../../../hooks/useRequest';
 
-const schema = Yup.object({
-  vestingAddress: Yup.string()
-    .required('Required')
-    .matches('KT1', 'Tezos contract address must start with KT1')
-    .matches(/^\S+$/, 'No spaces are allowed')
-    .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
-    .length(36, 'Tezos address must be 36 characters long')
-    .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
-  to: Yup.string()
-    .required(
-      `This field cannot be empty. If you want to undelegate, click the button 'Undelegate'.`,
-    )
-    .matches('tz1|tz2|tz3', 'Tezos address must start with tz1, tz2, tz3')
-    .matches(/^\S+$/, 'No spaces are allowed')
-    .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
-    .length(36, 'Tezos address must be 36 characters long')
-    .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
-});
+const schema = (isWalletDelegateAdmin) =>
+  Yup.object({
+    vestingAddress: Yup.string()
+      .required('Required')
+      .matches('KT1', 'Tezos contract address must start with KT1')
+      .matches(/^\S+$/, 'No spaces are allowed')
+      .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
+      .length(36, 'Tezos address must be 36 characters long')
+      .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
+    to: Yup.string()
+      .required(
+        `This field cannot be empty. If you want to undelegate, click the button 'Undelegate'.`,
+      )
+      .matches('tz1|tz2|tz3', 'Tezos address must start with tz1, tz2, tz3')
+      .matches(/^\S+$/, 'No spaces are allowed')
+      .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
+      .length(36, 'Tezos address must be 36 characters long')
+      .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val))
+      .test(
+        'isDelegateAdmin',
+        'Wallet address is not a delegate admin of the vesting contract',
+        () => isWalletDelegateAdmin,
+      ),
+  });
 
 const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
   const { contractAddress } = useContractStateContext();
   const { setOps } = useOperationsDispatchContext();
-  const { createOperation } = useAPI();
+  const { createOperation, getVestingInfo } = useAPI();
+  const {
+    request: loadVestingInfo,
+    resp: vestingInfo,
+    isLoading: isVestingInfoLoading,
+  } = useRequest(getVestingInfo);
 
+  const isWalletDelegateAdmin = useMemo(() => {
+    return (
+      vestingInfo?.storage.delegate_admin === contractAddress &&
+      !isVestingInfoLoading
+    );
+  }, [vestingInfo, contractAddress, isVestingInfoLoading]);
+
+  // FIXME: double submits
   const createVestingSetDelegate = async (
     { vestingAddress, to },
     setSubmitting,
   ) => {
     try {
+      await setSubmitting(true);
       const resp = await createOperation({
         contract_id: contractAddress,
         type: 'vesting_set_delegate',
         vesting_id: vestingAddress,
         to,
       });
-      console.log(resp);
       await setOps((prev) => {
         return [resp.data, ...prev];
       });
@@ -69,13 +89,11 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
         vestingAddress: '',
         to: '',
       }}
-      validationSchema={schema}
+      validationSchema={Yup.lazy(() => schema(isWalletDelegateAdmin))}
       onSubmit={(values, { setSubmitting }) => {
-        console.log('ss');
         createVestingSetDelegate(values, setSubmitting);
       }}
     >
-      {/* eslint-disable-next-line no-unused-vars */}
       {({
         values,
         errors,
@@ -89,11 +107,16 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
           <BForm.Group controlId="vestingAddress">
             <FormLabel>Vesting address</FormLabel>
             <VestingsSelect
-              isTouched={touched.vestingAddress}
-              isInvalid={!!errors.vestingAddress && touched.vestingAddress}
-              isValid={!errors.vestingAddress && touched.vestingAddress}
-              onChange={(value) => {
+              isTouched={Boolean(touched.vestingAddress)}
+              isInvalid={Boolean(
+                !!errors.vestingAddress && touched.vestingAddress,
+              )}
+              isValid={Boolean(
+                !errors.vestingAddress && touched.vestingAddress,
+              )}
+              onChange={async (value) => {
                 setFieldValue('vestingAddress', value.value);
+                await loadVestingInfo(value.value);
                 setFieldTouched('vestingAddress', true);
               }}
               onBlur={() => {
@@ -124,6 +147,7 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
               name="to"
               aria-label="to"
               autoComplete="off"
+              disabled={!isWalletDelegateAdmin}
               isInvalid={!!errors.to && touched.to}
               isValid={!errors.to && touched.to}
             />
@@ -149,7 +173,11 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
               style={{ marginRight: '10px' }}
               disabled={isSubmitting}
               onClick={() => {
-                if (!errors.vestingAddress && touched.vestingAddress) {
+                if (
+                  !errors.vestingAddress &&
+                  touched.vestingAddress &&
+                  isWalletDelegateAdmin
+                ) {
                   createVestingSetDelegate(
                     { ...values, to: '' },
                     setSubmitting,

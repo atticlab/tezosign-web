@@ -99,6 +99,7 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
                   name="baker"
                   aria-label="baker"
                   placeholder="tz1..."
+                  autoComplete="off"
                   isInvalid={!!errors.baker && touched.baker}
                   isValid={!errors.baker && touched.baker}
                   onChange={(value) => {

@@ -33,6 +33,7 @@ const SelectCustom = ({
   onBlur,
   isClearable,
   maxWidth,
+  styles,
 }) => {
   const option = options.map((el) => ({
     ...el,
@@ -74,7 +75,7 @@ const SelectCustom = ({
       isLoading={isLoading}
       displayValue={displayValue}
       className={isInvalid ? 'is-invalid' : ''}
-      styles={selectStyle}
+      styles={{ ...selectStyle, ...styles }}
       onInputChange={inputChange}
       inputValue={inputValue}
       placeholder={placeholder}
@@ -119,6 +120,7 @@ SelectCustom.propTypes = {
   placeholder: PropTypes.string,
   isClearable: PropTypes.bool,
   maxWidth: PropTypes.string,
+  styles: PropTypes.objectOf(PropTypes.any),
 };
 
 SelectCustom.defaultProps = {
@@ -136,6 +138,7 @@ SelectCustom.defaultProps = {
   placeholder: '',
   isClearable: false,
   maxWidth: 'auto',
+  styles: {},
 };
 
 export default SelectCustom;

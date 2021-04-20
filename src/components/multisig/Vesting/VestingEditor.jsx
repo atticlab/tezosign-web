@@ -30,31 +30,45 @@ const VestingEditor = ({ isEdit, name, address, onSubmit, onCancel }) => {
   const { contractAddress } = useContractStateContext();
   const { setVestings } = useVestingsDispatchContext();
 
-  const manageVesting = async (values, setSubmitting) => {
+  const addVestingReq = async (values, setSubmitting) => {
     try {
-      let resp;
-
-      if (!isEdit) {
-        resp = await addVesting(contractAddress, values);
-        setVestings((prev) => [resp.data, ...prev]);
-      } else {
-        resp = await editVesting(contractAddress, values);
-        setVestings((prev) => {
-          const indexToModify = prev.indexOf(
-            prev.find((asset) => asset.address === resp.data.address),
-          );
-          const res = [...prev];
-          res[indexToModify] = resp.data;
-          return res;
-        });
-      }
-
+      setSubmitting(true);
+      const resp = await addVesting(contractAddress, values);
+      setVestings((prev) => [resp.data, ...prev]);
       onSubmit();
     } catch (e) {
       handleError(e);
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const editVestingReq = async (values, setSubmitting) => {
+    try {
+      setSubmitting(true);
+      const resp = await editVesting(contractAddress, values);
+      setVestings((prev) => {
+        const indexToModify = prev.indexOf(
+          prev.find((asset) => asset.address === resp.data.address),
+        );
+        const res = [...prev];
+        res[indexToModify] = resp.data;
+        return res;
+      });
+      onSubmit();
+    } catch (e) {
+      handleError(e);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const addOrEditVesting = async (values, setSubmitting) => {
+    if (!isEdit) {
+      return addVestingReq(values, setSubmitting);
+    }
+
+    return editVestingReq(values, setSubmitting);
   };
 
   return (
@@ -65,7 +79,7 @@ const VestingEditor = ({ isEdit, name, address, onSubmit, onCancel }) => {
       }}
       validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {
-        manageVesting(values, setSubmitting);
+        addOrEditVesting(values, setSubmitting);
       }}
     >
       {({ errors, touched, isSubmitting, setFieldTouched, setFieldValue }) => (
