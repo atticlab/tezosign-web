@@ -27,7 +27,7 @@ import {
   convertAssetSubunitToAssetAmount,
   ellipsis,
 } from '../../../utils/helpers';
-import { dateFormat } from '../../../utils/constants';
+import { dateFormat, operationsTypesMap } from '../../../utils/constants';
 
 dayjs.extend(utc);
 
@@ -52,36 +52,10 @@ const initialOpsCounts = {
   success: 0,
 };
 
-const listOperationType = [
-  {
-    label: 'Transfer',
-    value: 'transfer',
-  },
-  {
-    label: 'Fa transfer',
-    value: 'fa_transfer',
-  },
-  {
-    label: 'Fa2 transfer',
-    value: 'fa2_transfer',
-  },
-  {
-    label: 'Income fa transfer',
-    value: 'income_fa_transfer',
-  },
-  {
-    label: 'Income transfer',
-    value: 'income_transfer',
-  },
-  {
-    label: 'Delegation',
-    value: 'delegation',
-  },
-  {
-    label: 'Storage update',
-    value: 'storage_update',
-  },
-];
+const listOperationType = Object.entries(operationsTypesMap).map((entry) => ({
+  label: entry[1],
+  value: entry[0],
+}));
 
 const limit = 15;
 
@@ -152,10 +126,11 @@ const Operations = () => {
     {
       key: 'type',
       process(operation) {
-        // eslint-disable-next-line react/no-this-in-sfc
-        const opType = operation.operation_info[this.key].split('_').join(' ');
+        const opType = operation.operation_info.type;
 
-        return capitalize(opType);
+        return (
+          operationsTypesMap[opType] || capitalize(opType.split('_').join(' '))
+        );
       },
     },
     {

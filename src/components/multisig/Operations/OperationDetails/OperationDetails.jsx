@@ -13,6 +13,7 @@ import { requestSignPayload, sendTx } from '../../../../plugins/beacon';
 import useAPI from '../../../../hooks/useApi';
 import { useUserStateContext } from '../../../../store/userContext';
 import { useAssetsStateContext } from '../../../../store/assetsContext';
+import { handleError } from '../../../../utils/errorsHandler';
 
 const OperationGeneralInfo = styled.div`
   display: flex;
@@ -123,7 +124,7 @@ const OperationDetails = ({ operation, resetOperations }) => {
       });
       resetOperations();
     } catch (e) {
-      console.error(e);
+      handleError(e);
     } finally {
       setIsActionLoading(false);
     }
@@ -144,7 +145,7 @@ const OperationDetails = ({ operation, resetOperations }) => {
       });
       resetOperations();
     } catch (e) {
-      console.error(e);
+      handleError(e);
     } finally {
       setIsActionLoading(false);
     }
@@ -161,7 +162,7 @@ const OperationDetails = ({ operation, resetOperations }) => {
       await sendTx(0, contractAddress, params);
       resetOperations();
     } catch (e) {
-      console.error(e);
+      handleError(e);
     } finally {
       setIsActionLoading(false);
     }
