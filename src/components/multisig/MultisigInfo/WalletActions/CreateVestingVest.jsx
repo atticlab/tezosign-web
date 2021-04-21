@@ -67,7 +67,7 @@ const CreateVestingVest = ({ onCreate, onCancel }) => {
         contract_id: contractAddress,
         type: 'vesting_vest',
         vesting_id: vestingAddress,
-        amount: batches,
+        ticks: batches,
       });
 
       await setOps((prev) => {

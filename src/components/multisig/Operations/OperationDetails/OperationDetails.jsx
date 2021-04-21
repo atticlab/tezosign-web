@@ -271,6 +271,24 @@ const OperationDetails = ({ operation, resetOperations }) => {
         ) : (
           ''
         )}
+        {operation.operation_info.type === 'vesting_vest' ||
+        operation.operation_info.type === 'vesting_set_delegate' ? (
+          <OperationGeneralInfo.Item>
+            <div>
+              <Bold>Vesting contract:</Bold>{' '}
+              {operation.operation_info.vesting_id}2
+            </div>
+            {operation.operation_info.type === 'vesting_vest' ? (
+              <div>
+                <Bold>Ticks:</Bold> {operation.operation_info.ticks}
+              </div>
+            ) : (
+              ''
+            )}
+          </OperationGeneralInfo.Item>
+        ) : (
+          ''
+        )}
       </OperationGeneralInfo>
 
       <div>
