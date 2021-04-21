@@ -135,7 +135,7 @@ const calcMaxAllowedBalance = (balance, tokensPerTick) => {
   return Math.floor(balance / tokensPerTick) * tokensPerTick;
 };
 
-const NewVestingForm = ({ onSubmit, onCancel }) => {
+const CreateVestingForm = ({ onSubmit, onCancel }) => {
   const { getVestingContractCode, initVesting } = useAPI();
   const { balance: balanceRaw, address } = useUserStateContext();
   const { getBalance } = useUserDispatchContext();
@@ -554,9 +554,9 @@ const NewVestingForm = ({ onSubmit, onCancel }) => {
   );
 };
 
-NewVestingForm.propTypes = {
+CreateVestingForm.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
 
-export default NewVestingForm;
+export default CreateVestingForm;

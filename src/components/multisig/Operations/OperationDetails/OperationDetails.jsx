@@ -13,6 +13,7 @@ import { requestSignPayload, sendTx } from '../../../../plugins/beacon';
 import useAPI from '../../../../hooks/useApi';
 import { useUserStateContext } from '../../../../store/userContext';
 import { useAssetsStateContext } from '../../../../store/assetsContext';
+import { handleError } from '../../../../utils/errorsHandler';
 
 const OperationGeneralInfo = styled.div`
   display: flex;
@@ -123,7 +124,7 @@ const OperationDetails = ({ operation, resetOperations }) => {
       });
       resetOperations();
     } catch (e) {
-      console.error(e);
+      handleError(e);
     } finally {
       setIsActionLoading(false);
     }
@@ -144,7 +145,7 @@ const OperationDetails = ({ operation, resetOperations }) => {
       });
       resetOperations();
     } catch (e) {
-      console.error(e);
+      handleError(e);
     } finally {
       setIsActionLoading(false);
     }
@@ -161,7 +162,7 @@ const OperationDetails = ({ operation, resetOperations }) => {
       await sendTx(0, contractAddress, params);
       resetOperations();
     } catch (e) {
-      console.error(e);
+      handleError(e);
     } finally {
       setIsActionLoading(false);
     }
@@ -266,6 +267,24 @@ const OperationDetails = ({ operation, resetOperations }) => {
               newKeys={operation.operation_info.keys}
               newThreshold={operation.operation_info.threshold}
             />
+          </OperationGeneralInfo.Item>
+        ) : (
+          ''
+        )}
+        {operation.operation_info.type === 'vesting_vest' ||
+        operation.operation_info.type === 'vesting_set_delegate' ? (
+          <OperationGeneralInfo.Item>
+            <div>
+              <Bold>Vesting contract:</Bold>{' '}
+              {operation.operation_info.vesting_id}2
+            </div>
+            {operation.operation_info.type === 'vesting_vest' ? (
+              <div>
+                <Bold>Ticks:</Bold> {operation.operation_info.ticks}
+              </div>
+            ) : (
+              ''
+            )}
           </OperationGeneralInfo.Item>
         ) : (
           ''

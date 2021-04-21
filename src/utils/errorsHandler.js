@@ -20,6 +20,7 @@ const errorNotifications = {
 const availableCodes = Object.keys(errorNotifications);
 
 const handleError = (error) => {
+  // eslint-disable-next-line no-console
   console.error(error);
 
   const {

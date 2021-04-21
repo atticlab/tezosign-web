@@ -32,6 +32,7 @@ const Deployed = () => {
           clearInterval(interval);
         }
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.error(e);
       }
     }, 7000);

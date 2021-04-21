@@ -151,6 +151,7 @@ const SelectMultisig = () => {
                     aria-label="address"
                     placeholder="KT1..."
                     size="sm"
+                    autoComplete="off"
                     isInvalid={!!errors.address && touched.address}
                     isValid={!errors.address && touched.address}
                     style={{ height: 'auto' }}

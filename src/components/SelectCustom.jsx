@@ -24,6 +24,7 @@ const SelectCustom = ({
   isValid,
   isInvalid,
   isTouched,
+  isLoading,
   disabled,
   menuWidth,
   placeholder,
@@ -32,6 +33,7 @@ const SelectCustom = ({
   onBlur,
   isClearable,
   maxWidth,
+  styles,
 }) => {
   const option = options.map((el) => ({
     ...el,
@@ -70,9 +72,10 @@ const SelectCustom = ({
       isValid={isValid}
       isInvalid={isInvalid}
       isDisabled={disabled}
+      isLoading={isLoading}
       displayValue={displayValue}
       className={isInvalid ? 'is-invalid' : ''}
-      styles={selectStyle}
+      styles={{ ...selectStyle, ...styles }}
       onInputChange={inputChange}
       inputValue={inputValue}
       placeholder={placeholder}
@@ -108,6 +111,7 @@ SelectCustom.propTypes = {
   isValid: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   // TODO: Investigate and handle type changes
   isInvalid: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+  isLoading: PropTypes.bool,
   menuWidth: PropTypes.string,
   height: PropTypes.string,
   disabled: PropTypes.bool,
@@ -116,6 +120,7 @@ SelectCustom.propTypes = {
   placeholder: PropTypes.string,
   isClearable: PropTypes.bool,
   maxWidth: PropTypes.string,
+  styles: PropTypes.objectOf(PropTypes.any),
 };
 
 SelectCustom.defaultProps = {
@@ -126,12 +131,14 @@ SelectCustom.defaultProps = {
   isTouched: false,
   isValid: false,
   isInvalid: false,
+  isLoading: false,
   menuWidth: '',
   height: '',
   disabled: false,
   placeholder: '',
   isClearable: false,
   maxWidth: 'auto',
+  styles: {},
 };
 
 export default SelectCustom;

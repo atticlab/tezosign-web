@@ -97,7 +97,7 @@ const AssetEditor = ({
     }
   };
 
-  const addOrCreateAsset = (contractID, assetFields, setSubmitting) => {
+  const addOrEditAsset = (contractID, assetFields, setSubmitting) => {
     if (!isEdit) {
       return addAssetReq(contractID, assetFields, setSubmitting);
     }
@@ -116,7 +116,7 @@ const AssetEditor = ({
       }}
       validationSchema={schema}
       onSubmit={async (values, { setSubmitting }) => {
-        return addOrCreateAsset(contractAddress, values, setSubmitting);
+        return addOrEditAsset(contractAddress, values, setSubmitting);
       }}
     >
       {({ errors, touched, setFieldValue, setFieldTouched, isSubmitting }) => (
@@ -209,6 +209,7 @@ const AssetEditor = ({
               min="0"
               name="scale"
               aria-label="scale"
+              autoComplete="off"
               isInvalid={!!errors.scale && touched.scale}
               isValid={!errors.scale && touched.scale}
             />

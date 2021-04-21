@@ -40,13 +40,13 @@ const schema = Yup.object({
 
 const CreateDelegation = ({ onCreate, onCancel }) => {
   // const [alias, setAlias] = useState('');
-  const { sendOperation } = useAPI();
+  const { createOperation } = useAPI();
   const { contractAddress } = useContractStateContext();
   const { setOps } = useOperationsDispatchContext();
   const createDelegation = async (baker, setSubmitting) => {
     try {
       setSubmitting(true);
-      const newDelegation = await sendOperation({
+      const newDelegation = await createOperation({
         contract_id: contractAddress,
         type: 'delegation',
         to: baker,
@@ -99,6 +99,7 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
                   name="baker"
                   aria-label="baker"
                   placeholder="tz1..."
+                  autoComplete="off"
                   isInvalid={!!errors.baker && touched.baker}
                   isValid={!errors.baker && touched.baker}
                   onChange={(value) => {

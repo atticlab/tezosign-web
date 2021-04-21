@@ -3,7 +3,7 @@ import { TblGenInfo } from '../../styled/Tbl';
 import Card from '../../styled/Card';
 import { FlexCenter } from '../../styled/Flex';
 import { TextLeft } from '../../styled/Text';
-import NewVesting from './NewVesting';
+import CreateVesting from './CreateVesting';
 import AddVesting from './AddVesting';
 import Table from '../../Table';
 import Spinner from '../../Spinner';
@@ -80,7 +80,7 @@ const Vesting = () => {
               <AddVesting />
             </TblGenInfo.Item>
             <TblGenInfo.Item style={{ margin: 0 }}>
-              <NewVesting />
+              <CreateVesting />
             </TblGenInfo.Item>
           </>
         )}

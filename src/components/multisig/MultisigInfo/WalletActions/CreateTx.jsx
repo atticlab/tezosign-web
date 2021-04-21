@@ -11,14 +11,12 @@ import {
 } from 'react-bootstrap';
 import { FormLabel, FormSubmit } from '../../../styled/Forms';
 import { FlexAlignItemsCenter } from '../../../styled/Flex';
-import { BtnMax } from '../../../styled/Btns';
 import SelectCustom from '../../../SelectCustom';
 import IdentIcon from '../../../IdentIcon';
 import useAPI from '../../../../hooks/useApi';
 import {
   bs58Validation,
   convertXTZToMutez,
-  convertMutezToXTZ,
   limitInputDecimals,
   convertAssetSubunitToAssetAmount,
   convertAssetAmountToAssetSubunit,
@@ -29,7 +27,7 @@ import { useAssetsStateContext } from '../../../../store/assetsContext';
 import { handleError } from '../../../../utils/errorsHandler';
 import XTZ from '../../../../assets/img/assets/xtz-256.svg';
 
-const schema = (maxAmount = 30000, minAmount = 0.000001, asset = 'XTZ') => {
+const schema = (minAmount = 0.000001, asset = 'XTZ') => {
   return Yup.object({
     asset: Yup.object().required('Required'),
     tokenID: Yup.number().when('asset', {
@@ -46,7 +44,6 @@ const schema = (maxAmount = 30000, minAmount = 0.000001, asset = 'XTZ') => {
     }),
     amount: Yup.number()
       .required('Required')
-      .max(maxAmount, `Maximum amount is ${maxAmount} ${asset}`)
       .min(minAmount, `Minimum amount is ${minAmount} ${asset}`),
     to: Yup.string()
       .required('Required')
@@ -61,7 +58,7 @@ const schema = (maxAmount = 30000, minAmount = 0.000001, asset = 'XTZ') => {
   });
 };
 
-const formXTZAsset = (balance) => ({
+const XTZAsset = {
   value: 'xtz',
   label: (
     <FlexAlignItemsCenter>
@@ -75,18 +72,13 @@ const formXTZAsset = (balance) => ({
     </FlexAlignItemsCenter>
   ),
   scale: 6,
-  balance: convertMutezToXTZ(balance),
-});
+};
 
 const CreateTx = ({ onCreate, onCancel }) => {
-  const { sendOperation } = useAPI();
+  const { createOperation } = useAPI();
   const { assets } = useAssetsStateContext();
-  const { contractAddress, contractInfo } = useContractStateContext();
+  const { contractAddress } = useContractStateContext();
   const { setOps } = useOperationsDispatchContext();
-
-  const XTZAsset = useMemo(() => {
-    return formXTZAsset(contractInfo.balance);
-  }, [contractInfo]);
 
   const assetsOptions = useMemo(() => {
     if (!assets || !assets.length) return [XTZAsset];
@@ -103,18 +95,9 @@ const CreateTx = ({ onCreate, onCancel }) => {
             {asset.name}
           </FlexAlignItemsCenter>
         ),
-        balance:
-          asset.balances && asset.balances.length
-            ? Number(
-                convertAssetSubunitToAssetAmount(
-                  asset.balances[0].balance,
-                  asset.scale,
-                ),
-              )
-            : 0,
       })),
     );
-  }, [assets, XTZAsset]);
+  }, [assets]);
 
   const createTx = async ({ asset, tokenID, amount, to }, setSubmitting) => {
     try {
@@ -151,7 +134,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
         ];
       }
 
-      const newTx = await sendOperation(payload);
+      const newTx = await createOperation(payload);
       await setOps((prev) => {
         return [newTx.data, ...prev];
       });
@@ -169,7 +152,6 @@ const CreateTx = ({ onCreate, onCancel }) => {
       enableReinitialize
       validationSchema={Yup.lazy((values) =>
         schema(
-          values.asset.balance,
           convertAssetSubunitToAssetAmount(1, values.asset.scale),
           values.asset.ticker,
         ),
@@ -230,11 +212,12 @@ const CreateTx = ({ onCreate, onCancel }) => {
               type="number"
               name="tokenID"
               aria-label="tokenID"
-              isInvalid={!!errors.tokenID && touched.tokenID}
-              isValid={!errors.tokenID && touched.tokenID}
               step="1"
               min="0"
+              autoComplete="off"
               disabled={values.asset.contract_type !== 'FA2'}
+              isInvalid={!!errors.tokenID && touched.tokenID}
+              isValid={!errors.tokenID && touched.tokenID}
             />
             <ErrorMessage
               component={BForm.Control.Feedback}
@@ -251,6 +234,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
                 type="number"
                 name="amount"
                 aria-label="amount"
+                autoComplete="off"
                 isInvalid={!!errors.amount && touched.amount}
                 isValid={!errors.amount && touched.amount}
                 step={1 / 10 ** values.asset.scale}
@@ -259,24 +243,6 @@ const CreateTx = ({ onCreate, onCancel }) => {
                   limitInputDecimals(event, values.asset.scale)
                 }
               />
-
-              <InputGroup.Append>
-                <InputGroup.Text style={{ paddingTop: 0, paddingBottom: 0 }}>
-                  <span style={{ display: 'flex', alignItems: 'center' }}>
-                    <BtnMax
-                      onClick={() => {
-                        setFieldValue('amount', values.asset.balance);
-                        setFieldTouched('amount', true, false);
-                      }}
-                    >
-                      MAX
-                    </BtnMax>
-                    <span style={{ fontSize: '12px', marginBottom: '2px' }}>
-                      {values.asset.balance}
-                    </span>
-                  </span>
-                </InputGroup.Text>
-              </InputGroup.Append>
 
               <ErrorMessage
                 component={BForm.Control.Feedback}
@@ -293,6 +259,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
               type="text"
               name="to"
               aria-label="to"
+              autoComplete="off"
               isInvalid={!!errors.to && touched.to}
               isValid={!errors.to && touched.to}
             />

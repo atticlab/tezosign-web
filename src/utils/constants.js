@@ -11,4 +11,22 @@ const base58Prefixes = {
   p2pk: {},
 };
 
-export { XTZInMutez, XTZFormat, dateFormat, base58Prefixes };
+const operationsTypesMap = {
+  transfer: 'Transfer',
+  income_transfer: 'Income transfer',
+  fa_transfer: 'FA transfer',
+  fa2_transfer: 'FA2 transfer',
+  income_fa_transfer: 'Income FA transfer',
+  delegation: 'Delegation',
+  storage_update: 'Storage update',
+  vesting_vest: 'Vesting withdrawal',
+  vesting_set_delegate: 'Vesting delegation',
+};
+
+export {
+  XTZInMutez,
+  XTZFormat,
+  dateFormat,
+  base58Prefixes,
+  operationsTypesMap,
+};
