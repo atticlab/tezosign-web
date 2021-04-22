@@ -39,7 +39,7 @@ const schema = (minAmount = 0.000001, asset = 'XTZ') => {
           Number.MAX_SAFE_INTEGER,
           `Maximum value is ${Number.MAX_SAFE_INTEGER}`,
         )
-        .min(0, `Minimum amount is 0.000001 ${asset}`),
+        .min(0, 'Minimum value is 0'),
       otherwise: Yup.number().max(0, 'Token ID is allowed only for FA2 assets'),
     }),
     amount: Yup.number()

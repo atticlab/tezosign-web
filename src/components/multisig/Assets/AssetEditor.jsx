@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import { Button, Form as BForm } from 'react-bootstrap';
+import {
+  Button,
+  Form as BForm,
+  OverlayTrigger,
+  Tooltip,
+} from 'react-bootstrap';
 import { FormLabel, FormSubmit } from '../../styled/Forms';
 import SelectCustom from '../../SelectCustom';
 import useAPI from '../../../hooks/useApi';
@@ -11,20 +16,37 @@ import { useContractStateContext } from '../../../store/contractContext';
 import { useAssetsDispatchContext } from '../../../store/assetsContext';
 import { handleError } from '../../../utils/errorsHandler';
 
+const addressSchema = Yup.string()
+  .required('Required')
+  .matches('KT1', 'Tezos contract address must start with KT1')
+  .matches(/^\S+$/, 'No spaces are allowed')
+  .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
+  .length(36, 'Tezos address must be 36 characters long')
+  .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val));
+
+const tokenIDSchema = Yup.number()
+  .required('Required')
+  .integer('Value must be an integer')
+  .max(Number.MAX_SAFE_INTEGER, `Maximum value is ${Number.MAX_SAFE_INTEGER}`)
+  .min(0, 'Minimum value is 0');
+
 const schema = Yup.object({
+  address: addressSchema,
+  contractType: Yup.string()
+    .required('Required')
+    .matches('FA1.2|FA2', 'Invalid asset type. Asset types are FA1.2 or FA2'),
+  tokenID: Yup.number().when('contractType', {
+    is: (assetField) => {
+      return assetField === 'FA2';
+    },
+    then: tokenIDSchema,
+    otherwise: Yup.number().max(0, 'Token ID is allowed only for FA2 assets'),
+  }),
   name: Yup.string()
     .required('Required')
     .max(32, 'At most 32 characters')
     .matches(/^[\w ]*$/, 'Only latin characters and numbers are allowed')
     .matches(/^[\w]+( [\w]+)*$/, 'Unnecessary spaces'),
-  address: Yup.string()
-    .required('Required')
-    .matches('KT1', 'Tezos contract address must start with KT1')
-    .matches(/^\S+$/, 'No spaces are allowed')
-    .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
-    .length(36, 'Tezos address must be 36 characters long')
-    .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
-  contractType: Yup.string().required('Required'),
   scale: Yup.number()
     .required('Required')
     .integer('Decimals must be an integer')
@@ -52,19 +74,84 @@ const formAssetPayload = ({ name, contractType, address, scale, ticker }) => {
   };
 };
 
+const handleAssetMeta = async ({
+  address,
+  addressValidator,
+  contractType,
+  tokenID,
+  tokenIDValidator,
+  request,
+}) => {
+  const isAddressValid = await addressValidator.isValid(address);
+  const isTokenIDValid = await tokenIDValidator.isValid(tokenID);
+
+  if (!isAddressValid) return null;
+  if (contractType === 'FA2' && !isTokenIDValid) return null;
+  if (contractType === 'FA2' && isTokenIDValid) {
+    request(address, tokenID);
+    return null;
+  }
+  request(address);
+  return null;
+};
+
 const AssetEditor = ({
   isEdit,
-  name,
   address,
   contractType,
+  tokenID,
+  name,
   scale,
   ticker,
   onSubmit,
   onCancel,
 }) => {
   const { contractAddress } = useContractStateContext();
-  const { addAsset, editAsset } = useAPI();
+  const { addAsset, editAsset, getAssetMetaData } = useAPI();
   const { setAssets } = useAssetsDispatchContext();
+  const [assetMeta, setAssetMeta] = useState({});
+  const [isAssetMetaLoading, setIssAssetMetaLoading] = useState(false);
+  const [observableFields, setObservableFields] = useState({
+    address: null,
+    contractType: null,
+    tokenID: null,
+  });
+
+  const getAssetMeta = async (assetContractID, tokenIdentifier) => {
+    try {
+      setIssAssetMetaLoading(true);
+      const params = {};
+      if (typeof tokenIdentifier !== 'undefined') {
+        params.token_id = tokenIdentifier;
+      }
+      const resp = await getAssetMetaData(assetContractID, params);
+      setAssetMeta(resp.data);
+    } catch (e) {
+      handleError(e);
+    } finally {
+      setIssAssetMetaLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleAssetMeta({
+      address: observableFields.address,
+      addressValidator: addressSchema,
+      contractType: observableFields.contractType,
+      tokenID: observableFields.tokenID,
+      tokenIDValidator: tokenIDSchema,
+      request: getAssetMeta,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    observableFields.address,
+    observableFields.contractType,
+    observableFields.tokenID,
+  ]);
+
+  const isFieldDisabled = useMemo(() => {
+    return Boolean(Object.keys(assetMeta).length) || isAssetMetaLoading;
+  }, [assetMeta, isAssetMetaLoading]);
 
   const addAssetReq = async (contractID, assetFields, setSubmitting) => {
     try {
@@ -108,9 +195,10 @@ const AssetEditor = ({
   return (
     <Formik
       initialValues={{
-        name,
         address,
         contractType,
+        tokenID,
+        name,
         scale,
         ticker,
       }}
@@ -119,26 +207,16 @@ const AssetEditor = ({
         return addOrEditAsset(contractAddress, values, setSubmitting);
       }}
     >
-      {({ errors, touched, setFieldValue, setFieldTouched, isSubmitting }) => (
+      {({
+        values,
+        errors,
+        touched,
+        setFieldValue,
+        setFieldTouched,
+        isSubmitting,
+        handleBlur,
+      }) => (
         <Form>
-          <BForm.Group>
-            <FormLabel>Asset name</FormLabel>
-            <Field
-              as={BForm.Control}
-              type="text"
-              name="name"
-              aria-label="name"
-              autoComplete="off"
-              isInvalid={!!errors.name && touched.name}
-              isValid={!errors.name && touched.name}
-            />
-
-            <ErrorMessage
-              component={BForm.Control.Feedback}
-              name="name"
-              type="invalid"
-            />
-          </BForm.Group>
           <BForm.Group>
             <FormLabel>Asset contract address</FormLabel>
 
@@ -152,10 +230,14 @@ const AssetEditor = ({
               isInvalid={!!errors.address && touched.address}
               isValid={!errors.address && touched.address}
               onBlur={() => {
-                setFieldTouched('address', true);
+                setFieldTouched('address', true, true);
                 if (isEdit) {
                   setFieldValue('address', address);
                 }
+                setObservableFields((prev) => ({
+                  ...prev,
+                  address: values.address,
+                }));
               }}
             />
 
@@ -190,6 +272,11 @@ const AssetEditor = ({
                 if (isEdit) {
                   setFieldValue('contractType', contractType);
                 }
+
+                setObservableFields((prev) => ({
+                  ...prev,
+                  contractType: values.contractType,
+                }));
               }}
             />
 
@@ -199,6 +286,63 @@ const AssetEditor = ({
               type="invalid"
             />
           </BForm.Group>
+
+          <BForm.Group controlId="tokenID">
+            <OverlayTrigger
+              overlay={
+                <Tooltip>
+                  Token ID is an identifier of the token in FA2 asset contract.
+                </Tooltip>
+              }
+            >
+              <FormLabel>Token ID</FormLabel>
+            </OverlayTrigger>
+            <Field
+              as={BForm.Control}
+              type="number"
+              name="tokenID"
+              aria-label="tokenID"
+              step="1"
+              min="0"
+              autoComplete="off"
+              disabled={values.contractType !== 'FA2'}
+              isInvalid={!!errors.tokenID && touched.tokenID}
+              isValid={!errors.tokenID && touched.tokenID}
+              onBlur={(e) => {
+                handleBlur(e);
+                setObservableFields((prev) => ({
+                  ...prev,
+                  tokenID: values.tokenID,
+                }));
+              }}
+            />
+            <ErrorMessage
+              component={BForm.Control.Feedback}
+              name="tokenID"
+              type="invalid"
+            />
+          </BForm.Group>
+
+          <BForm.Group>
+            <FormLabel>Asset name</FormLabel>
+            <Field
+              as={BForm.Control}
+              type="text"
+              name="name"
+              aria-label="name"
+              autoComplete="off"
+              disabled={assetMeta.name || isFieldDisabled}
+              isInvalid={!!errors.name && touched.name}
+              isValid={!errors.name && touched.name}
+            />
+
+            <ErrorMessage
+              component={BForm.Control.Feedback}
+              name="name"
+              type="invalid"
+            />
+          </BForm.Group>
+
           <BForm.Group>
             <FormLabel>Decimals</FormLabel>
 
@@ -210,6 +354,7 @@ const AssetEditor = ({
               name="scale"
               aria-label="scale"
               autoComplete="off"
+              disabled={assetMeta.decimals || isFieldDisabled}
               isInvalid={!!errors.scale && touched.scale}
               isValid={!errors.scale && touched.scale}
             />
@@ -229,6 +374,7 @@ const AssetEditor = ({
               name="ticker"
               aria-label="ticker"
               autoComplete="off"
+              disabled={assetMeta.symbol || isFieldDisabled}
               isInvalid={!!errors.ticker && touched.ticker}
               isValid={!errors.ticker && touched.ticker}
             />
@@ -259,9 +405,10 @@ const AssetEditor = ({
 
 AssetEditor.propTypes = {
   isEdit: PropTypes.bool,
-  name: PropTypes.string,
   address: PropTypes.string,
   contractType: PropTypes.string,
+  tokenID: PropTypes.string,
+  name: PropTypes.string,
   scale: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   ticker: PropTypes.string,
   onSubmit: PropTypes.func,
@@ -270,9 +417,10 @@ AssetEditor.propTypes = {
 
 AssetEditor.defaultProps = {
   isEdit: false,
-  name: '',
   address: '',
-  contractType: '',
+  contractType: contractTypes[0].value,
+  tokenID: '',
+  name: '',
   scale: '',
   ticker: '',
   onSubmit: () => null,
