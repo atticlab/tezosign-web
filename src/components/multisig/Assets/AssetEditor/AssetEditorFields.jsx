@@ -56,6 +56,9 @@ const AssetEditorFields = ({
   address,
   contractType,
   tokenID,
+  name,
+  scale,
+  ticker,
   onCancel,
 }) => {
   const {
@@ -117,9 +120,9 @@ const AssetEditorFields = ({
 
   useEffect(() => {
     (async () => {
-      await setFieldValue('name', assetMeta.name || '');
-      await setFieldValue('scale', assetMeta.decimals || '');
-      await setFieldValue('ticker', assetMeta.symbol || '');
+      await setFieldValue('name', assetMeta.name || name || '');
+      await setFieldValue('scale', assetMeta.decimals || scale || '');
+      await setFieldValue('ticker', assetMeta.symbol || ticker || '');
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assetMeta]);
@@ -353,6 +356,9 @@ AssetEditorFields.propTypes = {
   address: PropTypes.string,
   contractType: PropTypes.string,
   tokenID: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  name: PropTypes.string,
+  scale: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  ticker: PropTypes.string,
   onCancel: PropTypes.func,
 };
 
@@ -361,6 +367,9 @@ AssetEditorFields.defaultProps = {
   address: '',
   contractType: contractTypes[0].value,
   tokenID: '',
+  name: '',
+  scale: '',
+  ticker: '',
   onCancel: () => null,
 };
 

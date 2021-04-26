@@ -9,14 +9,27 @@ import { handleError } from '../../../../utils/errorsHandler';
 import { schema } from './assetEditorSchemas';
 import { contractTypes } from '../../../../utils/constants';
 
-const formAssetPayload = ({ name, contractType, address, scale, ticker }) => {
-  return {
+const formAssetPayload = ({
+  name,
+  contractType,
+  address,
+  scale,
+  ticker,
+  tokenID,
+}) => {
+  const payload = {
     name,
     contract_type: contractType,
     address,
     scale: Number(scale),
     ticker,
   };
+
+  if (typeof tokenID !== 'undefined' && tokenID !== '') {
+    payload.token_id = tokenID;
+  }
+
+  return payload;
 };
 
 const AssetEditor = ({
@@ -26,9 +39,9 @@ const AssetEditor = ({
   tokenID,
   name,
   scale,
+  ticker,
   onSubmit,
   onCancel,
-  ticker,
 }) => {
   const { addAsset, editAsset } = useAPI();
   const { setAssets } = useAssetsDispatchContext();
@@ -92,7 +105,9 @@ const AssetEditor = ({
         isEdit={isEdit}
         address={address}
         contractType={contractType}
-        tokenID={tokenID}
+        name={name}
+        scale={scale}
+        ticker={ticker}
         onCancel={onCancel}
       />
     </Formik>

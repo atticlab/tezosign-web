@@ -99,6 +99,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
     );
   }, [assets]);
 
+  // eslint-disable-next-line consistent-return
   const createTx = async ({ asset, tokenID, amount, to }, setSubmitting) => {
     try {
       const isXTZ = asset.value === 'xtz';
@@ -126,17 +127,22 @@ const CreateTx = ({ onCreate, onCancel }) => {
                   convertAssetAmountToAssetSubunit(amount, asset.scale),
                 ),
                 to,
-                token_id: tokenID ?? undefined,
+                token_id:
+                  typeof tokenID !== 'undefined' && tokenID !== ''
+                    ? tokenID
+                    : undefined,
               },
             ],
           },
         ];
       }
 
+      // eslint-disable-next-line no-unreachable
       const newTx = await createOperation(payload);
       await setOps((prev) => {
         return [newTx.data, ...prev];
       });
+      // eslint-disable-next-line no-unreachable
       onCreate();
     } catch (e) {
       handleError(e);
@@ -221,7 +227,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
               onChange={(e) => {
                 handleChange(e);
                 setFieldValue('amount', '');
-                setFieldValue('tokenID', values.asset.token_id);
+                setFieldValue('tokenID', values.asset.token_id ?? '');
               }}
             />
             <ErrorMessage

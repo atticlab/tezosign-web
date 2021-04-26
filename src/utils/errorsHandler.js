@@ -18,6 +18,7 @@ const errorNotifications = {
   'ERR_NOT_FOUND:big_map value':
     'Invalid token ID for the asset contract address.',
   ERR_NOT_ALLOWED: 'Not allowed.',
+  'ERR_NOT_ALLOWED:not enough balance': 'Insufficient funds on the wallet.',
   ERR_BAD_AUTH: 'Login failed.',
   'No matching peer found.': 'No matching peer found. Try reconnect, please.',
 };

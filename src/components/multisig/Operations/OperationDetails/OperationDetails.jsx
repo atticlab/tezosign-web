@@ -340,7 +340,10 @@ const OperationDetails = ({ operation, resetOperations }) => {
           {operation.nonce === contractInfo.counter && (
             <div>
               {/* TODO: Address balance check  */}
-              {!contractInfo.balance ? (
+              {!contractInfo.balance &&
+              (operation.operation_info.type === 'fa_transfer' ||
+                operation.operation_info.type === 'fa2_transfer' ||
+                operation.operation_info.type === 'transfer') ? (
                 <BadgeOutline variant="danger">
                   Insufficient wallet funds
                 </BadgeOutline>

@@ -57,7 +57,7 @@ const DeleteAsset = ({ asset }) => {
     return () => {
       setIsDeleteLoading(false);
     };
-  });
+  }, []);
 
   return (
     <>
