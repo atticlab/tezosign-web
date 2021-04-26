@@ -42,8 +42,8 @@ const handleAssetMeta = async ({
   const isTokenIDValid = await tokenIDValidator.isValid(tokenID);
 
   if (!isAddressValid) return null;
-  if (contractType === 'FA2' && !isTokenIDValid) return null;
-  if (contractType === 'FA2' && isTokenIDValid) {
+  if (contractType === 'FA2') {
+    if (!isTokenIDValid) return null;
     request(address, tokenID);
     return null;
   }
@@ -51,7 +51,13 @@ const handleAssetMeta = async ({
   return null;
 };
 
-const AssetEditorFields = ({ isEdit, address, contractType, onCancel }) => {
+const AssetEditorFields = ({
+  isEdit,
+  address,
+  contractType,
+  tokenID,
+  onCancel,
+}) => {
   const {
     values,
     errors,
@@ -59,8 +65,6 @@ const AssetEditorFields = ({ isEdit, address, contractType, onCancel }) => {
     isSubmitting,
     setFieldValue,
     setFieldTouched,
-    // validateForm,
-    // validateField,
     handleChange,
     handleBlur,
   } = useFormikContext();
@@ -113,15 +117,6 @@ const AssetEditorFields = ({ isEdit, address, contractType, onCancel }) => {
   };
 
   useEffect(() => {
-    // if (assetMeta.symbol) {
-    //   setFieldValue('ticker', assetMeta.symbol);
-    // }
-    // if (assetMeta.name) {
-    //   setFieldValue('name', assetMeta.name);
-    // }
-    // if (assetMeta.decimals) {
-    //   setFieldValue('scale', assetMeta.decimals);
-    // }
     (async () => {
       await setFieldValue('name', assetMeta.name || '');
       await setFieldValue('scale', assetMeta.decimals || '');
@@ -190,10 +185,9 @@ const AssetEditorFields = ({ isEdit, address, contractType, onCancel }) => {
             setFieldValue('contractType', value.value);
             setFieldTouched('contractType', true);
             resetDependantFields();
-
             setObservableFields((prev) => ({
               ...prev,
-              contractType: values.contractType,
+              contractType: value.value,
             }));
           }}
           onBlur={() => {
@@ -229,7 +223,7 @@ const AssetEditorFields = ({ isEdit, address, contractType, onCancel }) => {
           step="1"
           min="0"
           autoComplete="off"
-          disabled={values.contractType !== 'FA2'}
+          disabled={values.contractType !== 'FA2' || isEdit}
           isInvalid={!!errors.tokenID && touched.tokenID}
           isValid={!errors.tokenID && touched.tokenID}
           onChange={(e) => {
@@ -238,6 +232,9 @@ const AssetEditorFields = ({ isEdit, address, contractType, onCancel }) => {
           }}
           onBlur={(e) => {
             handleBlur(e);
+            if (isEdit) {
+              setFieldValue('tokenID', tokenID);
+            }
             setObservableFields((prev) => ({
               ...prev,
               tokenID: values.tokenID,
@@ -362,6 +359,7 @@ AssetEditorFields.propTypes = {
   isEdit: PropTypes.bool,
   address: PropTypes.string,
   contractType: PropTypes.string,
+  tokenID: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   onCancel: PropTypes.func,
 };
 
@@ -369,6 +367,7 @@ AssetEditorFields.defaultProps = {
   isEdit: false,
   address: '',
   contractType: contractTypes[0].value,
+  tokenID: '',
   onCancel: () => null,
 };
 

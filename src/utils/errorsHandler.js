@@ -3,6 +3,8 @@ import { toast } from 'react-toastify';
 const errorNotifications = {
   ERR_SERVICE: 'Service error. Please, try later or contact support.',
   ERR_BAD_REQUEST: 'Bad request.',
+  'ERR_BAD_REQUEST:token_metadata':
+    'Cannot get meta info for the asset contact address.',
   ERR_BAD_PARAM: 'Invalid param.',
   'ERR_BAD_PARAM:address': 'Invalid address. Try another one.',
   'ERR_BAD_PARAM:not FA asset':
@@ -13,6 +15,8 @@ const errorNotifications = {
   ERR_NOT_FOUND: 'Not found.',
   'ERR_NOT_FOUND:contract':
     "Wallet is not found. It probably doesn't exist in the current network.",
+  'ERR_NOT_FOUND:big_map value':
+    'Invalid token ID for the asset contract address.',
   ERR_NOT_ALLOWED: 'Not allowed.',
   ERR_BAD_AUTH: 'Login failed.',
   'No matching peer found.': 'No matching peer found. Try reconnect, please.',

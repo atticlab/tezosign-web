@@ -25,7 +25,7 @@ const schema = Yup.object({
       return assetField === 'FA2';
     },
     then: tokenIDSchema,
-    otherwise: Yup.number().max(0, 'Token ID is allowed only for FA2 assets'),
+    otherwise: Yup.number(),
   }),
   name: Yup.string()
     .required('Required')

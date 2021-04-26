@@ -14,7 +14,7 @@ const formAssetPayload = ({ name, contractType, address, scale, ticker }) => {
     name,
     contract_type: contractType,
     address,
-    scale,
+    scale: Number(scale),
     ticker,
   };
 };
@@ -37,7 +37,7 @@ const AssetEditor = ({
   const addAssetReq = async (contractID, assetFields, setSubmitting) => {
     try {
       const resp = await addAsset(contractID, formAssetPayload(assetFields));
-      setAssets((prev) => [...prev, resp.data]);
+      setAssets((prev) => [resp.data, ...prev]);
       onSubmit();
     } catch (e) {
       handleError(e);
@@ -92,6 +92,7 @@ const AssetEditor = ({
         isEdit={isEdit}
         address={address}
         contractType={contractType}
+        tokenID={tokenID}
         onCancel={onCancel}
       />
     </Formik>
@@ -102,7 +103,7 @@ AssetEditor.propTypes = {
   isEdit: PropTypes.bool,
   address: PropTypes.string,
   contractType: PropTypes.string,
-  tokenID: PropTypes.string,
+  tokenID: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   name: PropTypes.string,
   scale: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   ticker: PropTypes.string,

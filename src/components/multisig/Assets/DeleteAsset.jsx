@@ -25,10 +25,16 @@ const DeleteAsset = ({ asset }) => {
     setShow(true);
   };
 
-  const removeAsset = async (contractID, address) => {
+  const removeAsset = async (contractID, address, tokenID) => {
     try {
       setIsDeleteLoading(true);
-      await deleteAsset(contractID, { address });
+
+      const payload = {
+        address,
+      };
+      if (typeof tokenID !== 'undefined') payload.token_id = tokenID;
+
+      await deleteAsset(contractID, payload);
       setAssets((prev) => {
         const res = [...prev];
         res.splice(
@@ -80,7 +86,9 @@ const DeleteAsset = ({ asset }) => {
             <Button
               variant="danger"
               disabled={isDeleteLoading}
-              onClick={() => removeAsset(contractAddress, asset.address)}
+              onClick={() =>
+                removeAsset(contractAddress, asset.address, asset.token_id)
+              }
             >
               Delete
             </Button>
