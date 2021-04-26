@@ -102,7 +102,6 @@ const CreateTx = ({ onCreate, onCancel }) => {
   const createTx = async ({ asset, tokenID, amount, to }, setSubmitting) => {
     try {
       const isXTZ = asset.value === 'xtz';
-
       const payload = {
         contract_id: contractAddress,
         // eslint-disable-next-line no-nested-ternary
@@ -127,7 +126,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
                   convertAssetAmountToAssetSubunit(amount, asset.scale),
                 ),
                 to,
-                token_id: tokenID || undefined,
+                token_id: tokenID ?? undefined,
               },
             ],
           },
@@ -167,6 +166,8 @@ const CreateTx = ({ onCreate, onCancel }) => {
         touched,
         setFieldValue,
         setFieldTouched,
+        handleChange,
+        handleBlur,
       }) => (
         <Form>
           <BForm.Group>
@@ -183,7 +184,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
               onChange={(value) => {
                 setFieldValue('asset', value);
                 setFieldValue('amount', '');
-                setFieldValue('tokenID', '');
+                setFieldValue('tokenID', value.token_id ?? '');
                 setFieldTouched('asset', true);
               }}
               onBlur={() => {
@@ -215,9 +216,18 @@ const CreateTx = ({ onCreate, onCancel }) => {
               step="1"
               min="0"
               autoComplete="off"
-              disabled={values.asset.contract_type !== 'FA2'}
+              // disabled={values.asset.contract_type !== 'FA2'}
+              disabled
               isInvalid={!!errors.tokenID && touched.tokenID}
               isValid={!errors.tokenID && touched.tokenID}
+              onChange={(e) => {
+                handleChange(e);
+                setFieldValue('amount', '');
+              }}
+              onBlur={(e) => {
+                handleBlur(e);
+                setFieldValue('tokenID', values.asset.token_id);
+              }}
             />
             <ErrorMessage
               component={BForm.Control.Feedback}
