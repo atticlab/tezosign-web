@@ -66,7 +66,6 @@ const AssetEditorFields = ({
     setFieldValue,
     setFieldTouched,
     handleChange,
-    handleBlur,
   } = useFormikContext();
   const [observableFields, setObservableFields] = useState({
     address: null,
@@ -146,15 +145,12 @@ const AssetEditorFields = ({
           onChange={async (e) => {
             handleChange(e);
             resetDependantFields();
-          }}
-          onBlur={(e) => {
-            handleBlur(e);
             if (isEdit) {
               setFieldValue('address', address);
             }
             setObservableFields((prev) => ({
               ...prev,
-              address: values.address,
+              address: e.target.value,
             }));
           }}
         />
@@ -229,15 +225,12 @@ const AssetEditorFields = ({
           onChange={(e) => {
             handleChange(e);
             resetDependantFields();
-          }}
-          onBlur={(e) => {
-            handleBlur(e);
             if (isEdit) {
               setFieldValue('tokenID', tokenID);
             }
             setObservableFields((prev) => ({
               ...prev,
-              tokenID: values.tokenID,
+              tokenID: e.target.value,
             }));
           }}
         />
@@ -268,8 +261,8 @@ const AssetEditorFields = ({
             disabled={assetMeta.name || isFieldDisabled}
             isInvalid={!!errors.name && touched.name}
             isValid={!errors.name && touched.name}
-            onBlur={(e) => {
-              handleBlur(e);
+            onChange={(e) => {
+              handleChange(e);
               if (assetMeta.name || isFieldDisabled) {
                 setFieldValue('name', assetMeta.name);
               }
@@ -297,8 +290,8 @@ const AssetEditorFields = ({
             disabled={assetMeta.decimals || isFieldDisabled}
             isInvalid={!!errors.scale && touched.scale}
             isValid={!errors.scale && touched.scale}
-            onBlur={(e) => {
-              handleBlur(e);
+            onChange={(e) => {
+              handleChange(e);
               if (assetMeta.decimals || isFieldDisabled) {
                 setFieldValue('scale', assetMeta.decimals);
               }
@@ -323,8 +316,8 @@ const AssetEditorFields = ({
             disabled={assetMeta.symbol || isFieldDisabled}
             isInvalid={!!errors.ticker && touched.ticker}
             isValid={!errors.ticker && touched.ticker}
-            onBlur={(e) => {
-              handleBlur(e);
+            onChange={(e) => {
+              handleChange(e);
               if (assetMeta.symbol || isFieldDisabled) {
                 setFieldValue('ticker', assetMeta.symbol);
               }

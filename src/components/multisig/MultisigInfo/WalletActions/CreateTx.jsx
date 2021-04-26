@@ -167,7 +167,6 @@ const CreateTx = ({ onCreate, onCancel }) => {
         setFieldValue,
         setFieldTouched,
         handleChange,
-        handleBlur,
       }) => (
         <Form>
           <BForm.Group>
@@ -216,16 +215,12 @@ const CreateTx = ({ onCreate, onCancel }) => {
               step="1"
               min="0"
               autoComplete="off"
-              // disabled={values.asset.contract_type !== 'FA2'}
               disabled
               isInvalid={!!errors.tokenID && touched.tokenID}
               isValid={!errors.tokenID && touched.tokenID}
               onChange={(e) => {
                 handleChange(e);
                 setFieldValue('amount', '');
-              }}
-              onBlur={(e) => {
-                handleBlur(e);
                 setFieldValue('tokenID', values.asset.token_id);
               }}
             />
