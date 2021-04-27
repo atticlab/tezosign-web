@@ -3,7 +3,9 @@ import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../../styled/Modal';
 import { Title } from '../../../styled/Text';
+// eslint-disable-next-line no-unused-vars
 import CreateVestingForm from './CreateVestingForm';
+import CreateVestingFormSimple from './CreateVestingFormSimple';
 
 const CreateVesting = () => {
   const [show, setShow] = useState(false);
@@ -37,6 +39,10 @@ const CreateVesting = () => {
 
         <Modal.Body style={{ padding: '15px 30px' }}>
           <CreateVestingForm onSubmit={handleClose} onCancel={handleClose} />
+          <CreateVestingFormSimple
+            onSubmit={handleClose}
+            onCancel={handleClose}
+          />
         </Modal.Body>
       </Modal>
 

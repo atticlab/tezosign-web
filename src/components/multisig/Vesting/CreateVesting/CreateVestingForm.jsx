@@ -16,9 +16,11 @@ import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components';
 import { DatePickerWrapper } from '../../../styled/DatePickerStyles';
 import { FormLabel, FormSubmit } from '../../../styled/Forms';
+import InputVestingAddress from './InputVestingAddress';
+import InputBalance from './InputBalance';
+import InputDelegateAdmin from './InputDelegateAdmin';
 import useAPI from '../../../../hooks/useApi';
 import {
-  bs58Validation,
   convertMutezToXTZ,
   convertXTZToMutez,
   limitInputDecimals,
@@ -31,6 +33,8 @@ import {
   useUserDispatchContext,
   useUserStateContext,
 } from '../../../../store/userContext';
+import tezosAddressSchema from '../../../../utils/schemas/tezosAddressSchema';
+import balanceSchema from '../../../../utils/schemas/balanceSchema';
 
 dayjs.extend(utc);
 
@@ -55,26 +59,8 @@ const Check = styled(BForm.Check)`
 
 const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
   Yup.object({
-    vestingAddress: Yup.string()
-      .required('Required')
-      .matches(
-        'tz1|tz2|tz3|KT1',
-        'Tezos address must start with tz1, tz2, tz3 or KT1',
-      )
-      .matches(/^\S+$/, 'No spaces are allowed')
-      .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
-      .length(36, 'Tezos address must be 36 characters long')
-      .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
-    delegateAddress: Yup.string()
-      .required('Required')
-      .matches(
-        'tz1|tz2|tz3|KT1',
-        'Tezos address must start with tz1, tz2, tz3 or KT1',
-      )
-      .matches(/^\S+$/, 'No spaces are allowed')
-      .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
-      .length(36, 'Tezos address must be 36 characters long')
-      .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
+    vestingAddress: tezosAddressSchema,
+    delegateAddress: tezosAddressSchema,
     timestamp: Yup.string().required('Required'),
     secondsPerTick: Yup.string()
       .required('Required')
@@ -86,10 +72,7 @@ const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
       .max(maxTokensPerTick, `Maximum amount is ${maxTokensPerTick} XTZ`)
       .min(0.000001, `Minimum amount is ${0.000001} XTZ`),
     check: Yup.bool().oneOf([true], 'The terms must be accepted'),
-    balance: Yup.number()
-      .required('Required')
-      .max(maxAmount, `Maximum amount is ${maxAmount} XTZ`)
-      .min(minAmount, `Minimum amount is ${minAmount} XTZ`),
+    balance: balanceSchema(maxAmount, minAmount),
   });
 
 const handleDateChangeRaw = (e) => {
@@ -220,61 +203,8 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
         handleChange,
       }) => (
         <Form>
-          <BForm.Group>
-            <OverlayTrigger
-              overlay={
-                <Tooltip>
-                  The address where a withdrawn amount of XTZ from a vesting
-                  contract is sent.
-                </Tooltip>
-              }
-            >
-              <FormLabel>Withdrawal address</FormLabel>
-            </OverlayTrigger>
-            <Field
-              as={BForm.Control}
-              type="text"
-              name="vestingAddress"
-              aria-label="vestingAddress"
-              autoComplete="off"
-              isInvalid={!!errors.vestingAddress && touched.vestingAddress}
-              isValid={!errors.vestingAddress && touched.vestingAddress}
-            />
-
-            <ErrorMessage
-              component={BForm.Control.Feedback}
-              name="vestingAddress"
-              type="invalid"
-            />
-          </BForm.Group>
-
-          <BForm.Group>
-            <OverlayTrigger
-              overlay={
-                <Tooltip>
-                  The address that can set and change a delegate of a vesting
-                  contract. No other address is allowed to do this action.
-                </Tooltip>
-              }
-            >
-              <FormLabel>Delegate admin address</FormLabel>
-            </OverlayTrigger>
-            <Field
-              as={BForm.Control}
-              type="text"
-              name="delegateAddress"
-              aria-label="delegateAddress"
-              autoComplete="off"
-              isInvalid={!!errors.delegateAddress && touched.delegateAddress}
-              isValid={!errors.delegateAddress && touched.delegateAddress}
-            />
-
-            <ErrorMessage
-              component={BForm.Control.Feedback}
-              name="delegateAddress"
-              type="invalid"
-            />
-          </BForm.Group>
+          <InputVestingAddress />
+          <InputDelegateAdmin />
 
           <BForm.Group>
             <FormLabel>Vesting activation date</FormLabel>
@@ -467,74 +397,7 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
             </Field>
           </BForm.Group>
 
-          <BForm.Group controlId="balance">
-            <OverlayTrigger
-              overlay={
-                <Tooltip>
-                  The balance field is recalculated to a maximum allowed number
-                  every time it cannot be evenly divided by &quot;XTZ per
-                  tick&quot;.
-                </Tooltip>
-              }
-            >
-              <FormLabel>Balance</FormLabel>
-            </OverlayTrigger>
-            <InputGroup>
-              <Field
-                as={BForm.Control}
-                type="number"
-                name="balance"
-                aria-label="balance"
-                autoComplete="off"
-                isInvalid={!!errors.balance && touched.balance}
-                isValid={!errors.balance && touched.balance}
-                step={values.tokensPerTick}
-                min={values.tokensPerTick}
-                onKeyPress={(event) => limitInputDecimals(event, 6)}
-                onBlur={(e) => {
-                  handleBlur(e);
-
-                  const tokensInMutez = Number(
-                    convertXTZToMutez(values.tokensPerTick),
-                  );
-                  const balanceInMutez = Number(
-                    convertXTZToMutez(e.target.value),
-                  );
-
-                  if (balanceInMutez && tokensInMutez) {
-                    const maxAllowedBalanceInXTZ = convertMutezToXTZ(
-                      calcMaxAllowedBalance(balanceInMutez, tokensInMutez),
-                    );
-                    setFieldValue('balance', maxAllowedBalanceInXTZ);
-                  }
-                }}
-              />
-
-              <InputGroup.Append>
-                <InputGroup.Text style={{ paddingTop: 0, paddingBottom: 0 }}>
-                  <span style={{ display: 'flex', alignItems: 'center' }}>
-                    <BtnMax
-                      onClick={() => {
-                        setFieldValue('balance', balanceConverted);
-                        setFieldTouched('balance', true, false);
-                      }}
-                    >
-                      MAX
-                    </BtnMax>
-                    <span style={{ fontSize: '12px', marginBottom: '2px' }}>
-                      {balanceConverted}
-                    </span>
-                  </span>
-                </InputGroup.Text>
-              </InputGroup.Append>
-
-              <ErrorMessage
-                component={BForm.Control.Feedback}
-                name="balance"
-                type="invalid"
-              />
-            </InputGroup>
-          </BForm.Group>
+          <InputBalance />
 
           <FormSubmit>
             <Button

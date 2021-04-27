@@ -58,6 +58,10 @@ const ellipsis = (string, start = 7, end = -4) => {
   return `${string.substr(0, start)}...${string.substr(end)}`;
 };
 
+const calcMaxAllowedBalance = (balance, tokensPerTick) => {
+  return Math.floor(balance / tokensPerTick) * tokensPerTick;
+};
+
 const isHex = (string) => {
   const hexRegExp = /^[A-F0-9]+$/i;
   return hexRegExp.test(string);
@@ -169,4 +173,5 @@ export {
   convertAssetAmountToAssetSubunit,
   ellipsis,
   toHHMMSS,
+  calcMaxAllowedBalance,
 };
