@@ -25,7 +25,11 @@ const formAssetPayload = ({
     ticker,
   };
 
-  if (typeof tokenID !== 'undefined' && tokenID !== '') {
+  if (
+    typeof tokenID !== 'undefined' &&
+    tokenID !== '' &&
+    contractType !== 'FA1.2'
+  ) {
     payload.token_id = tokenID;
   }
 

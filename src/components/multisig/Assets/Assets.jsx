@@ -91,7 +91,7 @@ const Assets = () => {
         <Table
           cols={cols}
           rows={assets || []}
-          rowKey="ticker"
+          rowKey="address"
           maxHeight="600px"
           stickyHeader
           isDataLoading={isAssetsLoading}
