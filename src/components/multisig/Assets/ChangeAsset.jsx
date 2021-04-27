@@ -42,6 +42,7 @@ const ChangeAsset = ({ asset }) => {
             name={asset.name}
             address={asset.address}
             contractType={asset.contract_type}
+            tokenID={asset.token_id}
             scale={asset.scale}
             ticker={asset.ticker}
             onSubmit={handleClose}

@@ -52,6 +52,7 @@ const Assets = () => {
       },
     },
     { key: 'contract_type', label: 'contract type' },
+    { key: 'token_id', label: 'token ID' },
     {
       key: 'balances',
       label: 'Balance',
@@ -90,7 +91,7 @@ const Assets = () => {
         <Table
           cols={cols}
           rows={assets || []}
-          rowKey="ticker"
+          rowKey="address"
           maxHeight="600px"
           stickyHeader
           isDataLoading={isAssetsLoading}

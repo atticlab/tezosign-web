@@ -23,10 +23,16 @@ const operationsTypesMap = {
   vesting_set_delegate: 'Vesting delegation',
 };
 
+const contractTypes = [
+  { value: 'FA1.2', label: 'FA1.2' },
+  { value: 'FA2', label: 'FA2' },
+];
+
 export {
   XTZInMutez,
   XTZFormat,
   dateFormat,
   base58Prefixes,
   operationsTypesMap,
+  contractTypes,
 };

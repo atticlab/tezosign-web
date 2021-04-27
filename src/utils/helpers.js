@@ -5,6 +5,16 @@ import bs58check from 'bs58check';
 import * as sodium from 'libsodium-wrappers';
 import { XTZInMutez, XTZFormat, base58Prefixes } from './constants';
 
+const avoidScientificNotation = (x) => {
+  return x
+    .toLocaleString('fullwide', {
+      useGrouping: false,
+      maximumSignificantDigits: 10,
+    })
+    .split(',')
+    .join('.');
+};
+
 const convertXTZToMutez = (amount) => {
   return `${Number(amount) * XTZInMutez}`;
 };
@@ -35,7 +45,7 @@ const convertAssetAmountToAssetSubunit = (amount, scale) => {
 };
 
 const convertAssetSubunitToAssetAmount = (amount, scale) => {
-  return `${Number(amount) / pow10(scale)}`;
+  return `${avoidScientificNotation(Number(amount) / pow10(scale))}`;
 };
 
 const capitalize = (string) => {

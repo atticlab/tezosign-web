@@ -232,6 +232,13 @@ const useAPI = () => {
   const getAddressBalance = (address) => {
     return API.get(`/${network}/${address}/balance`);
   };
+  const getAssetMetaData = async (assetContractID, params = {}) => {
+    return API.get(
+      `/${network}/asset/${assetContractID}/meta_data${formatParams({
+        ...params,
+      })}`,
+    );
+  };
 
   currentTokens = { ...tokens };
 
@@ -305,6 +312,7 @@ const useAPI = () => {
     isAddressRevealed,
     getAssets,
     getAssetsRates,
+    getAssetMetaData,
     addAsset,
     editAsset,
     deleteAsset,
