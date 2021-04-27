@@ -71,8 +71,8 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
             <FormLabel>Vesting activation date</FormLabel>
             <DatePickerWrapper>
               <Field
-                name="range"
-                aria-label="range"
+                name="startDate"
+                aria-label="startDate"
                 as={DatePicker}
                 dateFormat="yyyy/MM/dd"
                 minDate={today}
