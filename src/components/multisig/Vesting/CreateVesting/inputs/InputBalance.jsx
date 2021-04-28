@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
 import {
   Form as BForm,
@@ -6,17 +7,16 @@ import {
   OverlayTrigger,
   Tooltip,
 } from 'react-bootstrap';
-import { FormLabel } from '../../../styled/Forms';
-import { BtnMax } from '../../../styled/Btns';
-import useBalances from './useBalances';
+import { FormLabel } from '../../../../styled/Forms';
+import { BtnMax } from '../../../../styled/Btns';
 import {
   convertMutezToXTZ,
   convertXTZToMutez,
   limitInputDecimals,
   calcMaxAllowedBalance,
-} from '../../../../utils/helpers';
+} from '../../../../../utils/helpers';
 
-const InputBalance = () => {
+const InputBalance = ({ maxBalance }) => {
   const {
     values,
     errors,
@@ -25,7 +25,6 @@ const InputBalance = () => {
     setFieldValue,
     setFieldTouched,
   } = useFormikContext();
-  const { balanceConverted } = useBalances(10);
 
   return (
     <BForm.Group controlId="balance">
@@ -73,14 +72,14 @@ const InputBalance = () => {
             <span style={{ display: 'flex', alignItems: 'center' }}>
               <BtnMax
                 onClick={() => {
-                  setFieldValue('balance', balanceConverted);
+                  setFieldValue('balance', maxBalance);
                   setFieldTouched('balance', true, false);
                 }}
               >
                 MAX
               </BtnMax>
               <span style={{ fontSize: '12px', marginBottom: '2px' }}>
-                {balanceConverted}
+                {maxBalance}
               </span>
             </span>
           </InputGroup.Text>
@@ -94,6 +93,10 @@ const InputBalance = () => {
       </InputGroup>
     </BForm.Group>
   );
+};
+
+InputBalance.propTypes = {
+  maxBalance: PropTypes.string.isRequired,
 };
 
 export default InputBalance;

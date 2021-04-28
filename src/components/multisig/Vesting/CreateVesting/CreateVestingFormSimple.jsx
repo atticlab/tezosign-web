@@ -1,37 +1,69 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import dayjs from 'dayjs';
 import * as Yup from 'yup';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-import { Button, Form as BForm } from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
-import { FormLabel, FormSubmit } from '../../../styled/Forms';
-import InputVestingAddress from './InputVestingAddress';
-import InputBalance from './InputBalance';
-import InputDelegateAdmin from './InputDelegateAdmin';
+import dayjs from 'dayjs';
+import { Form, Formik } from 'formik';
+import { Button } from 'react-bootstrap';
+import { FormSubmit } from '../../../styled/Forms';
+import InputVestingAddress from './inputs/InputVestingAddress';
+import InputBalance from './inputs/InputBalance';
+import InputDelegateAdmin from './inputs/InputDelegateAdmin';
+import InputDateRange from './inputs/InputDateRange';
+import InputUnvestedPartsAmount from './inputs/InputUnvestedPartsAmount';
 import useBalances from './useBalances';
 import useAPI from '../../../../hooks/useApi';
 import { handleError } from '../../../../utils/errorsHandler';
 import tezosAddressSchema from '../../../../utils/schemas/tezosAddressSchema';
 import balanceSchema from '../../../../utils/schemas/balanceSchema';
-import { DatePickerWrapper } from '../../../styled/DatePickerStyles';
+import { convertXTZToMutez } from '../../../../utils/helpers';
 
-const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
+const calcSecondsPerTick = (rangeStart, rangeEnd, parts) => {
+  const start = dayjs(rangeStart).unix();
+  const end = dayjs(rangeEnd).unix();
+  return (end - start) / parts;
+};
+const calcTokensPerTick = (balance, parts) => {
+  return convertXTZToMutez(balance) / parts;
+};
+
+const schema = (maxAmount, minAmount = 0.000001) =>
   Yup.object({
     vestingAddress: tezosAddressSchema,
     delegateAddress: tezosAddressSchema,
-    range: Yup.string().required('Required'),
     balance: balanceSchema(maxAmount, minAmount),
+    startDate: Yup.string().required('Required'),
+    endDate: Yup.string().required('Required'),
+    parts: Yup.number()
+      .required('Required')
+      .integer('Value must be an integer')
+      .min(1, 'Minimum value is 1')
+      .max(
+        Number.MAX_SAFE_INTEGER,
+        `Maximum value is ${Number.MAX_SAFE_INTEGER}`,
+      )
+      .test(
+        'balanceCheck',
+        'Balance cannot be evenly divided by this number of parts',
+        // eslint-disable-next-line func-names
+        function (val) {
+          return Number.isInteger(calcTokensPerTick(this.parent.balance, val));
+        },
+      )
+      .test(
+        'secondsCheck',
+        'Vesting period cannot be evenly divided by this number of parts',
+        // eslint-disable-next-line func-names
+        function (val) {
+          return Number.isInteger(
+            calcSecondsPerTick(this.parent.startDate, this.parent.endDate, val),
+          );
+        },
+      ),
   });
-
-const today = dayjs().startOf('day').toDate();
-const handleDateChangeRaw = (e) => {
-  e.preventDefault();
-};
 
 const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
   const { getVestingContractCode, initVesting } = useAPI();
-  const { balanceConverted, balanceInXTZ } = useBalances(10);
+  const { balanceInXTZ } = useBalances();
 
   const createVesting = async (fields, setSubmitting) => {
     try {
@@ -52,72 +84,23 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
       initialValues={{
         vestingAddress: '',
         delegateAddress: '',
-        balance: '',
         startDate: '',
         endDate: '',
+        balance: '',
+        parts: '',
       }}
-      validationSchema={Yup.lazy(() => schema(balanceConverted, balanceInXTZ))}
+      validationSchema={Yup.lazy(() => schema(balanceInXTZ))}
       onSubmit={(values, { setSubmitting }) => {
         createVesting(values, setSubmitting);
       }}
     >
-      {({ values, errors, touched, isSubmitting, setFieldValue }) => (
+      {({ isSubmitting }) => (
         <Form>
           <InputVestingAddress />
-          <InputBalance />
           <InputDelegateAdmin />
-
-          <BForm.Group>
-            <FormLabel>Vesting activation date</FormLabel>
-            <DatePickerWrapper>
-              <Field
-                name="startDate"
-                aria-label="startDate"
-                as={DatePicker}
-                dateFormat="yyyy/MM/dd"
-                minDate={today}
-                wrapperClassName={
-                  // eslint-disable-next-line no-nested-ternary
-                  (!!errors.startDate && touched.startDate) ||
-                  (!!errors.endDate && touched.endDate)
-                    ? 'is-invalid'
-                    : (!errors.startDate && touched.startDate) ||
-                      (!errors.endDate && touched.endDate)
-                    ? 'is-valid'
-                    : ''
-                }
-                onChangeRaw={handleDateChangeRaw}
-                selected={values.startDate}
-                startDate={values.startDate}
-                endDate={values.endDate}
-                selectsRange
-                autoComplete="off"
-                customInput={
-                  <BForm.Control
-                    isInvalid={
-                      (!!errors.startDate && touched.startDate) ||
-                      (!!errors.endDate && touched.endDate)
-                    }
-                    isValid={
-                      (!errors.startDate && touched.startDate) ||
-                      (!errors.endDate && touched.endDate)
-                    }
-                  />
-                }
-                onChange={(dates) => {
-                  const [start, end] = dates;
-                  setFieldValue('startDate', start);
-                  setFieldValue('endDate', end);
-                }}
-              />
-
-              <ErrorMessage
-                component={BForm.Control.Feedback}
-                name="range"
-                type="invalid"
-              />
-            </DatePickerWrapper>
-          </BForm.Group>
+          <InputBalance maxBalance={balanceInXTZ} />
+          <InputDateRange />
+          <InputUnvestedPartsAmount />
 
           <FormSubmit>
             <Button

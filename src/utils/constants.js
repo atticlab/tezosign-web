@@ -1,6 +1,7 @@
 const XTZInMutez = 1000000;
 const XTZFormat = '0,0.[000000]';
 const dateFormat = 'YYYY/MM/DD HH:mm UTC';
+const dateFormatNoTime = dateFormat.split(' ')[0];
 
 const base58Prefixes = {
   edpk: {
@@ -32,6 +33,7 @@ export {
   XTZInMutez,
   XTZFormat,
   dateFormat,
+  dateFormatNoTime,
   base58Prefixes,
   operationsTypesMap,
   contractTypes,

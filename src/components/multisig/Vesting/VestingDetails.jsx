@@ -10,7 +10,7 @@ import VestingActions from './VestingActions';
 import useAPI from '../../../hooks/useApi';
 import useRequest from '../../../hooks/useRequest';
 import { convertMutezToXTZ, toHHMMSS } from '../../../utils/helpers';
-import { dateFormat } from '../../../utils/constants';
+import { dateFormatNoTime } from '../../../utils/constants';
 
 dayjs.extend(utc);
 
@@ -116,7 +116,7 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                 {dayjs
                   .unix(vestingInfo.storage.timestamp)
                   .utc()
-                  .format(dateFormat.split(' ')[0])}
+                  .format(dateFormatNoTime)}
               </OperationGeneralInfo.Item>
               <OperationGeneralInfo.Item>
                 <OverlayTrigger

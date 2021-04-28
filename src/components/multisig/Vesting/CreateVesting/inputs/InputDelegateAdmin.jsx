@@ -1,7 +1,7 @@
 import React from 'react';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
 import { Form as BForm, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { FormLabel } from '../../../styled/Forms';
+import { FormLabel } from '../../../../styled/Forms';
 
 const InputDelegateAdmin = () => {
   const { errors, touched } = useFormikContext();

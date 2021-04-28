@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form as BForm, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
-import { FormLabel } from '../../../styled/Forms';
+import { FormLabel } from '../../../../styled/Forms';
 
 const InputVestingAddress = () => {
   const { errors, touched } = useFormikContext();

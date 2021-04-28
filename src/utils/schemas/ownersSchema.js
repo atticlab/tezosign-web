@@ -53,7 +53,11 @@ const ownersSchema = (testAddress) =>
             .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
             .length(36, 'Tezos address must be 36 characters long')
             .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val))
-            .test('sad', 'Address is unrevealed', testAddress.current),
+            .test(
+              'isAddressRevealed',
+              'Address is unrevealed',
+              testAddress.current,
+            ),
           otherwise: Yup.string()
             .required('Required')
             .matches(/^\S+$/, 'No spaces are allowed')
