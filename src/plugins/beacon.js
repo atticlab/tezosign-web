@@ -63,7 +63,7 @@ const sendOrigination = async (balance = '0', script) => {
   });
 };
 
-const requestSignPayload = (payload, signingType = SigningType.MICHELINE) => {
+const requestSignPayload = (payload, signingType = SigningType.RAW) => {
   return client.requestSignPayload({
     payload,
     signingType,
