@@ -58,6 +58,10 @@ const ellipsis = (string, start = 7, end = -4) => {
   return `${string.substr(0, start)}...${string.substr(end)}`;
 };
 
+const calcMaxAllowedBalance = (balance, tokensPerTick) => {
+  return Math.floor(balance / tokensPerTick) * tokensPerTick;
+};
+
 const isHex = (string) => {
   const hexRegExp = /^[A-F0-9]+$/i;
   return hexRegExp.test(string);
@@ -98,6 +102,35 @@ const toHHMMSS = (secs) => {
     .filter((val, index) => val !== '00' || index > 0)
     .join(':')
     .replace(/^0/, '');
+};
+
+const getSecondsFromHHMMSS = (value) => {
+  const [str1, str2, str3] = value.split(':');
+
+  const val1 = Number(str1);
+  const val2 = Number(str2);
+  const val3 = Number(str3);
+
+  const isVal1NaN = Number.isNaN(val1);
+  const isVal2NaN = Number.isNaN(val2);
+  const isVal3NaN = Number.isNaN(val3);
+
+  if (!isVal1NaN && isVal2NaN && isVal3NaN) {
+    // seconds
+    return val1;
+  }
+
+  if (!isVal1NaN && !isVal2NaN && isVal3NaN) {
+    // minutes * 60 + seconds
+    return val1 * 60 + val2;
+  }
+
+  if (!isVal1NaN && !isVal2NaN && !isVal3NaN) {
+    // hours * 60 * 60 + minutes * 60 + seconds
+    return val1 * 60 * 60 + val2 * 60 + val3;
+  }
+
+  return 0;
 };
 
 const getAddressFromPubKey = (publicKey) => {
@@ -169,4 +202,6 @@ export {
   convertAssetAmountToAssetSubunit,
   ellipsis,
   toHHMMSS,
+  getSecondsFromHHMMSS,
+  calcMaxAllowedBalance,
 };

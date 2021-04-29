@@ -1,50 +1,61 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
+import dayjs from 'dayjs';
 import { Form, Formik } from 'formik';
 import { Button } from 'react-bootstrap';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import { FormSubmit } from '../../../styled/Forms';
 import InputVestingAddress from './inputs/InputVestingAddress';
 import InputBalance from './inputs/InputBalance';
 import InputDelegateAdmin from './inputs/InputDelegateAdmin';
 import InputVestingActivationDate from './inputs/InputVestingActivationDate';
-import InputSecondsPerTick from './inputs/InputSecondsPerTick';
-import InputXTZPerTick from './inputs/InputXTZPerTick';
-import CheckboxExplanation from './inputs/CheckboxExplanation';
-import useAPI from '../../../../hooks/useApi';
+import SelectUnvestingInterval from './inputs/SelectUnvestingInterval';
+import InputUnvestedPartsAmount from './inputs/InputUnvestedPartsAmount';
+import InputVestingEndDate from './inputs/InputVestingEndDate';
 import useBalances from './useBalances';
-import {
-  convertXTZToMutez,
-  getSecondsFromHHMMSS,
-} from '../../../../utils/helpers';
+import useAPI from '../../../../hooks/useApi';
 import { handleError } from '../../../../utils/errorsHandler';
-import { sendOrigination } from '../../../../plugins/beacon';
+import { convertXTZToMutez } from '../../../../utils/helpers';
 import tezosAddressSchema from '../../../../utils/schemas/tezosAddressSchema';
 import balanceSchema from '../../../../utils/schemas/balanceSchema';
 import { secondsPerTickSchema } from './createVestingSchemas';
+import { sendOrigination } from '../../../../plugins/beacon';
+import { unvestingIntervals } from '../../../../utils/constants';
 
-dayjs.extend(utc);
+const calcTokensPerTick = (balance, parts) => {
+  if (typeof balance !== 'number' || typeof parts !== 'number') return null;
+  return convertXTZToMutez(balance) / parts;
+};
 
-const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
+const schema = (maxAmount, minAmount = 0.000001) =>
   Yup.object({
     vestingAddress: tezosAddressSchema,
     delegateAddress: tezosAddressSchema,
     startDate: Yup.string().required('Required'),
-    secondsPerTick: secondsPerTickSchema,
-    tokensPerTick: Yup.number()
+    parts: Yup.number()
       .required('Required')
-      .max(maxTokensPerTick, `Maximum amount is ${maxTokensPerTick} XTZ`)
-      .min(0.000001, `Minimum amount is ${0.000001} XTZ`),
-    check: Yup.bool().oneOf([true], 'The terms must be accepted'),
+      .integer('Value must be an integer')
+      .min(1, 'Minimum value is 1')
+      .max(
+        Number.MAX_SAFE_INTEGER,
+        `Maximum value is ${Number.MAX_SAFE_INTEGER}`,
+      )
+      .test(
+        'balanceCheck',
+        'Balance cannot be evenly divided by this number of parts',
+        // eslint-disable-next-line func-names
+        function (val) {
+          return Number.isInteger(calcTokensPerTick(this.parent.balance, val));
+        },
+      ),
+    secondsPerTick: secondsPerTickSchema,
+    endDate: Yup.string().required('Required'),
     balance: balanceSchema(maxAmount, minAmount),
   });
 
-const CreateVestingForm = ({ onSubmit, onCancel }) => {
+const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
   const { getVestingContractCode, initVesting } = useAPI();
-  const [currentTokensPerTick, setCurrentTokensPerTick] = useState(null);
-  const { balanceConverted, balanceInXTZ } = useBalances(currentTokensPerTick);
+  const { balanceInXTZ } = useBalances();
 
   const createVesting = async (
     {
@@ -52,8 +63,8 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
       delegateAddress,
       startDate,
       secondsPerTick,
-      tokensPerTick,
       balance,
+      parts,
     },
     setSubmitting,
   ) => {
@@ -65,8 +76,8 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
         vesting_address: vestingAddress,
         delegate_admin: delegateAddress,
         timestamp: dayjs.utc(startDate).unix().valueOf(),
-        seconds_per_tick: getSecondsFromHHMMSS(secondsPerTick),
-        tokens_per_tick: Number(convertXTZToMutez(tokensPerTick)),
+        seconds_per_tick: secondsPerTick,
+        tokens_per_tick: calcTokensPerTick(balance, parts),
       };
       const respStorage = await initVesting(payload);
 
@@ -86,14 +97,12 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
         vestingAddress: '',
         delegateAddress: '',
         startDate: '',
-        secondsPerTick: '',
-        tokensPerTick: '',
-        check: false,
+        parts: '',
+        secondsPerTick: unvestingIntervals[0].value,
+        endDate: '',
         balance: '',
       }}
-      validationSchema={Yup.lazy((values) =>
-        schema(balanceConverted, balanceInXTZ, values.tokensPerTick),
-      )}
+      validationSchema={Yup.lazy(() => schema(balanceInXTZ))}
       onSubmit={(values, { setSubmitting }) => {
         createVesting(values, setSubmitting);
       }}
@@ -103,10 +112,10 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
           <InputVestingAddress />
           <InputDelegateAdmin />
           <InputVestingActivationDate />
-          <InputSecondsPerTick />
-          <InputXTZPerTick onChange={setCurrentTokensPerTick} />
-          <CheckboxExplanation />
-          <InputBalance maxBalance={balanceConverted} />
+          <InputUnvestedPartsAmount />
+          <SelectUnvestingInterval defaultValue={unvestingIntervals[0]} />
+          <InputVestingEndDate />
+          <InputBalance maxBalance={balanceInXTZ} />
 
           <FormSubmit>
             <Button
@@ -126,9 +135,9 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
   );
 };
 
-CreateVestingForm.propTypes = {
+CreateVestingFormSimple.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
 
-export default CreateVestingForm;
+export default CreateVestingFormSimple;

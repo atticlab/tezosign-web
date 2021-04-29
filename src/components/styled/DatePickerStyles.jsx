@@ -1,8 +1,8 @@
 import styled from 'styled-components';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const DatePickerWrapper = styled.div`
   position: relative;
-  z-index: 2;
 
   .react-datepicker-wrapper {
     width: 100%;
