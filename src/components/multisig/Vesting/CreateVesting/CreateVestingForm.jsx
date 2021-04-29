@@ -23,6 +23,7 @@ import { handleError } from '../../../../utils/errorsHandler';
 import { sendOrigination } from '../../../../plugins/beacon';
 import tezosAddressSchema from '../../../../utils/schemas/tezosAddressSchema';
 import balanceSchema from '../../../../utils/schemas/balanceSchema';
+import { secondsPerTickSchema } from './createVestingSchemas';
 
 dayjs.extend(utc);
 
@@ -30,12 +31,8 @@ const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
   Yup.object({
     vestingAddress: tezosAddressSchema,
     delegateAddress: tezosAddressSchema,
-    timestamp: Yup.string().required('Required'),
-    secondsPerTick: Yup.string()
-      .required('Required')
-      .test('secondsCheck', 'Seconds cannot be 0', (val) => {
-        return val !== '0:00';
-      }),
+    startDate: Yup.string().required('Required'),
+    secondsPerTick: secondsPerTickSchema,
     tokensPerTick: Yup.number()
       .required('Required')
       .max(maxTokensPerTick, `Maximum amount is ${maxTokensPerTick} XTZ`)
@@ -53,7 +50,7 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
     {
       vestingAddress,
       delegateAddress,
-      timestamp,
+      startDate,
       secondsPerTick,
       tokensPerTick,
       balance,
@@ -61,12 +58,13 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
     setSubmitting,
   ) => {
     try {
+      setSubmitting(true);
       const respCode = await getVestingContractCode();
 
       const payload = {
         vesting_address: vestingAddress,
         delegate_admin: delegateAddress,
-        timestamp: dayjs.utc(timestamp).unix().valueOf(),
+        timestamp: dayjs.utc(startDate).unix().valueOf(),
         seconds_per_tick: getSecondsFromHHMMSS(secondsPerTick),
         tokens_per_tick: Number(convertXTZToMutez(tokensPerTick)),
       };
@@ -87,7 +85,7 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
       initialValues={{
         vestingAddress: '',
         delegateAddress: '',
-        timestamp: '',
+        startDate: '',
         secondsPerTick: '',
         tokensPerTick: '',
         check: false,

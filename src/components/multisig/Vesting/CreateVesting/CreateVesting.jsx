@@ -35,9 +35,7 @@ const CreateVesting = () => {
             <Title as="h3">Create vesting</Title>
 
             <BtnTransparent onClick={() => setIsAdvanced((prev) => !prev)}>
-              {isAdvanced
-                ? 'Switch to standard mode'
-                : 'Switch to advanced mode'}
+              {isAdvanced ? 'Standard mode' : 'Advanced mode'}
             </BtnTransparent>
           </div>
         </Modal.Header>

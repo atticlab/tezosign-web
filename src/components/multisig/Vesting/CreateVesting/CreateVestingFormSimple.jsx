@@ -8,21 +8,22 @@ import { FormSubmit } from '../../../styled/Forms';
 import InputVestingAddress from './inputs/InputVestingAddress';
 import InputBalance from './inputs/InputBalance';
 import InputDelegateAdmin from './inputs/InputDelegateAdmin';
-import InputDateRange from './inputs/InputDateRange';
+import InputVestingActivationDate from './inputs/InputVestingActivationDate';
+import SelectUnvestingInterval from './inputs/SelectUnvestingInterval';
 import InputUnvestedPartsAmount from './inputs/InputUnvestedPartsAmount';
+import InputVestingEndDate from './inputs/InputVestingEndDate';
 import useBalances from './useBalances';
 import useAPI from '../../../../hooks/useApi';
 import { handleError } from '../../../../utils/errorsHandler';
+import { convertXTZToMutez } from '../../../../utils/helpers';
 import tezosAddressSchema from '../../../../utils/schemas/tezosAddressSchema';
 import balanceSchema from '../../../../utils/schemas/balanceSchema';
-import { convertXTZToMutez } from '../../../../utils/helpers';
+import { secondsPerTickSchema } from './createVestingSchemas';
+import { sendOrigination } from '../../../../plugins/beacon';
+import { unvestingIntervals } from '../../../../utils/constants';
 
-const calcSecondsPerTick = (rangeStart, rangeEnd, parts) => {
-  const start = dayjs(rangeStart).unix();
-  const end = dayjs(rangeEnd).unix();
-  return (end - start) / parts;
-};
 const calcTokensPerTick = (balance, parts) => {
+  if (typeof balance !== 'number' || typeof parts !== 'number') return null;
   return convertXTZToMutez(balance) / parts;
 };
 
@@ -30,9 +31,7 @@ const schema = (maxAmount, minAmount = 0.000001) =>
   Yup.object({
     vestingAddress: tezosAddressSchema,
     delegateAddress: tezosAddressSchema,
-    balance: balanceSchema(maxAmount, minAmount),
     startDate: Yup.string().required('Required'),
-    endDate: Yup.string().required('Required'),
     parts: Yup.number()
       .required('Required')
       .integer('Value must be an integer')
@@ -48,29 +47,42 @@ const schema = (maxAmount, minAmount = 0.000001) =>
         function (val) {
           return Number.isInteger(calcTokensPerTick(this.parent.balance, val));
         },
-      )
-      .test(
-        'secondsCheck',
-        'Vesting period cannot be evenly divided by this number of parts',
-        // eslint-disable-next-line func-names
-        function (val) {
-          return Number.isInteger(
-            calcSecondsPerTick(this.parent.startDate, this.parent.endDate, val),
-          );
-        },
       ),
+    secondsPerTick: secondsPerTickSchema,
+    endDate: Yup.string().required('Required'),
+    balance: balanceSchema(maxAmount, minAmount),
   });
 
 const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
   const { getVestingContractCode, initVesting } = useAPI();
   const { balanceInXTZ } = useBalances();
 
-  const createVesting = async (fields, setSubmitting) => {
+  const createVesting = async (
+    {
+      vestingAddress,
+      delegateAddress,
+      startDate,
+      secondsPerTick,
+      balance,
+      parts,
+    },
+    setSubmitting,
+  ) => {
     try {
       setSubmitting(true);
-      // eslint-disable-next-line no-unused-vars
       const respCode = await getVestingContractCode();
-      await initVesting();
+
+      const payload = {
+        vesting_address: vestingAddress,
+        delegate_admin: delegateAddress,
+        timestamp: dayjs.utc(startDate).unix().valueOf(),
+        seconds_per_tick: secondsPerTick,
+        tokens_per_tick: calcTokensPerTick(balance, parts),
+      };
+      const respStorage = await initVesting(payload);
+
+      const script = { code: respCode.data, storage: respStorage.data };
+      await sendOrigination(balance.toString(), script);
       onSubmit();
     } catch (e) {
       handleError(e);
@@ -85,9 +97,10 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
         vestingAddress: '',
         delegateAddress: '',
         startDate: '',
+        parts: '',
+        secondsPerTick: unvestingIntervals[0].value,
         endDate: '',
         balance: '',
-        parts: '',
       }}
       validationSchema={Yup.lazy(() => schema(balanceInXTZ))}
       onSubmit={(values, { setSubmitting }) => {
@@ -98,9 +111,11 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
         <Form>
           <InputVestingAddress />
           <InputDelegateAdmin />
-          <InputBalance maxBalance={balanceInXTZ} />
-          <InputDateRange />
+          <InputVestingActivationDate />
           <InputUnvestedPartsAmount />
+          <SelectUnvestingInterval defaultValue={unvestingIntervals[0]} />
+          <InputVestingEndDate />
+          <InputBalance maxBalance={balanceInXTZ} />
 
           <FormSubmit>
             <Button

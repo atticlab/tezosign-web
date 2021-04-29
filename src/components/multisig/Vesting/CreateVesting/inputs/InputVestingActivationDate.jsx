@@ -19,34 +19,34 @@ const VestingActivationDate = () => {
       <FormLabel>Vesting activation date</FormLabel>
       <DatePickerWrapper>
         <Field
-          name="timestamp"
-          aria-label="timestamp"
+          name="startDate"
+          aria-label="startDate"
           as={DatePicker}
           dateFormat="yyyy/MM/dd"
           minDate={today}
           wrapperClassName={
             // eslint-disable-next-line no-nested-ternary
-            !!errors.timestamp && touched.timestamp
+            !!errors.startDate && touched.startDate
               ? 'is-invalid'
-              : !errors.timestamp && touched.timestamp
+              : !errors.startDate && touched.startDate
               ? 'is-valid'
               : ''
           }
           onChangeRaw={handleDateChangeRaw}
-          selected={values.timestamp}
+          selected={values.startDate}
           autoComplete="off"
           customInput={
             <BForm.Control
-              isInvalid={!!errors.timestamp && touched.timestamp}
-              isValid={!errors.timestamp && touched.timestamp}
+              isInvalid={!!errors.startDate && touched.startDate}
+              isValid={!errors.startDate && touched.startDate}
             />
           }
-          onChange={(date) => setFieldValue('timestamp', date)}
+          onChange={(date) => setFieldValue('startDate', date)}
         />
 
         <ErrorMessage
           component={BForm.Control.Feedback}
-          name="timestamp"
+          name="startDate"
           type="invalid"
         />
       </DatePickerWrapper>
