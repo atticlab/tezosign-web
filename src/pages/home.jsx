@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { Title, Text } from '../components/styled/Text';
 import Card from '../components/styled/Card';
+import ModalAuth from '../components/ModalAuth';
 import {
   useUserStateContext,
   useUserDispatchContext,
@@ -19,6 +20,13 @@ const Home = () => {
   const history = useHistory();
   const { connect } = useUserDispatchContext();
   const { isLoggedIn } = useUserStateContext();
+  const [show, setShow] = useState(false);
+  const handleClose = () => {
+    setShow(false);
+  };
+  const handleShow = () => {
+    setShow(true);
+  };
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -78,10 +86,14 @@ const Home = () => {
             order to continue.
           </Text>
           <div style={{ textAlign: 'right' }}>
-            <Button onClick={() => connect()}>Connect</Button>
+            <Button onClick={() => connect(handleShow, handleClose)}>
+              Connect
+            </Button>
           </div>
         </Card.Body>
       </Card>
+
+      <ModalAuth show={show} handleClose={handleClose} />
     </HomeStyled>
   );
 };

@@ -8,13 +8,11 @@ import { BtnLink } from './styled/Btns';
 const copy = (msg) => toast.success(msg);
 // eslint-disable-next-line no-unused-vars,react/prop-types
 const BtnCopy = ({ textToCopy, msg, style }) => (
-  <div>
-    <CopyToClipboard text={textToCopy}>
-      <BtnLink style={{ ...style, lineHeight: '1' }} onClick={() => copy(msg)}>
-        <FontAwesomeIcon icon="copy" style={{ pointerEvents: 'none' }} />
-      </BtnLink>
-    </CopyToClipboard>
-  </div>
+  <CopyToClipboard text={textToCopy}>
+    <BtnLink style={{ ...style, lineHeight: '1' }} onClick={() => copy(msg)}>
+      <FontAwesomeIcon icon="copy" style={{ pointerEvents: 'none' }} />
+    </BtnLink>
+  </CopyToClipboard>
 );
 
 BtnCopy.propTypes = {

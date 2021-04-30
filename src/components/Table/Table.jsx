@@ -18,6 +18,7 @@ const Table = ({
   cols,
   rows,
   rowKey,
+  customRowKey,
   maxHeight,
   stickyHeader,
   lastItem,
@@ -91,7 +92,7 @@ const Table = ({
                 return (
                   <Row
                     ref={lastItem}
-                    key={row[rowKey]}
+                    key={customRowKey(row) || row[rowKey]}
                     cols={cols}
                     row={row}
                     isCollapsible={isCollapsible}
@@ -101,7 +102,7 @@ const Table = ({
               }
               return (
                 <Row
-                  key={row[rowKey]}
+                  key={customRowKey(row) || row[rowKey]}
                   cols={cols}
                   row={row}
                   isCollapsible={isCollapsible}
@@ -120,6 +121,7 @@ Table.propTypes = {
   cols: PropTypes.arrayOf(PropTypes.object).isRequired,
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   rowKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  customRowKey: PropTypes.func,
   maxHeight: PropTypes.string,
   stickyHeader: PropTypes.bool,
   lastItem: PropTypes.func,
@@ -130,6 +132,7 @@ Table.propTypes = {
 };
 
 Table.defaultProps = {
+  customRowKey: () => null,
   maxHeight: '100%',
   stickyHeader: false,
   lastItem: () => null,

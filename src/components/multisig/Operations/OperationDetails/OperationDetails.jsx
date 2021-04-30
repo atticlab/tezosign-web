@@ -11,6 +11,7 @@ import Address from './Address';
 import ContractChanges from './ContractChanges';
 import BtnCopy from '../../../BtnCopy';
 import OperationTransfersList from './OperationTransfersList';
+import ModalPayload from './ModalPayload';
 import { useContractStateContext } from '../../../../store/contractContext';
 import { requestSignPayload, sendTx } from '../../../../plugins/beacon';
 import useAPI from '../../../../hooks/useApi';
@@ -18,6 +19,7 @@ import { useUserStateContext } from '../../../../store/userContext';
 import { useAssetsStateContext } from '../../../../store/assetsContext';
 import { handleError } from '../../../../utils/errorsHandler';
 import { isOperationMultiTransfer } from '../../../../utils/helpers';
+import useModal from '../../../../hooks/useModal';
 
 const Actions = styled.div`
   display: flex;
@@ -96,6 +98,8 @@ const OperationDetails = ({ operation, resetOperations }) => {
   );
   const { sendSignature, getOperationPayload, buildOperation } = useAPI();
   const [isActionLoading, setIsActionLoading] = useState(false);
+  const { show, handleShow, handleClose } = useModal();
+  const [signingPayload, setSigningPayload] = useState({});
 
   const acceptOperation = async (operationID) => {
     try {
@@ -127,6 +131,12 @@ const OperationDetails = ({ operation, resetOperations }) => {
       const payload = await getOperationPayload(operationID, {
         type: 'reject',
       });
+
+      console.log(payload.data);
+
+      setSigningPayload(() => payload.data);
+      handleShow();
+      
       const resSignature = await requestSignPayload(
         payload.data.payload,
         SigningType.MICHELINE,
@@ -384,6 +394,13 @@ const OperationDetails = ({ operation, resetOperations }) => {
           )}
         </Actions>
       )}
+
+      <ModalPayload
+        show={show}
+        handleClose={handleClose}
+        JSONPayload={signingPayload.payload_json || ''}
+        bytesPayload={signingPayload.payload || ''}
+      />
     </div>
   );
 };
