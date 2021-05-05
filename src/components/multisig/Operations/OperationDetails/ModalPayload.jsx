@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,12 +9,18 @@ import Modal from '../../../styled/Modal';
 import { Bold, Title } from '../../../styled/Text';
 import Card from '../../../styled/Card';
 
+const PreCode = styled.pre`
+  color: #ff338d;
+  max-height: 400px;
+  overflow: auto;
+`;
+
 const copy = () => toast.success('Payload copied!');
 
 const ModalPayload = ({ show, handleClose, JSONPayload, bytesPayload }) => {
   const JSONPayloadFormatted = useMemo(() => {
     if (!JSONPayload) return '';
-    return JSONPayload;
+    return JSON.stringify(JSON.parse(JSONPayload), null, 2);
   }, [JSONPayload]);
 
   return (
@@ -48,7 +55,7 @@ const ModalPayload = ({ show, handleClose, JSONPayload, bytesPayload }) => {
           </div>
           <Card>
             <Card.Body style={{ padding: '2px 5px', overflow: 'auto' }}>
-              <code style={{ color: '#ff338d' }}>{JSONPayloadFormatted}</code>
+              <PreCode>{JSONPayloadFormatted}</PreCode>
             </Card.Body>
           </Card>
         </div>

@@ -107,6 +107,10 @@ const OperationDetails = ({ operation, resetOperations }) => {
       const payload = await getOperationPayload(operationID, {
         type: 'approve',
       });
+
+      setSigningPayload(() => payload.data);
+      handleShow();
+      
       const resSignature = await requestSignPayload(
         payload.data.payload,
         SigningType.MICHELINE,
@@ -131,8 +135,6 @@ const OperationDetails = ({ operation, resetOperations }) => {
       const payload = await getOperationPayload(operationID, {
         type: 'reject',
       });
-
-      console.log(payload.data);
 
       setSigningPayload(() => payload.data);
       handleShow();
