@@ -188,7 +188,9 @@ const UserProvider = ({ children }) => {
       setTokens(() => resTokens.data);
       return resTokens.data;
     } catch (e) {
-      handleError(e);
+      // handleError(e);
+      // eslint-disable-next-line no-console
+      console.error(e);
       await disconnect();
       return Promise.reject(e);
     }

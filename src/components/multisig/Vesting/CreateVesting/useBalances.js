@@ -17,6 +17,7 @@ const useBalances = (currentTokensPerTick) => {
   }, [getBalance, address]);
 
   const balanceInXTZ = useMemo(() => {
+    if (!balanceRaw) return 0;
     return convertMutezToXTZ(balanceRaw?.balance);
   }, [balanceRaw]);
 

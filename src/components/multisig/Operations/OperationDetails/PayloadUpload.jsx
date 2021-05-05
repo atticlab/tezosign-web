@@ -43,7 +43,7 @@ const PayloadUpload = ({ style, operationID }) => {
         handleClose={handleClose}
         JSONPayload={signingPayload.payload_json || ''}
         bytesPayload={signingPayload.payload || ''}
-        textExplain="Upload the payload, so that you can use it for offline signing."
+        textExplain="Upload the payload, so that you can use it for independent verification and offline signing."
       />
     </>
   );

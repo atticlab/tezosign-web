@@ -9,12 +9,13 @@ const errorNotifications = {
   'ERR_BAD_PARAM:address': 'Invalid address. Try another one.',
   'ERR_BAD_PARAM:not FA asset':
     'Contract address is not an FA asset. Try another one.',
+  'ERR_BAD_PARAM:wrong contract type': 'Wrong contract type',
   'ERR_BAD_REQUEST:wrong pubKey format': 'Wrong public key format.',
   'ERR_ALREADY_EXISTS:asset': 'Asset with the same address already exists.',
   'ERR_NOT_ALLOWED:global asset': 'Global assets cannot be edited.',
   ERR_NOT_FOUND: 'Not found.',
   'ERR_NOT_FOUND:contract':
-    "Wallet is not found. It probably doesn't exist in the current network.",
+    "Contract is not found. It probably doesn't exist in the current network.",
   'ERR_NOT_FOUND:big_map value':
     'Invalid token ID for the asset contract address.',
   ERR_NOT_ALLOWED: 'Not allowed.',

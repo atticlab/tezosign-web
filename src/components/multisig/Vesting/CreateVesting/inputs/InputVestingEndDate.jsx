@@ -65,7 +65,6 @@ const InputVestingEndDate = () => {
               isValid={!errors.endDate && touched.endDate}
             />
           }
-          // onChange={(date) => setFieldValue('endDate', date)}
         />
 
         <ErrorMessage

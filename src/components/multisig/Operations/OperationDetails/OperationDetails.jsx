@@ -312,93 +312,95 @@ const OperationDetails = ({ operation, resetOperations }) => {
         )}
       </div>
 
-      {operation.status === 'pending' && isUserOwner && (
-        <Actions>
-          <div>
-            <Button
-              size="sm"
-              style={{ marginRight: '10px' }}
-              variant="info"
-              disabled={
-                isActionLoading ||
-                checkOwnersIndices(
-                  address,
-                  operation.signatures,
-                  contractInfo.owners,
-                  'approve',
-                )
-              }
-              onClick={() => acceptOperation(operation.operation_id)}
-            >
-              Approve
-            </Button>
-            <Button
-              size="sm"
-              variant="danger"
-              style={{ marginRight: '10px' }}
-              disabled={
-                isActionLoading ||
-                checkOwnersIndices(
-                  address,
-                  operation.signatures,
-                  contractInfo.owners,
-                  'reject',
-                )
-              }
-              onClick={() => rejectOperation(operation.operation_id)}
-            >
-              Reject
-            </Button>
-            <PayloadUpload operationID={operation.operation_id} />
-          </div>
-
-          {operation.nonce === contractInfo.counter && (
+      {operation.status === 'pending' &&
+        isUserOwner &&
+        contractInfo.counter <= operation.nonce && (
+          <Actions>
             <div>
-              {/* TODO: Address balance check  */}
-              {!contractInfo.balance &&
-              (operation.operation_info.type === 'fa_transfer' ||
-                operation.operation_info.type === 'fa2_transfer' ||
-                operation.operation_info.type === 'transfer') ? (
-                <BadgeOutline variant="danger">
-                  Insufficient wallet funds
-                </BadgeOutline>
-              ) : (
-                <>
-                  {signaturesCount.approved >= contractInfo.threshold && (
-                    <Button
-                      size="sm"
-                      style={{ marginRight: '10px' }}
-                      variant="info"
-                      disabled={isActionLoading}
-                      onClick={() =>
-                        sendOperation(operation.operation_id, {
-                          type: 'approve',
-                        })
-                      }
-                    >
-                      Send approve
-                    </Button>
-                  )}
-                  {signaturesCount.rejected >= contractInfo.threshold && (
-                    <Button
-                      size="sm"
-                      variant="danger"
-                      disabled={isActionLoading}
-                      onClick={() =>
-                        sendOperation(operation.operation_id, {
-                          type: 'reject',
-                        })
-                      }
-                    >
-                      Send reject
-                    </Button>
-                  )}
-                </>
-              )}
+              <Button
+                size="sm"
+                style={{ marginRight: '10px' }}
+                variant="info"
+                disabled={
+                  isActionLoading ||
+                  checkOwnersIndices(
+                    address,
+                    operation.signatures,
+                    contractInfo.owners,
+                    'approve',
+                  )
+                }
+                onClick={() => acceptOperation(operation.operation_id)}
+              >
+                Approve
+              </Button>
+              <Button
+                size="sm"
+                variant="danger"
+                style={{ marginRight: '10px' }}
+                disabled={
+                  isActionLoading ||
+                  checkOwnersIndices(
+                    address,
+                    operation.signatures,
+                    contractInfo.owners,
+                    'reject',
+                  )
+                }
+                onClick={() => rejectOperation(operation.operation_id)}
+              >
+                Reject
+              </Button>
+              <PayloadUpload operationID={operation.operation_id} />
             </div>
-          )}
-        </Actions>
-      )}
+
+            {operation.nonce === contractInfo.counter && (
+              <div>
+                {/* TODO: Address balance check  */}
+                {!contractInfo.balance &&
+                (operation.operation_info.type === 'fa_transfer' ||
+                  operation.operation_info.type === 'fa2_transfer' ||
+                  operation.operation_info.type === 'transfer') ? (
+                  <BadgeOutline variant="danger">
+                    Insufficient wallet funds
+                  </BadgeOutline>
+                ) : (
+                  <>
+                    {signaturesCount.approved >= contractInfo.threshold && (
+                      <Button
+                        size="sm"
+                        style={{ marginRight: '10px' }}
+                        variant="info"
+                        disabled={isActionLoading}
+                        onClick={() =>
+                          sendOperation(operation.operation_id, {
+                            type: 'approve',
+                          })
+                        }
+                      >
+                        Send approve
+                      </Button>
+                    )}
+                    {signaturesCount.rejected >= contractInfo.threshold && (
+                      <Button
+                        size="sm"
+                        variant="danger"
+                        disabled={isActionLoading}
+                        onClick={() =>
+                          sendOperation(operation.operation_id, {
+                            type: 'reject',
+                          })
+                        }
+                      >
+                        Send reject
+                      </Button>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+          </Actions>
+        )}
 
       <ModalPayload
         show={show}
