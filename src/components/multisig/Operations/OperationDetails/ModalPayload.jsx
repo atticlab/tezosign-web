@@ -17,7 +17,13 @@ const PreCode = styled.pre`
 
 const copy = () => toast.success('Payload copied!');
 
-const ModalPayload = ({ show, handleClose, JSONPayload, bytesPayload }) => {
+const ModalPayload = ({
+  show,
+  handleClose,
+  JSONPayload,
+  bytesPayload,
+  textExplain,
+}) => {
   const JSONPayloadFormatted = useMemo(() => {
     if (!JSONPayload) return '';
     return JSON.stringify(JSON.parse(JSONPayload), null, 2);
@@ -44,11 +50,7 @@ const ModalPayload = ({ show, handleClose, JSONPayload, bytesPayload }) => {
       </Modal.Header>
 
       <Modal.Body style={{ padding: '15px 30px' }}>
-        <p>
-          You are going to sign a payload. Now you probably can see a string
-          payload in the wallet of your choice. It is necessary to sign the
-          payload in order to proceed.
-        </p>
+        <p>{textExplain}</p>
         <div style={{ marginBottom: '20px' }}>
           <div>
             <Bold>JSON payload:</Bold>
@@ -80,6 +82,12 @@ ModalPayload.propTypes = {
   handleClose: PropTypes.func.isRequired,
   JSONPayload: PropTypes.string.isRequired,
   bytesPayload: PropTypes.string.isRequired,
+  textExplain: PropTypes.string,
+};
+
+ModalPayload.defaultProps = {
+  textExplain:
+    'You are going to sign a payload. Now you probably can see a string payload in the wallet of your choice. It is necessary to sign the payload in order to proceed.',
 };
 
 export default ModalPayload;

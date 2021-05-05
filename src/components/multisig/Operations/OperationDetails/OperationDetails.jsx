@@ -12,6 +12,7 @@ import ContractChanges from './ContractChanges';
 import BtnCopy from '../../../BtnCopy';
 import OperationTransfersList from './OperationTransfersList';
 import ModalPayload from './ModalPayload';
+import PayloadUpload from './PayloadUpload';
 import { useContractStateContext } from '../../../../store/contractContext';
 import { requestSignPayload, sendTx } from '../../../../plugins/beacon';
 import useAPI from '../../../../hooks/useApi';
@@ -334,6 +335,7 @@ const OperationDetails = ({ operation, resetOperations }) => {
             <Button
               size="sm"
               variant="danger"
+              style={{ marginRight: '10px' }}
               disabled={
                 isActionLoading ||
                 checkOwnersIndices(
@@ -347,6 +349,7 @@ const OperationDetails = ({ operation, resetOperations }) => {
             >
               Reject
             </Button>
+            <PayloadUpload operationID={operation.operation_id} />
           </div>
 
           {operation.nonce === contractInfo.counter && (
