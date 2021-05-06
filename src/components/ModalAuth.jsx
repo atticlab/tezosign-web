@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from './styled/Modal';
@@ -9,6 +9,9 @@ import { useUserStateContext } from '../store/userContext';
 
 const ModalAuth = ({ show, handleClose }) => {
   const { authRequestToken } = useUserStateContext();
+  useEffect(() => {
+    return () => null;
+  }, []);
 
   return (
     <Modal
@@ -36,7 +39,7 @@ const ModalAuth = ({ show, handleClose }) => {
           string payload in the wallet of your choice. It is necessary to sign
           the payload in order to proceed.
         </p>
-        <p>
+        <div>
           <div>
             <Bold>Original payload:</Bold>
           </div>
@@ -46,7 +49,7 @@ const ModalAuth = ({ show, handleClose }) => {
               <BtnCopy textToCopy={authRequestToken} />
             </Card.Body>
           </Card>
-        </p>
+        </div>
       </Modal.Body>
     </Modal>
   );

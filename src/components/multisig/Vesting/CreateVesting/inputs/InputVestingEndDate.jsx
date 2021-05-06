@@ -17,10 +17,12 @@ const calcEndDate = (startDateTimestamp, parts, secondsPerTick) => {
   ) {
     return null;
   }
-  return dayjs
+
+  const res = dayjs
     .unix(startDateTimestamp)
-    .add(parts * secondsPerTick, 'second')
-    .toDate();
+    .add(parts * secondsPerTick, 'second');
+
+  return res.isValid() ? res.toDate() : null;
 };
 
 const InputVestingEndDate = () => {

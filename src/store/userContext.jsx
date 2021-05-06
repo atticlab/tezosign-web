@@ -140,7 +140,8 @@ const UserProvider = ({ children }) => {
         await disconnect();
       }
     } catch (e) {
-      handleError(e);
+      // eslint-disable-next-line no-console
+      console.error(e);
       await disconnect();
     } finally {
       setIsRestoreLoading(false);
@@ -188,9 +189,7 @@ const UserProvider = ({ children }) => {
       setTokens(() => resTokens.data);
       return resTokens.data;
     } catch (e) {
-      // handleError(e);
-      // eslint-disable-next-line no-console
-      console.error(e);
+      handleError(e);
       await disconnect();
       return Promise.reject(e);
     }

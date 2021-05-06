@@ -14,11 +14,10 @@ const Deployed = () => {
   const { getOriginatedContract } = useAPI();
 
   useEffect(() => {
-    if (!location.state || !location.state.transactionHash) {
+    if (!location.state) {
       history.replace('/not-found');
       return;
     }
-    console.log(location.state.transactionHash);
     setTransactionHash(location.state.transactionHash);
   }, [history, location]);
 
@@ -30,7 +29,6 @@ const Deployed = () => {
         const resp = await getOriginatedContract(transactionHash);
         if (resp.data.contract) {
           setOriginatedContract(resp.data.contract);
-          delete location.state.transactionHash;
           clearInterval(interval);
         }
       } catch (e) {

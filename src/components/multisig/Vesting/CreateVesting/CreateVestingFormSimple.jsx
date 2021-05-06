@@ -41,6 +41,17 @@ const schema = (maxAmount, minAmount = 0.000001) =>
         `Maximum value is ${Number.MAX_SAFE_INTEGER}`,
       )
       .test(
+        'isEndDateValid',
+        'Vesting end date is invalid due to this number of parts',
+        // eslint-disable-next-line func-names
+        function (val) {
+          return dayjs
+            .unix(this.parent.startDate && dayjs(this.parent.startDate).unix())
+            .add(val * this.parent.secondsPerTick, 'second')
+            .isValid();
+        },
+      )
+      .test(
         'balanceCheck',
         'Balance cannot be evenly divided by this number of parts',
         // eslint-disable-next-line func-names
