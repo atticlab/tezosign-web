@@ -9,22 +9,20 @@ const useSortableData = (items, nestedObjectKey) => {
   const sortedItems = useMemo(() => {
     const sortableItems = [...items];
 
-    if (sortConfig.direction !== null) {
-      sortableItems.sort((a, b) => {
-        const x = a[sortConfig.key] || a[nestedObjectKey][sortConfig.key] || 0;
-        const y = b[sortConfig.key] || b[nestedObjectKey][sortConfig.key] || 0;
+    if (sortConfig.direction === null) return sortableItems;
 
-        if (x < y) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (x > y) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
+    return sortableItems.sort((a, b) => {
+      const x = a[sortConfig.key] || a[nestedObjectKey][sortConfig.key] || 0;
+      const y = b[sortConfig.key] || b[nestedObjectKey][sortConfig.key] || 0;
 
-    return sortableItems;
+      if (x < y) {
+        return sortConfig.direction === 'ascending' ? -1 : 1;
+      }
+      if (x > y) {
+        return sortConfig.direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
   }, [items, sortConfig, nestedObjectKey]);
 
   const requestSort = (key) => {

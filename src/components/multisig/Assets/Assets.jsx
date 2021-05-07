@@ -98,7 +98,6 @@ const Assets = () => {
           maxHeight="600px"
           stickyHeader
           isDataLoading={isAssetsLoading}
-          additionalProp="balance"
         />
 
         {isAssetsLoading && (

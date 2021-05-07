@@ -32,7 +32,7 @@ const Vesting = () => {
   }, []);
 
   const cols = [
-    { key: 'name' },
+    { key: 'name', isSortable: true },
     {
       key: 'address',
       process(vesting) {

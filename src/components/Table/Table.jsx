@@ -50,7 +50,7 @@ const Table = ({
                 <FlexCenter>
                   {col.label ? col.label : col.key}
 
-                  {col.key !== 'Actions' && (
+                  {col.isSortable && (
                     <WrapIcons>
                       <FontAwesomeIcon
                         icon="caret-up"

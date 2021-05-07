@@ -137,7 +137,6 @@ const Operations = () => {
     },
     {
       key: 'type',
-      isSortable: true,
       process(operation) {
         const {
           operation_info: { type: opType },
@@ -159,7 +158,6 @@ const Operations = () => {
     },
     {
       key: 'amount',
-      isSortable: true,
       process(operation) {
         const {
           operation_info: operationInfo,
@@ -203,7 +201,6 @@ const Operations = () => {
     {
       key: 'to',
       label: 'Recipient',
-      isSortable: false,
       process(operation) {
         const to =
           operation.operation_info.to ||
@@ -226,7 +223,6 @@ const Operations = () => {
     { key: 'nonce', isSortable: true },
     {
       key: 'status',
-      isSortable: true,
       process(operation) {
         return (
           <Status status={operation[this.key]}>{operation[this.key]}</Status>
