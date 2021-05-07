@@ -62,6 +62,14 @@ const calcMaxAllowedBalance = (balance, tokensPerTick) => {
   return Math.floor(balance / tokensPerTick) * tokensPerTick;
 };
 
+const isOperationMultiTransfer = (operationInfo) => {
+  if (!operationInfo.transfer_list) return false;
+  return (
+    operationInfo.transfer_list.length > 1 ||
+    operationInfo.transfer_list.some((el) => el.txs.length > 1)
+  );
+};
+
 const isHex = (string) => {
   const hexRegExp = /^[A-F0-9]+$/i;
   return hexRegExp.test(string);
@@ -204,4 +212,5 @@ export {
   toHHMMSS,
   getSecondsFromHHMMSS,
   calcMaxAllowedBalance,
+  isOperationMultiTransfer,
 };

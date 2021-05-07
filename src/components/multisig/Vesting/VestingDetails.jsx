@@ -14,26 +14,14 @@ import { dateFormatNoTime } from '../../../utils/constants';
 
 dayjs.extend(utc);
 
-const OperationGeneralInfo = styled.div`
-  display: flex;
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  text-align: left;
   border: ${({ theme }) => theme.border};
   border-radius: 5px;
   padding: 10px;
   font-size: 14px;
-  flex-wrap: wrap;
-`;
-
-OperationGeneralInfo.Item = styled.div`
-  text-align: left;
-  flex: 1 0 50%;
-
-  &:not(:last-child) {
-    padding-right: 30px;
-  }
-
-  @media (${({ theme }) => theme.xlDown}) {
-    flex: 1 0 100%;
-  }
 `;
 
 const VestingDetails = ({ vesting, isRowCollapsed }) => {
@@ -58,15 +46,15 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
       ) : (
         vestingInfo && (
           <>
-            <OperationGeneralInfo>
-              <OperationGeneralInfo.Item>
+            <Grid style={{ flexWrap: 'wrap' }}>
+              <div>
                 <Bold>Balance:</Bold>{' '}
                 {`${convertMutezToXTZ(vestingInfo.balance)} XTZ`}
-              </OperationGeneralInfo.Item>
-              <OperationGeneralInfo.Item>
+              </div>
+              <div>
                 <Bold>Delegate:</Bold> {vestingInfo.delegate}
-              </OperationGeneralInfo.Item>
-              <OperationGeneralInfo.Item>
+              </div>
+              <div>
                 <OverlayTrigger
                   overlay={
                     <Tooltip>
@@ -79,8 +67,8 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                     {`${convertMutezToXTZ(vestingInfo.opened_balance)} XTZ`}
                   </span>
                 </OverlayTrigger>
-              </OperationGeneralInfo.Item>
-              <OperationGeneralInfo.Item>
+              </div>
+              <div>
                 <OverlayTrigger
                   overlay={
                     <Tooltip>
@@ -95,8 +83,8 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                     {vestingInfo.storage.delegate_admin}
                   </span>
                 </OverlayTrigger>
-              </OperationGeneralInfo.Item>
-              <OperationGeneralInfo.Item>
+              </div>
+              <div>
                 <OverlayTrigger
                   overlay={
                     <Tooltip>
@@ -110,15 +98,15 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                     {toHHMMSS(vestingInfo.storage.seconds_per_tick)}
                   </span>
                 </OverlayTrigger>
-              </OperationGeneralInfo.Item>
-              <OperationGeneralInfo.Item>
+              </div>
+              <div>
                 <Bold>Activation date:</Bold>{' '}
                 {dayjs
                   .unix(vestingInfo.storage.timestamp)
                   .utc()
                   .format(dateFormatNoTime)}
-              </OperationGeneralInfo.Item>
-              <OperationGeneralInfo.Item>
+              </div>
+              <div>
                 <OverlayTrigger
                   overlay={
                     <Tooltip>
@@ -134,12 +122,12 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                     )} XTZ`}
                   </span>
                 </OverlayTrigger>
-              </OperationGeneralInfo.Item>
-              <OperationGeneralInfo.Item>
+              </div>
+              <div>
                 <Bold>Vested amount</Bold>{' '}
                 {`${convertMutezToXTZ(vestingInfo.storage.vested_amount)} XTZ`}
-              </OperationGeneralInfo.Item>
-              <OperationGeneralInfo.Item>
+              </div>
+              <div>
                 <OverlayTrigger
                   overlay={
                     <Tooltip>
@@ -153,8 +141,8 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                     {vestingInfo.storage.vesting_address}
                   </span>
                 </OverlayTrigger>
-              </OperationGeneralInfo.Item>
-            </OperationGeneralInfo>
+              </div>
+            </Grid>
 
             <div style={{ marginTop: '20px', textAlign: 'right' }}>
               <VestingActions

@@ -4,33 +4,19 @@ import { Badge, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { Green, Red, Bold } from '../../../styled/Text';
 import { FlexCenter } from '../../../styled/Flex';
+import InfoBox from '../../../styled/InfoBox';
 import Stepper from '../../../Stepper';
 import Address from './Address';
 import ContractChanges from './ContractChanges';
 import BtnCopy from '../../../BtnCopy';
+import OperationTransfersList from './OperationTransfersList';
 import { useContractStateContext } from '../../../../store/contractContext';
 import { requestSignPayload, sendTx } from '../../../../plugins/beacon';
 import useAPI from '../../../../hooks/useApi';
 import { useUserStateContext } from '../../../../store/userContext';
 import { useAssetsStateContext } from '../../../../store/assetsContext';
 import { handleError } from '../../../../utils/errorsHandler';
-import OperationDetailsTx from './OperationDetailsTx';
-
-const OperationGeneralInfo = styled.div`
-  display: flex;
-  border: ${({ theme }) => theme.border};
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 14px;
-`;
-
-OperationGeneralInfo.Item = styled.div`
-  text-align: left;
-
-  &:not(:last-child) {
-    margin-right: 30px;
-  }
-`;
+import { isOperationMultiTransfer } from '../../../../utils/helpers';
 
 const Actions = styled.div`
   display: flex;
@@ -218,16 +204,16 @@ const OperationDetails = ({ operation, resetOperations }) => {
 
   return (
     <div>
-      <OperationGeneralInfo>
-        <OperationGeneralInfo.Item>
+      <InfoBox style={{ marginBottom: '10px' }}>
+        <InfoBox.Item>
           <div>
             <Bold>Total owners:</Bold> {contractInfo.owners.length}
           </div>
           <div>
             <Bold>Approved:</Bold> <Green>{signaturesCount.approved}</Green>
           </div>
-        </OperationGeneralInfo.Item>
-        <OperationGeneralInfo.Item>
+        </InfoBox.Item>
+        <InfoBox.Item>
           <div>
             <Bold>Threshold:</Bold>{' '}
             {`${contractInfo.threshold}/${contractInfo.owners.length}`}
@@ -235,14 +221,14 @@ const OperationDetails = ({ operation, resetOperations }) => {
           <div>
             <Bold>Rejected:</Bold> <Red>{signaturesCount.rejected}</Red>
           </div>
-        </OperationGeneralInfo.Item>
+        </InfoBox.Item>
         {(() => {
           const {
             operation_info: { type, asset_id: assetID },
           } = operation;
 
           return type === 'fa_transfer' || type === 'fa2_transfer' ? (
-            <OperationGeneralInfo.Item>
+            <InfoBox.Item>
               <FlexCenter>
                 <Bold style={{ marginRight: '5px' }}>Asset address:</Bold>
                 {assetID}
@@ -257,24 +243,24 @@ const OperationDetails = ({ operation, resetOperations }) => {
                   {assets.find((asset) => asset.address === assetID)?.name}
                 </div>
               )}
-            </OperationGeneralInfo.Item>
+            </InfoBox.Item>
           ) : (
             ''
           );
         })()}
         {operation.operation_info.type === 'storage_update' ? (
-          <OperationGeneralInfo.Item style={{ flex: '1 0 50%' }}>
+          <InfoBox.Item style={{ flex: '1 0 50%' }}>
             <ContractChanges
               newKeys={operation.operation_info.keys}
               newThreshold={operation.operation_info.threshold}
             />
-          </OperationGeneralInfo.Item>
+          </InfoBox.Item>
         ) : (
           ''
         )}
         {operation.operation_info.type === 'vesting_vest' ||
         operation.operation_info.type === 'vesting_set_delegate' ? (
-          <OperationGeneralInfo.Item>
+          <InfoBox.Item>
             <div>
               <Bold>Vesting contract:</Bold>{' '}
               {operation.operation_info.vesting_id}2
@@ -286,11 +272,18 @@ const OperationDetails = ({ operation, resetOperations }) => {
             ) : (
               ''
             )}
-          </OperationGeneralInfo.Item>
+          </InfoBox.Item>
         ) : (
           ''
         )}
-      </OperationGeneralInfo>
+      </InfoBox>
+
+      {isOperationMultiTransfer(operation.operation_info) ? (
+        <OperationTransfersList operation={operation} />
+      ) : (
+        ''
+      )}
+
       <div>
         {signatures.length ? (
           <Stepper steps={signatures} style={{ marginTop: '30px' }} />
@@ -298,6 +291,7 @@ const OperationDetails = ({ operation, resetOperations }) => {
           ''
         )}
       </div>
+
       {operation.status === 'pending' && isUserOwner && (
         <Actions>
           <div>
@@ -382,12 +376,6 @@ const OperationDetails = ({ operation, resetOperations }) => {
             </div>
           )}
         </Actions>
-      )}
-
-      {operation.operation_info.transfer_list ? (
-        <OperationDetailsTx operation={operation} />
-      ) : (
-        ''
       )}
     </div>
   );

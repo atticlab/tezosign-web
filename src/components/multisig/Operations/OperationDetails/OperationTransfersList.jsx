@@ -1,21 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Tbl } from '../../styled/Tbl';
-import { useAssetsStateContext } from '../../../store/assetsContext';
-import { Ellipsis } from '../../styled/Text';
-import BtnCopy from '../../BtnCopy';
-import IndentIcon from '../../IdentIcon';
-import { FlexAlignItemsCenter } from '../../styled/Flex';
-
-const OperationGeneralInfo = styled.div`
-  display: flex;
-  border: ${({ theme }) => theme.border};
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 14px;
-  margin-top: 10px;
-`;
+import { Tbl } from '../../../styled/Tbl';
+import { FlexAlignItemsCenter } from '../../../styled/Flex';
+import InfoBox from '../../../styled/InfoBox';
+import BtnCopy from '../../../BtnCopy';
+import IndentIcon from '../../../IdentIcon';
+import { useAssetsStateContext } from '../../../../store/assetsContext';
+import {
+  convertAssetSubunitToAssetAmount,
+  ellipsis,
+} from '../../../../utils/helpers';
 
 const Th = styled.th`
   border: none !important;
@@ -38,36 +33,19 @@ const IconWrapper = styled.div`
   margin-right: 5px;
 `;
 
-// const transferList = [
-//   {
-//     from: 'tz1TamtKM6SwTqdP1wPCGCqndnCiKcSxaQBg',
-//     txs: [
-//       { to: 'KT1Xa7F5FY5eSiBAYgvgW9S1tu7kMnACAg6W', amount: 500 },
-//       { to: 'KT1Xa7F5FY5eSiBAYgvgW9S1tu7kMnACAg6eR', amount: 300 },
-//     ],
-//   },
-//   {
-//     from: 'tz1TamtKM6SwTqdP1wPCGCqndnCiKcSxaEwq',
-//     txs: [
-//       { to: 'KT1Xa7F5FY5eSiBAYgvgW9S1tu7kMnACAgEr', amount: 30 },
-//       { to: 'KT1Xa7F5FY5eSiBAYgvgW9S1tu7kMnACAgOh', amount: 50 },
-//     ],
-//   },
-// ];
-
-const OperationDetailsTx = ({ operation }) => {
+const OperationTransfersList = ({ operation }) => {
   const { assets } = useAssetsStateContext();
 
   const transferList = operation.operation_info.transfer_list.reduce(
-    (list, transferItem) => {
+    (agg, transferItem) => {
       const txs = transferItem.txs.map((txsItem) => ({
         from: transferItem.from,
         to: txsItem.to,
         amount: txsItem.amount,
       }));
 
-      list.push(...txs);
-      return list;
+      agg.push(...txs);
+      return agg;
     },
     [],
   );
@@ -86,7 +64,7 @@ const OperationDetailsTx = ({ operation }) => {
             <IconWrapper>
               <IndentIcon address={from} scale={3} />
             </IconWrapper>
-            <Ellipsis>{from}</Ellipsis>
+            <span>{ellipsis(from)}</span>
             <BtnCopy
               textToCopy={from}
               style={{ paddingTop: 0, paddingBottom: 0 }}
@@ -106,7 +84,7 @@ const OperationDetailsTx = ({ operation }) => {
             <IconWrapper>
               <IndentIcon address={to} scale={3} />
             </IconWrapper>
-            <Ellipsis>{to}</Ellipsis>
+            <span>{ellipsis(to)}</span>
             <BtnCopy
               textToCopy={to}
               style={{ paddingTop: 0, paddingBottom: 0 }}
@@ -128,14 +106,16 @@ const OperationDetailsTx = ({ operation }) => {
         });
 
         return `${
-          currAsset?.scale ? amount / (10 ** currAsset?.scale || 1) : amount
+          currAsset?.scale
+            ? convertAssetSubunitToAssetAmount(amount, currAsset.scale)
+            : amount
         } ${currAsset?.ticker || '???'}`;
       },
     },
   ];
 
   return (
-    <OperationGeneralInfo>
+    <InfoBox style={{ padding: 0 }}>
       <Tbl style={{ textAlign: 'left' }} responsive>
         <thead>
           <tr>
@@ -145,8 +125,9 @@ const OperationDetailsTx = ({ operation }) => {
           </tr>
         </thead>
         <tbody>
-          {transferList.map((txs) => (
-            <tr key={txs.to}>
+          {transferList.map((txs, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <tr key={index}>
               {cols.map((col) => (
                 <Td key={col.key}>
                   {col.process ? col.process(txs, operation) : txs[col.key]}
@@ -156,12 +137,12 @@ const OperationDetailsTx = ({ operation }) => {
           ))}
         </tbody>
       </Tbl>
-    </OperationGeneralInfo>
+    </InfoBox>
   );
 };
 
-OperationDetailsTx.propTypes = {
+OperationTransfersList.propTypes = {
   operation: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default OperationDetailsTx;
+export default OperationTransfersList;
