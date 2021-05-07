@@ -120,6 +120,7 @@ const Operations = () => {
     {
       key: 'operation_id',
       label: 'ID',
+      isSortable: true,
       process(operation) {
         const id = operation[this.key];
 
@@ -149,6 +150,7 @@ const Operations = () => {
     {
       key: 'created_at',
       label: 'Created',
+      isSortable: true,
       process(operation) {
         // eslint-disable-next-line react/no-this-in-sfc
         return dayjs.unix(operation[this.key]).utc().format(dateFormat);
@@ -218,7 +220,7 @@ const Operations = () => {
         );
       },
     },
-    { key: 'nonce' },
+    { key: 'nonce', isSortable: true },
     {
       key: 'status',
       process(operation) {
@@ -314,6 +316,7 @@ const Operations = () => {
           lastItem={lastItem}
           isDataLoading={isOpsLoading}
           isCollapsible
+          nestedObjectKey="operation_info"
           collapseContent={(operation) => {
             return (
               <OperationDetails
