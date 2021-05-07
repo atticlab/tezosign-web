@@ -22,6 +22,8 @@ const operationsTypesMap = {
   fa_transfer: 'FA transfer',
   fa2_transfer: 'FA2 transfer',
   income_fa_transfer: 'Income FA transfer',
+  // Custom type
+  multi_transfer: 'Multi-transfer',
   delegation: 'Delegation',
   storage_update: 'Storage update',
   vesting_vest: 'Vesting withdrawal',

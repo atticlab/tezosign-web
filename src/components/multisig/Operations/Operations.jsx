@@ -26,6 +26,7 @@ import {
   capitalize,
   convertAssetSubunitToAssetAmount,
   ellipsis,
+  isOperationMultiTransfer,
 } from '../../../utils/helpers';
 import { dateFormat, operationsTypesMap } from '../../../utils/constants';
 
@@ -96,13 +97,23 @@ const Operations = () => {
   }, [pageNumber]);
 
   const opsLists = useMemo(() => {
-    if (!ops) return ops;
+    if (!ops) return [];
 
-    return ops.filter(
-      (elem) =>
-        operationType === null ||
-        operationType.value === elem.operation_info.type,
-    );
+    const res = ops.map((el) => {
+      const elLocal = el;
+      if (isOperationMultiTransfer(el.operation_info)) {
+        elLocal.operation_info.type = 'multi_transfer';
+      }
+      return elLocal;
+    });
+
+    if (operationType) {
+      return res.filter(
+        (elem) => operationType.value === elem.operation_info.type,
+      );
+    }
+
+    return res;
   }, [ops, operationType]);
 
   const cols = [
@@ -126,7 +137,9 @@ const Operations = () => {
     {
       key: 'type',
       process(operation) {
-        const opType = operation.operation_info.type;
+        const {
+          operation_info: { type: opType },
+        } = operation;
 
         return (
           operationsTypesMap[opType] || capitalize(opType.split('_').join(' '))
@@ -145,6 +158,7 @@ const Operations = () => {
       key: 'amount',
       process(operation) {
         const {
+          operation_info: operationInfo,
           operation_info: {
             amount,
             asset_id: assetId,
@@ -152,6 +166,10 @@ const Operations = () => {
             type,
           },
         } = operation;
+
+        if (isOperationMultiTransfer(operationInfo)) {
+          return 'Multiple amounts';
+        }
 
         // eslint-disable-next-line no-underscore-dangle
         const _amount =
