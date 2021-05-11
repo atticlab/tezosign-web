@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Badge, Button } from 'react-bootstrap';
 import styled from 'styled-components';
+import { SigningType } from '@airgap/beacon-sdk';
 import { Green, Red, Bold } from '../../../styled/Text';
 import { FlexCenter } from '../../../styled/Flex';
 import InfoBox from '../../../styled/InfoBox';
@@ -102,7 +103,10 @@ const OperationDetails = ({ operation, resetOperations }) => {
       const payload = await getOperationPayload(operationID, {
         type: 'approve',
       });
-      const resSignature = await requestSignPayload(payload.data.payload);
+      const resSignature = await requestSignPayload(
+        payload.data.payload,
+        SigningType.MICHELINE,
+      );
       await sendSignature(operationID, {
         type: 'approve',
         contract_id: contractAddress,
@@ -123,7 +127,10 @@ const OperationDetails = ({ operation, resetOperations }) => {
       const payload = await getOperationPayload(operationID, {
         type: 'reject',
       });
-      const resSignature = await requestSignPayload(payload.data.payload);
+      const resSignature = await requestSignPayload(
+        payload.data.payload,
+        SigningType.MICHELINE,
+      );
       await sendSignature(operationID, {
         type: 'reject',
         contract_id: contractAddress,
