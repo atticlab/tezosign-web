@@ -1,26 +1,25 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
-import ModalPayload from './ModalPayload';
-import useModal from '../../../../hooks/useModal';
-import { handleError } from '../../../../utils/errorsHandler';
-import useAPI from '../../../../hooks/useApi';
+import ModalPayload from '../ModalPayload';
+import useModal from '../../../../../hooks/useModal';
+import { handleError } from '../../../../../utils/errorsHandler';
+import useAPI from '../../../../../hooks/useApi';
 
-const PayloadUpload = ({ style, operationID }) => {
+const PayloadDownload = ({ style, operationID, disabled }) => {
   const { show, handleShow, handleClose } = useModal();
   const { getOperationPayload } = useAPI();
   const [signingPayload, setSigningPayload] = useState({});
   const [isSigningPayloadLoading, setIsSigningPayloadLoading] = useState(false);
 
-  const handleGetOperationPayload = async (opID) => {
+  const handleGetOperationPayload = async (opID, type) => {
     try {
       setIsSigningPayloadLoading(true);
       const payload = await getOperationPayload(opID, {
-        type: 'approve',
+        type,
       });
 
       setSigningPayload(() => payload.data);
-      handleShow();
     } catch (e) {
       handleError(e);
     } finally {
@@ -33,28 +32,36 @@ const PayloadUpload = ({ style, operationID }) => {
       <Button
         size="sm"
         style={style}
-        disabled={isSigningPayloadLoading}
-        onClick={() => handleGetOperationPayload(operationID)}
+        disabled={disabled || isSigningPayloadLoading}
+        onClick={handleShow}
       >
         Upload payload
       </Button>
+
       <ModalPayload
         show={show}
-        handleClose={handleClose}
+        handleClose={() => {
+          handleClose();
+          setSigningPayload(() => ({}));
+        }}
         JSONPayload={signingPayload.payload_json || ''}
         bytesPayload={signingPayload.payload || ''}
+        selectType
+        isTypeLoading={isSigningPayloadLoading}
+        onSelect={(type) => handleGetOperationPayload(operationID, type)}
         textExplain="Upload the payload, so that you can use it for independent verification and offline signing."
       />
     </>
   );
 };
 
-PayloadUpload.propTypes = {
+PayloadDownload.propTypes = {
   style: PropTypes.objectOf(PropTypes.any),
   operationID: PropTypes.string.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
-PayloadUpload.defaultProps = {
+PayloadDownload.defaultProps = {
   style: {},
 };
 
-export default PayloadUpload;
+export default PayloadDownload;

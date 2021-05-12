@@ -8,6 +8,9 @@ import { Button } from 'react-bootstrap';
 import Modal from '../../../styled/Modal';
 import { Bold, Title } from '../../../styled/Text';
 import Card from '../../../styled/Card';
+import { FlexCenter } from '../../../styled/Flex';
+import PayloadType from './PayloadDownload/PayloadType';
+import Spinner from '../../../Spinner';
 
 const PreCode = styled.pre`
   color: #ff338d;
@@ -23,6 +26,9 @@ const ModalPayload = ({
   JSONPayload,
   bytesPayload,
   textExplain,
+  selectType,
+  isTypeLoading,
+  onSelect,
 }) => {
   const JSONPayloadFormatted = useMemo(() => {
     if (!JSONPayload) return '';
@@ -51,27 +57,40 @@ const ModalPayload = ({
 
       <Modal.Body style={{ padding: '15px 30px' }}>
         <p>{textExplain}</p>
-        <div style={{ marginBottom: '20px' }}>
-          <div>
-            <Bold>JSON payload:</Bold>
-          </div>
-          <Card>
-            <Card.Body style={{ padding: '2px 5px', overflow: 'auto' }}>
-              <PreCode>{JSONPayloadFormatted}</PreCode>
-            </Card.Body>
-          </Card>
-        </div>
 
-        <CopyToClipboard text={bytesPayload}>
-          <Button style={{ marginRight: '10px' }} onClick={() => copy()}>
-            Copy bytes payload
-          </Button>
-        </CopyToClipboard>
-        <CopyToClipboard text={JSONPayload}>
-          <Button varinat="info" onClick={() => copy()}>
-            Copy JSON payload
-          </Button>
-        </CopyToClipboard>
+        {selectType && <PayloadType onSelect={onSelect} />}
+
+        {isTypeLoading ? (
+          <FlexCenter style={{ height: '400px' }}>
+            <Spinner />
+          </FlexCenter>
+        ) : (
+          JSONPayloadFormatted && (
+            <div>
+              <div style={{ marginBottom: '20px' }}>
+                <div>
+                  <Bold>JSON payload:</Bold>
+                </div>
+                <Card>
+                  <Card.Body style={{ padding: '2px 5px', overflow: 'auto' }}>
+                    <PreCode>{JSONPayloadFormatted}</PreCode>
+                  </Card.Body>
+                </Card>
+              </div>
+
+              <CopyToClipboard text={bytesPayload}>
+                <Button style={{ marginRight: '10px' }} onClick={() => copy()}>
+                  Copy bytes payload
+                </Button>
+              </CopyToClipboard>
+              <CopyToClipboard text={JSONPayload}>
+                <Button varinat="info" onClick={() => copy()}>
+                  Copy JSON payload
+                </Button>
+              </CopyToClipboard>
+            </div>
+          )
+        )}
       </Modal.Body>
     </Modal>
   );
@@ -83,11 +102,17 @@ ModalPayload.propTypes = {
   JSONPayload: PropTypes.string.isRequired,
   bytesPayload: PropTypes.string.isRequired,
   textExplain: PropTypes.string,
+  selectType: PropTypes.bool,
+  isTypeLoading: PropTypes.bool,
+  onSelect: PropTypes.func,
 };
 
 ModalPayload.defaultProps = {
   textExplain:
     'You are going to sign a payload. Now you probably can see a string payload in the wallet of your choice. It is necessary to sign the payload in order to proceed.',
+  selectType: false,
+  isTypeLoading: false,
+  onSelect: () => null,
 };
 
 export default ModalPayload;

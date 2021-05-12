@@ -12,7 +12,7 @@ import ContractChanges from './ContractChanges';
 import BtnCopy from '../../../BtnCopy';
 import OperationTransfersList from './OperationTransfersList';
 import ModalPayload from './ModalPayload';
-import PayloadUpload from './PayloadUpload';
+import PayloadDownload from './PayloadDownload';
 import { useContractStateContext } from '../../../../store/contractContext';
 import { requestSignPayload, sendTx } from '../../../../plugins/beacon';
 import useAPI from '../../../../hooks/useApi';
@@ -111,7 +111,7 @@ const OperationDetails = ({ operation, resetOperations }) => {
 
       setSigningPayload(() => payload.data);
       handleShow();
-      
+
       const resSignature = await requestSignPayload(
         payload.data.payload,
         SigningType.MICHELINE,
@@ -139,7 +139,7 @@ const OperationDetails = ({ operation, resetOperations }) => {
 
       setSigningPayload(() => payload.data);
       handleShow();
-      
+
       const resSignature = await requestSignPayload(
         payload.data.payload,
         SigningType.MICHELINE,
@@ -351,7 +351,11 @@ const OperationDetails = ({ operation, resetOperations }) => {
               >
                 Reject
               </Button>
-              <PayloadUpload operationID={operation.operation_id} />
+
+              <PayloadDownload
+                operationID={operation.operation_id}
+                disabled={isActionLoading}
+              />
             </div>
 
             {operation.nonce === contractInfo.counter && (
