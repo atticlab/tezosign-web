@@ -35,9 +35,9 @@ const ModalAuth = ({ show, handleClose }) => {
 
       <Modal.Body style={{ padding: '15px 30px' }}>
         <p>
-          You are going to login to the application. Now you probably can see a
-          string payload in the wallet of your choice. It is necessary to sign
-          the payload in order to proceed.
+          In order to log in to the application please sign the payload string
+          in the wallet you connected. Click ‘Reject’ if you would like to
+          cancel the log in request.
         </p>
         <div>
           <div>

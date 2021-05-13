@@ -35,7 +35,7 @@ const PayloadDownload = ({ style, operationID, disabled }) => {
         disabled={disabled || isSigningPayloadLoading}
         onClick={handleShow}
       >
-        Upload payload
+        Download payload
       </Button>
 
       <ModalPayload
@@ -46,10 +46,8 @@ const PayloadDownload = ({ style, operationID, disabled }) => {
         }}
         JSONPayload={signingPayload.payload_json || ''}
         bytesPayload={signingPayload.payload || ''}
-        selectType
         isTypeLoading={isSigningPayloadLoading}
         onSelect={(type) => handleGetOperationPayload(operationID, type)}
-        textExplain="Upload the payload, so that you can use it for independent verification and offline signing."
       />
     </>
   );

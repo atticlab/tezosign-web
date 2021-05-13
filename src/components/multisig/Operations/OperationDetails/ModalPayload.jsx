@@ -25,8 +25,6 @@ const ModalPayload = ({
   handleClose,
   JSONPayload,
   bytesPayload,
-  textExplain,
-  selectType,
   isTypeLoading,
   onSelect,
 }) => {
@@ -50,15 +48,18 @@ const ModalPayload = ({
           </Modal.Close>
 
           <Title as="h3" style={{ marginBottom: 0 }}>
-            Payload
+            Download payload
           </Title>
         </div>
       </Modal.Header>
 
       <Modal.Body style={{ padding: '15px 30px' }}>
-        <p>{textExplain}</p>
+        <p>
+          To download the payload and sign it offline, please click the
+          ‘Download’ button.
+        </p>
 
-        {selectType && <PayloadType onSelect={onSelect} />}
+        <PayloadType onSelect={onSelect} />
 
         {isTypeLoading ? (
           <FlexCenter style={{ height: '400px' }}>
@@ -101,16 +102,11 @@ ModalPayload.propTypes = {
   handleClose: PropTypes.func.isRequired,
   JSONPayload: PropTypes.string.isRequired,
   bytesPayload: PropTypes.string.isRequired,
-  textExplain: PropTypes.string,
-  selectType: PropTypes.bool,
   isTypeLoading: PropTypes.bool,
   onSelect: PropTypes.func,
 };
 
 ModalPayload.defaultProps = {
-  textExplain:
-    'You are going to sign a payload. Now you probably can see a string payload in the wallet of your choice. It is necessary to sign the payload in order to proceed.',
-  selectType: false,
   isTypeLoading: false,
   onSelect: () => null,
 };
