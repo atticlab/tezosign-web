@@ -6,25 +6,29 @@ import { Button, Form as BForm } from 'react-bootstrap';
 import { FormLabel, FormSubmit } from '../../../../styled/Forms';
 import useAPI from '../../../../../hooks/useApi';
 import { handleError } from '../../../../../utils/errorsHandler';
-import { isHex } from '../../../../../utils/helpers';
+import { isHex, bs58Validation } from '../../../../../utils/helpers';
 import { useContractStateContext } from '../../../../../store/contractContext';
 
 const schema = Yup.object({
   payload: Yup.string()
     .required('Required')
-    .test('isHex', 'Payload must be in hex format', (val) => isHex(val)),
-  pubKey: Yup.string().required('Required'),
+    .test('isHex', 'Payload must be in hex format', (val) => {
+      return isHex(val);
+    }),
+  pubKey: Yup.string()
+    .required('Required')
+    .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
 });
 
 const PayloadUploadForm = ({ operationID, onUpload, onCancel }) => {
   const { contractAddress } = useContractStateContext();
   const { sendSignature } = useAPI();
 
-  const onSubmit = async ({ payload, pubKey }, setSubmitting) => {
+  const onSubmit = async ({ type, payload, pubKey }, setSubmitting) => {
     try {
       setSubmitting(true);
       await sendSignature(operationID, {
-        type: 'reject',
+        type,
         contract_id: contractAddress,
         pub_key: payload,
         signature: pubKey,
@@ -40,6 +44,7 @@ const PayloadUploadForm = ({ operationID, onUpload, onCancel }) => {
   return (
     <Formik
       initialValues={{
+        type: '',
         payload: '',
         pubKey: '',
       }}
