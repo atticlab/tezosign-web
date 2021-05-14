@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from './styled/Modal';
@@ -9,9 +9,6 @@ import { useUserStateContext } from '../store/userContext';
 
 const ModalAuth = ({ show, handleClose }) => {
   const { authRequestToken } = useUserStateContext();
-  useEffect(() => {
-    return () => null;
-  }, []);
 
   return (
     <Modal
@@ -36,8 +33,9 @@ const ModalAuth = ({ show, handleClose }) => {
       <Modal.Body style={{ padding: '15px 30px' }}>
         <p>
           In order to log in to the application please sign the payload string
-          in the wallet you connected. Click ‘Reject’ if you would like to
-          cancel the log in request.
+          in the wallet you connected. Click
+          &quot;Reject&quot;/&quot;Cancel&quot; if you would like to cancel the
+          log in request.
         </p>
         <div>
           <div>

@@ -55,8 +55,9 @@ const ModalPayload = ({
 
       <Modal.Body style={{ padding: '15px 30px' }}>
         <p>
-          To download the payload and sign it offline, please click the
-          ‘Download’ button.
+          To copy the payload of the operation and sign it offline, please first
+          select the &quot;Approve&quot; or &quot;Reject&quot; option and then
+          pick the format.
         </p>
 
         <PayloadType onSelect={onSelect} />
