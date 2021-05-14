@@ -83,6 +83,7 @@ const UserProvider = ({ children }) => {
   const [tokens, setTokens] = useState(null);
   const [balance, setBalance] = useState(null);
   const [isBalanceLoading, setIsBalanceLoading] = useState(false);
+  const [authRequestToken, setAuthRequestToken] = useState('');
   const {
     loginRequest,
     login,
@@ -139,32 +140,37 @@ const UserProvider = ({ children }) => {
         await disconnect();
       }
     } catch (e) {
-      handleError(e);
+      // eslint-disable-next-line no-console
+      console.error(e);
       await disconnect();
     } finally {
       setIsRestoreLoading(false);
     }
   };
 
-  const connect = async () => {
+  const connect = async (onAuthRequest, onSuccess) => {
     try {
       // setIsPermissionsLoading(true);
       const perms = await requestPermissions();
       setPermissions(perms);
 
       const payload = await loginRequest({ pub_key: perms.publicKey });
+      const { token } = payload.data;
+      setAuthRequestToken(token);
+      onAuthRequest();
 
-      const signature = await requestSignPayload(payload.data.token);
+      const signature = await requestSignPayload(token);
 
       const { publicKey } = perms;
       const resTokens = await login({
-        payload: payload.data.token,
+        payload: token,
         pub_key: isHex(publicKey)
           ? convertHexToPrefixedBase58(publicKey)
           : publicKey,
         signature: signature.signature,
       });
       setTokens(() => resTokens.data);
+      onSuccess();
 
       setRedirectToReferrer(true);
     } catch (e) {
@@ -229,6 +235,7 @@ const UserProvider = ({ children }) => {
       tokens,
       balance,
       isBalanceLoading,
+      authRequestToken,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -239,6 +246,7 @@ const UserProvider = ({ children }) => {
     tokens,
     balance,
     isBalanceLoading,
+    authRequestToken,
   ]);
 
   const dispatchValue = useMemo(

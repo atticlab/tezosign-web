@@ -68,10 +68,13 @@ const Multisig = () => {
 
   useEffect(() => {
     if (contractError) {
-      const { error, value } = contractError.response.data;
+      const { error, value, description } = contractError.response.data;
 
-      if (`${error}:${value}` === 'ERR_NOT_FOUND:contract') {
-        history.push('/not-found');
+      if (
+        `${error}:${value}` === 'ERR_NOT_FOUND:contract' ||
+        `${error}:${description}` === 'ERR_BAD_PARAM:wrong contract type'
+      ) {
+        history.replace('/not-found');
       }
     }
   }, [contractError, history]);

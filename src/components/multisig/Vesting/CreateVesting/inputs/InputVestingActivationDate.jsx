@@ -12,7 +12,13 @@ const handleDateChangeRaw = (e) => {
 const today = dayjs().startOf('day').toDate();
 
 const VestingActivationDate = () => {
-  const { values, errors, touched, setFieldValue } = useFormikContext();
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue,
+    setFieldTouched,
+  } = useFormikContext();
 
   return (
     <BForm.Group>
@@ -41,7 +47,10 @@ const VestingActivationDate = () => {
               isValid={!errors.startDate && touched.startDate}
             />
           }
-          onChange={(date) => setFieldValue('startDate', date)}
+          onChange={(date) => {
+            setFieldTouched('startDate', true);
+            setFieldValue('startDate', date);
+          }}
         />
 
         <ErrorMessage

@@ -95,6 +95,10 @@ const Assets = () => {
           cols={cols}
           rows={assets || []}
           rowKey="address"
+          customRowKey={(row) => {
+            if (typeof row.token_id !== 'number') return row.address;
+            return `${row.address}${row.token_id}`;
+          }}
           maxHeight="600px"
           stickyHeader
           isDataLoading={isAssetsLoading}

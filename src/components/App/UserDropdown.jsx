@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Dropdown, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import beaconLogo from '../../assets/img/beacon-logo.svg';
 import IdentIcon from '../IdentIcon';
 import { useUserDispatchContext } from '../../store/userContext';
 import { ellipsis } from '../../utils/helpers';
 import { Bold } from '../styled/Text';
+// TODO: Find graceful way to eliminate delay of image displaying
+import { ReactComponent as BeaconLogo } from '../../assets/img/beacon-logo.svg';
 
 const DDwnToggle = styled(Dropdown.Toggle)`
   color: ${({ theme }) => theme.black};
@@ -62,7 +63,7 @@ const UserDropdown = ({ address }) => {
 
       <DDwnMenu align="right">
         <div style={{ marginBottom: '20px' }}>
-          <img src={beaconLogo} alt="Beacon" width="123px" />
+          <BeaconLogo alt="Beacon" width="123px" />
         </div>
         <Button
           variant="danger"

@@ -22,7 +22,13 @@ const handleDateRange = (start, end) => {
 };
 
 const InputDateRange = () => {
-  const { values, errors, touched, setFieldValue } = useFormikContext();
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue,
+    setFieldTouched,
+  } = useFormikContext();
   const isInvalid = useMemo(() => {
     return (!!errors.startDate || !!errors.endDate) && touched.startDate;
   }, [errors.startDate, touched.startDate, errors.endDate]);
@@ -57,6 +63,8 @@ const InputDateRange = () => {
           }
           onChange={(dates) => {
             const [start, end] = dates;
+            setFieldTouched('startDate', true);
+            setFieldTouched('endDate', true);
             setFieldValue('startDate', start ?? '');
             setFieldValue('endDate', end ?? '');
           }}
