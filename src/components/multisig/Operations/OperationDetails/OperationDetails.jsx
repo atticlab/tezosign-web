@@ -10,6 +10,7 @@ import Stepper from '../../../Stepper';
 import Address from './Address';
 import ContractChanges from './ContractChanges';
 import BtnCopy from '../../../BtnCopy';
+import PayloadUpload from './PayloadUpload';
 import OperationTransfersList from './OperationTransfersList';
 import PayloadDownload from './PayloadDownload';
 import { useContractStateContext } from '../../../../store/contractContext';
@@ -343,8 +344,26 @@ const OperationDetails = ({ operation, resetOperations }) => {
               </Button>
 
               <PayloadDownload
+                style={{ marginRight: '10px' }}
                 operationID={operation.operation_id}
                 disabled={isActionLoading}
+              />
+
+              <PayloadUpload
+                operationID={operation.operation_id}
+                approveDisabled={checkOwnersIndices(
+                  address,
+                  operation.signatures,
+                  contractInfo.owners,
+                  'approve',
+                )}
+                rejectDisabled={checkOwnersIndices(
+                  address,
+                  operation.signatures,
+                  contractInfo.owners,
+                  'reject',
+                )}
+                onUpload={resetOperations}
               />
             </div>
 
