@@ -7,12 +7,21 @@ import { Title } from '../../../../styled/Text';
 import PayloadUploadForm from './PayloadUploadForm';
 import useModal from '../../../../../hooks/useModal';
 
-const PayloadUpload = ({ operationID, onUpload }) => {
+const PayloadUpload = ({
+  operationID,
+  approveDisabled,
+  rejectDisabled,
+  onUpload,
+}) => {
   const { show, handleShow, handleClose } = useModal();
 
   return (
     <>
-      <Button size="sm" onClick={handleShow}>
+      <Button
+        size="sm"
+        disabled={approveDisabled && rejectDisabled}
+        onClick={handleShow}
+      >
         Upload signature
       </Button>
 
@@ -36,6 +45,8 @@ const PayloadUpload = ({ operationID, onUpload }) => {
         <Modal.Body style={{ padding: '15px 30px' }}>
           <PayloadUploadForm
             operationID={operationID}
+            approveDisabled={approveDisabled}
+            rejectDisabled={rejectDisabled}
             onUpload={onUpload}
             onCancel={handleClose}
           />
@@ -47,6 +58,8 @@ const PayloadUpload = ({ operationID, onUpload }) => {
 
 PayloadUpload.propTypes = {
   operationID: PropTypes.string.isRequired,
+  approveDisabled: PropTypes.bool.isRequired,
+  rejectDisabled: PropTypes.bool.isRequired,
   onUpload: PropTypes.func.isRequired,
 };
 

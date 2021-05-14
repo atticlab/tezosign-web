@@ -21,7 +21,13 @@ const schema = Yup.object({
     .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
 });
 
-const PayloadUploadForm = ({ operationID, onUpload, onCancel }) => {
+const PayloadUploadForm = ({
+  operationID,
+  approveDisabled,
+  rejectDisabled,
+  onUpload,
+  onCancel,
+}) => {
   const { contractAddress } = useContractStateContext();
   const { sendSignature } = useAPI();
 
@@ -59,7 +65,10 @@ const PayloadUploadForm = ({ operationID, onUpload, onCancel }) => {
     >
       {({ touched, errors, isSubmitting, handleBlur, handleChange }) => (
         <Form>
-          <PayloadType />
+          <PayloadType
+            approveDisabled={approveDisabled}
+            rejectDisabled={rejectDisabled}
+          />
 
           <BForm.Group>
             <FormLabel>Signature</FormLabel>
@@ -119,6 +128,8 @@ const PayloadUploadForm = ({ operationID, onUpload, onCancel }) => {
 
 PayloadUploadForm.propTypes = {
   operationID: PropTypes.string.isRequired,
+  approveDisabled: PropTypes.bool.isRequired,
+  rejectDisabled: PropTypes.bool.isRequired,
   onUpload: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };

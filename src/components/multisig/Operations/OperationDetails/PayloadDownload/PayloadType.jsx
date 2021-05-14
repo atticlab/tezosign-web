@@ -1,22 +1,25 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorMessage, useFormikContext } from 'formik';
 import { Form as BForm } from 'react-bootstrap';
 import { FormLabel } from '../../../../styled/Forms';
 import SelectCustom from '../../../../SelectCustom';
 
-const options = [
-  { value: 'approve', label: 'Approve' },
-  { value: 'reject', label: 'Reject' },
-];
-
-const PayloadType = ({ onSelect }) => {
+const PayloadType = ({ approveDisabled, rejectDisabled, onSelect }) => {
   const {
     errors,
     touched,
     setFieldTouched,
     setFieldValue,
   } = useFormikContext();
+
+  const options = useMemo(
+    () => [
+      { value: 'approve', label: 'Approve', isDisabled: approveDisabled },
+      { value: 'reject', label: 'Reject', isDisabled: rejectDisabled },
+    ],
+    [approveDisabled, rejectDisabled],
+  );
 
   return (
     <BForm.Group>
@@ -51,6 +54,8 @@ const PayloadType = ({ onSelect }) => {
 
 PayloadType.propTypes = {
   onSelect: PropTypes.func,
+  approveDisabled: PropTypes.bool.isRequired,
+  rejectDisabled: PropTypes.bool.isRequired,
 };
 
 PayloadType.defaultProps = {
