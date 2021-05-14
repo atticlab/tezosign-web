@@ -344,10 +344,11 @@ const OperationDetails = ({ operation, resetOperations }) => {
               </Button>
 
               <PayloadDownload
+                style={{ marginRight: '10px' }}
                 operationID={operation.operation_id}
                 disabled={isActionLoading}
               />
-  
+
               <PayloadUpload
                 operationID={operation.operation_id}
                 onUpload={resetOperations}

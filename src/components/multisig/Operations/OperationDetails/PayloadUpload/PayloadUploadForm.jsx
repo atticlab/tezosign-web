@@ -4,17 +4,18 @@ import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Button, Form as BForm } from 'react-bootstrap';
 import { FormLabel, FormSubmit } from '../../../../styled/Forms';
+import PayloadType from '../PayloadDownload/PayloadType';
 import useAPI from '../../../../../hooks/useApi';
-import { handleError } from '../../../../../utils/errorsHandler';
-import { isHex, bs58Validation } from '../../../../../utils/helpers';
 import { useContractStateContext } from '../../../../../store/contractContext';
+import { handleError } from '../../../../../utils/errorsHandler';
+import { bs58Validation } from '../../../../../utils/helpers';
+import payloadTypeSchema from '../../../../../utils/schemas/payloadTypeSchema';
 
 const schema = Yup.object({
-  payload: Yup.string()
+  payloadType: payloadTypeSchema,
+  signature: Yup.string()
     .required('Required')
-    .test('isHex', 'Payload must be in hex format', (val) => {
-      return isHex(val);
-    }),
+    .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
   pubKey: Yup.string()
     .required('Required')
     .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
@@ -24,14 +25,17 @@ const PayloadUploadForm = ({ operationID, onUpload, onCancel }) => {
   const { contractAddress } = useContractStateContext();
   const { sendSignature } = useAPI();
 
-  const onSubmit = async ({ type, payload, pubKey }, setSubmitting) => {
+  const onSubmit = async (
+    { payloadType, signature, pubKey },
+    setSubmitting,
+  ) => {
     try {
       setSubmitting(true);
       await sendSignature(operationID, {
-        type,
+        type: payloadType,
         contract_id: contractAddress,
-        pub_key: payload,
-        signature: pubKey,
+        pub_key: pubKey,
+        signature,
       });
       onUpload();
     } catch (e) {
@@ -44,8 +48,8 @@ const PayloadUploadForm = ({ operationID, onUpload, onCancel }) => {
   return (
     <Formik
       initialValues={{
-        type: '',
-        payload: '',
+        payloadType: '',
+        signature: '',
         pubKey: '',
       }}
       validationSchema={schema}
@@ -55,22 +59,24 @@ const PayloadUploadForm = ({ operationID, onUpload, onCancel }) => {
     >
       {({ touched, errors, isSubmitting, handleBlur, handleChange }) => (
         <Form>
+          <PayloadType />
+
           <BForm.Group>
-            <FormLabel>Payload</FormLabel>
+            <FormLabel>Signature</FormLabel>
             <BForm.Control
               as="textarea"
               rows={3}
-              name="payload"
-              aria-label="payload"
+              name="signature"
+              aria-label="signature"
               autoComplete="off"
-              isInvalid={!!errors.payload && touched.payload}
-              isValid={!errors.payload && touched.payload}
+              isInvalid={!!errors.signature && touched.signature}
+              isValid={!errors.signature && touched.signature}
               onBlur={handleBlur}
               onChange={handleChange}
             />
             <ErrorMessage
               component={BForm.Control.Feedback}
-              name="payload"
+              name="signature"
               type="invalid"
             />
           </BForm.Group>

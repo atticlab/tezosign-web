@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
+import * as Yup from 'yup';
+import { Form, Formik } from 'formik';
 import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
@@ -11,12 +13,17 @@ import Card from '../../../styled/Card';
 import { FlexCenter } from '../../../styled/Flex';
 import PayloadType from './PayloadDownload/PayloadType';
 import Spinner from '../../../Spinner';
+import payloadTypeSchema from '../../../../utils/schemas/payloadTypeSchema';
 
 const PreCode = styled.pre`
   color: #ff338d;
   max-height: 400px;
   overflow: auto;
 `;
+
+const schema = Yup.object({
+  payloadType: payloadTypeSchema,
+});
 
 const copy = () => toast.success('Payload copied!');
 
@@ -60,7 +67,17 @@ const ModalPayload = ({
           pick the format.
         </p>
 
-        <PayloadType onSelect={onSelect} />
+        <Formik
+          initialValues={{
+            payloadType: '',
+          }}
+          validationSchema={schema}
+          onSubmit={() => null}
+        >
+          <Form>
+            <PayloadType onSelect={onSelect} />
+          </Form>
+        </Formik>
 
         {isTypeLoading ? (
           <FlexCenter style={{ height: '400px' }}>

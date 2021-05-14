@@ -1,24 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
 import Modal from '../../../../styled/Modal';
 import { Title } from '../../../../styled/Text';
 import PayloadUploadForm from './PayloadUploadForm';
+import useModal from '../../../../../hooks/useModal';
 
 const PayloadUpload = ({ operationID, onUpload }) => {
-  const [show, setShow] = useState(false);
-  const handleClose = () => {
-    setShow(false);
-  };
-  const handleShow = () => {
-    setShow(true);
-  };
+  const { show, handleShow, handleClose } = useModal();
 
   return (
     <>
       <Button size="sm" onClick={handleShow}>
-        Upload payload
+        Upload signature
       </Button>
 
       <Modal
@@ -34,7 +29,7 @@ const PayloadUpload = ({ operationID, onUpload }) => {
               <FontAwesomeIcon icon="times" />
             </Modal.Close>
 
-            <Title as="h3">Upload payload</Title>
+            <Title as="h3">Upload signature</Title>
           </div>
         </Modal.Header>
 
