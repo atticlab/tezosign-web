@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useLocation, useHistory, Link } from 'react-router-dom';
 import { Text } from '../components/styled/Text';
 import Card from '../components/styled/Card';
 import Spinner from '../components/Spinner';
 import BtnBack from '../components/BtnBack';
 import useAPI from '../hooks/useApi';
+
+const explorerNetworks = {
+  florence: 'florencenet',
+};
 
 const Deployed = () => {
   const location = useLocation();
@@ -41,6 +45,12 @@ const Deployed = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactionHash]);
 
+  const explorerOperationLink = useMemo(() => {
+    return `https://${
+      explorerNetworks[process.env.REACT_APP_TEZOS_NETWORK]
+    }.tzkt.io/${transactionHash}`;
+  }, [transactionHash]);
+
   return (
     <>
       <BtnBack pageName="Create a New Multisig" />
@@ -67,11 +77,7 @@ const Deployed = () => {
           </div>
           <Text style={{ marginBottom: 0 }}>
             Transaction hash:{' '}
-            <a
-              href={`https://edo2net.tzkt.io/${transactionHash}`}
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href={explorerOperationLink} target="_blank" rel="noreferrer">
               {transactionHash}
             </a>
           </Text>
