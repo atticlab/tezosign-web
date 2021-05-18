@@ -153,15 +153,19 @@ const UserProvider = ({ children }) => {
       // setIsPermissionsLoading(true);
       const perms = await requestPermissions();
       setPermissions(perms);
+      const { publicKey } = perms;
 
-      const payload = await loginRequest({ pub_key: perms.publicKey });
+      const payload = await loginRequest({
+        pub_key: isHex(publicKey)
+          ? convertHexToPrefixedBase58(publicKey)
+          : publicKey,
+      });
       const { token } = payload.data;
       setAuthRequestToken(token);
       onAuthRequest();
 
       const signature = await requestSignPayload(token);
 
-      const { publicKey } = perms;
       const resTokens = await login({
         payload: token,
         pub_key: isHex(publicKey)
