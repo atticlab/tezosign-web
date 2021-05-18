@@ -88,7 +88,6 @@ const ContractEditor = ({ onCreate, onCancel }) => {
         isSubmitting,
         setFieldValue,
         setFieldTouched,
-        validateForm,
       }) => (
         <Form>
           <div>
@@ -98,13 +97,7 @@ const ContractEditor = ({ onCreate, onCancel }) => {
               their addresses
             </Text>
 
-            <OwnersFields
-              values={values}
-              touched={touched}
-              errors={errors}
-              setFieldValue={setFieldValue}
-              validateForm={validateForm}
-            />
+            <OwnersFields />
           </div>
 
           <div>

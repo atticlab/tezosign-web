@@ -36,43 +36,76 @@ const cacheTest = (asyncValidate) => {
   };
 };
 
-const ownersSchema = (testAddress) =>
-  Yup.array()
-    .of(
-      Yup.object().shape({
-        id: Yup.number(),
-        value: Yup.string().when('isPubKey', {
-          is: false,
-          then: Yup.string()
-            .required('Required')
-            .matches(
-              'tz1|tz2|tz3',
-              'Tezos address must start with tz1, tz2 or tz3',
-            )
-            .matches(/^\S+$/, 'No spaces are allowed')
-            .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
-            .length(36, 'Tezos address must be 36 characters long')
-            .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val))
-            .test(
-              'isAddressRevealed',
-              'Address is unrevealed',
-              testAddress.current,
-            ),
-          otherwise: Yup.string()
-            .required('Required')
-            .matches(/^\S+$/, 'No spaces are allowed')
-            .specificLength(
-              'The string must be either 54-55 (base58) or 64(hex) characters long',
-            )
-            .bs58OrHexCheck('The string must be base58 or hex format'),
-        }),
-        isPubKey: Yup.boolean(),
+// const ownersSchema = (testAddress) =>
+//   Yup.array()
+//     .of(
+//       Yup.object().shape({
+//         id: Yup.number(),
+//         value: Yup.string().when('isPubKey', {
+//           is: false,
+//           then: Yup.string()
+//             .required('Required')
+//             .matches(
+//               'tz1|tz2|tz3',
+//               'Tezos address must start with tz1, tz2 or tz3',
+//             )
+//             .matches(/^\S+$/, 'No spaces are allowed')
+//             .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
+//             .length(36, 'Tezos address must be 36 characters long')
+//             .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val))
+//             .test(
+//               'isAddressRevealed',
+//               'Address is unrevealed',
+//               testAddress.current,
+//             ),
+//           otherwise: Yup.string()
+//             .required('Required')
+//             .matches(/^\S+$/, 'No spaces are allowed')
+//             .specificLength(
+//               'The string must be either 54-55 (base58) or 64(hex) characters long',
+//             )
+//             .bs58OrHexCheck('The string must be base58 or hex format'),
+//         }),
+//         isPubKey: Yup.boolean(),
+//       }),
+//     )
+//     .ensure()
+//     .required('Must have addresses')
+//     .min(1, 'Minimum of 1 addresses')
+//     .max(20, 'Maximum of 20 addresses')
+//     .unique('Addresses must be unique', (entity) => entity.value);
+
+const ownersSchema = Yup.array()
+  .of(
+    Yup.object().shape({
+      id: Yup.number(),
+      value: Yup.string().when('isPubKey', {
+        is: false,
+        then: Yup.string()
+          .required('Required')
+          .matches(
+            'tz1|tz2|tz3',
+            'Tezos address must start with tz1, tz2 or tz3',
+          )
+          .matches(/^\S+$/, 'No spaces are allowed')
+          .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
+          .length(36, 'Tezos address must be 36 characters long')
+          .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
+        otherwise: Yup.string()
+          .required('Required')
+          .matches(/^\S+$/, 'No spaces are allowed')
+          .specificLength(
+            'The string must be either 54-55 (base58) or 64(hex) characters long',
+          )
+          .bs58OrHexCheck('The string must be base58 or hex format'),
       }),
-    )
-    .ensure()
-    .required('Must have addresses')
-    .min(1, 'Minimum of 1 addresses')
-    .max(20, 'Maximum of 20 addresses')
-    .unique('Addresses must be unique', (entity) => entity.value);
+      isPubKey: Yup.boolean(),
+    }),
+  )
+  .ensure()
+  .required('Must have addresses')
+  .min(1, 'Minimum of 1 addresses')
+  .max(20, 'Maximum of 20 addresses')
+  .unique('Addresses must be unique', (entity) => entity.value);
 
 export { ownersSchema, cacheTest };

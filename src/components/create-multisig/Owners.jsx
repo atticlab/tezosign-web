@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
@@ -9,11 +10,15 @@ import useAddressRevealCheck from '../../hooks/useAddressRevealCheck';
 import { cacheTest, ownersSchema } from '../../utils/schemas/ownersSchema';
 
 const Owners = ({ onSubmit }) => {
-  const { testIsAddressRevealed } = useAddressRevealCheck();
-  const testAddress = useRef(cacheTest(testIsAddressRevealed));
+  // const { testIsAddressRevealed } = useAddressRevealCheck();
+  // const testAddress = useRef(cacheTest(testIsAddressRevealed));
+
+  // const schema = Yup.object().shape({
+  //   entities: ownersSchema(testAddress),
+  // });
 
   const schema = Yup.object().shape({
-    entities: ownersSchema(testAddress),
+    entities: ownersSchema,
   });
 
   return (
@@ -36,22 +41,9 @@ const Owners = ({ onSubmit }) => {
           setSubmitting(false);
         }}
       >
-        {({
-          values,
-          touched,
-          errors,
-          setFieldValue,
-          isSubmitting,
-          validateForm,
-        }) => (
+        {({ isSubmitting }) => (
           <Form>
-            <OwnersFields
-              values={values}
-              touched={touched}
-              errors={errors}
-              setFieldValue={setFieldValue}
-              validateForm={validateForm}
-            />
+            <OwnersFields />
 
             <div style={{ textAlign: 'right' }}>
               <Button type="submit" disabled={isSubmitting}>
