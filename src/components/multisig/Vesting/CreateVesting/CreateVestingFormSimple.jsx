@@ -16,7 +16,7 @@ import useBalances from './useBalances';
 import useAPI from '../../../../hooks/useApi';
 import { handleError } from '../../../../utils/errorsHandler';
 import { convertXTZToMutez } from '../../../../utils/helpers';
-import tezosAddressSchema from '../../../../utils/schemas/tezosAddressSchema';
+import { tezosAddressSchema } from '../../../../utils/schemas/tezosAddressSchema';
 import balanceSchema from '../../../../utils/schemas/balanceSchema';
 import { secondsPerTickSchema } from './createVestingSchemas';
 import { sendOrigination } from '../../../../plugins/beacon';

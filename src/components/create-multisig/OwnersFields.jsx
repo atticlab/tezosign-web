@@ -9,6 +9,10 @@ import {
 import { ErrorMessage, Field, FieldArray, useFormikContext } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useAddressRevealCheck from '../../hooks/useAddressRevealCheck';
+import { tezosAddressTzSchema } from '../../utils/schemas/tezosAddressSchema';
+import pubKeySchema from '../../utils/schemas/pubKeySchema';
+
+const maxOwners = 20;
 
 const OwnersFields = () => {
   const {
@@ -16,12 +20,28 @@ const OwnersFields = () => {
     touched,
     errors,
     handleBlur,
+    handleChange,
     setFieldValue,
     validateForm,
     validateField,
-    setFieldError,
   } = useFormikContext();
   const { testIsAddressRevealed } = useAddressRevealCheck();
+  const validateSingleField = async (val, entityIndex) => {
+    try {
+      if (!values.entities[entityIndex].isPubKey) {
+        await tezosAddressTzSchema.validate(val);
+
+        const resp = await testIsAddressRevealed(val);
+        if (resp === false) return 'Address is unrevealed';
+      } else {
+        await pubKeySchema.validate(val);
+      }
+    } catch (e) {
+      return e.errors[0];
+    }
+
+    return '';
+  };
 
   return (
     <>
@@ -50,12 +70,13 @@ const OwnersFields = () => {
                     size="sm"
                     autoComplete="off"
                     isInvalid={
-                      errors.entities &&
-                      touched.entities &&
-                      errors.entities[index] &&
-                      touched.entities[index] &&
-                      !!errors.entities[index].value &&
-                      touched.entities[index].value
+                      (errors.entities &&
+                        touched.entities &&
+                        errors.entities[index] &&
+                        touched.entities[index] &&
+                        !!errors.entities[index].value &&
+                        touched.entities[index].value) ||
+                      typeof errors.entities === 'string'
                     }
                     isValid={
                       errors.entities &&
@@ -66,17 +87,15 @@ const OwnersFields = () => {
                       touched.entities[index].value
                     }
                     style={{ maxWidth: '500px' }}
-                    onBlur={async (e) => {
-                      handleBlur(e);
-                      const res = await testIsAddressRevealed(e.target.value);
-                      if (res === false) {
-                        await setFieldError(
-                          `entities[${index}].value`,
-                          'Address is unrevealed',
-                        );
-                        validateField(`entities[${index}].value`);
-                      }
+                    onChange={async (e) => {
+                      await handleChange(e);
+                      await validateField(`entities[${index}].value`);
                     }}
+                    onBlur={async (e) => {
+                      await handleBlur(e);
+                      await validateField(`entities[${index}].value`);
+                    }}
+                    validate={(val) => validateSingleField(val, index)}
                   />
                   <InputGroup.Append>
                     <OverlayTrigger
@@ -97,6 +116,9 @@ const OwnersFields = () => {
                             `entities[${index}].isPubKey`,
                             !values.entities[index].isPubKey,
                           );
+                          setTimeout(() => {
+                            validateField(`entities[${index}].value`);
+                          });
                         }}
                       >
                         <FontAwesomeIcon icon="retweet" />
@@ -131,17 +153,19 @@ const OwnersFields = () => {
               </BForm.Group>
             ))}
             <div style={{ maxWidth: '500px', textAlign: 'center' }}>
-              <Button
-                variant="link"
-                onClick={() =>
-                  arrayHelpers.push({
-                    value: '',
-                    isPubKey: false,
-                  })
-                }
-              >
-                <FontAwesomeIcon icon="plus" />
-              </Button>
+              {values.entities && values.entities.length < maxOwners && (
+                <Button
+                  variant="link"
+                  onClick={() =>
+                    arrayHelpers.push({
+                      value: '',
+                      isPubKey: false,
+                    })
+                  }
+                >
+                  <FontAwesomeIcon icon="plus" />
+                </Button>
+              )}
             </div>
           </div>
         )}
