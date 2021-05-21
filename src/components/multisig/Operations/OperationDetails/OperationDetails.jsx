@@ -351,18 +351,22 @@ const OperationDetails = ({ operation, resetOperations }) => {
 
               <PayloadUpload
                 operationID={operation.operation_id}
-                approveDisabled={checkOwnersIndices(
-                  address,
-                  operation.signatures,
-                  contractInfo.owners,
-                  'approve',
-                )}
-                rejectDisabled={checkOwnersIndices(
-                  address,
-                  operation.signatures,
-                  contractInfo.owners,
-                  'reject',
-                )}
+                approveDisabled={
+                  checkOwnersIndices(
+                    address,
+                    operation.signatures,
+                    contractInfo.owners,
+                    'approve',
+                  ) || false
+                }
+                rejectDisabled={
+                  checkOwnersIndices(
+                    address,
+                    operation.signatures,
+                    contractInfo.owners,
+                    'reject',
+                  ) || false
+                }
                 onUpload={resetOperations}
               />
             </div>
