@@ -54,12 +54,14 @@ const PayloadType = ({ approveDisabled, rejectDisabled, onSelect }) => {
 
 PayloadType.propTypes = {
   onSelect: PropTypes.func,
-  approveDisabled: PropTypes.bool.isRequired,
-  rejectDisabled: PropTypes.bool.isRequired,
+  approveDisabled: PropTypes.bool,
+  rejectDisabled: PropTypes.bool,
 };
 
 PayloadType.defaultProps = {
   onSelect: () => null,
+  approveDisabled: false,
+  rejectDisabled: false,
 };
 
 export default PayloadType;
