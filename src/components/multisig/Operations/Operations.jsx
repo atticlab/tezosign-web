@@ -158,6 +158,11 @@ const Operations = () => {
     },
     {
       key: 'amount',
+      isSortable: true,
+      altKeys: [
+        'operation_info.amount',
+        'operation_info.transfer_list[0].txs[0].amount',
+      ],
       process(operation) {
         const {
           operation_info: operationInfo,

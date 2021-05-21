@@ -45,7 +45,7 @@ const Table = ({
                 isSortable={col.isSortable}
                 onClick={() => {
                   if (!col.isSortable) return;
-                  requestSort(col.key);
+                  requestSort(col.key, col.altKeys);
                 }}
               >
                 <FlexCenter>

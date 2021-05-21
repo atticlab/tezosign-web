@@ -1,19 +1,15 @@
-import React, { useRef } from 'react';
+import React from 'react';
+import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
+import { Form, Formik } from 'formik';
 import { Text } from '../styled/Text';
 import OwnersFields from './OwnersFields';
-import useAddressRevealCheck from '../../hooks/useAddressRevealCheck';
-import { cacheTest, ownersSchema } from '../../utils/schemas/ownersSchema';
+import { ownersSchema } from '../../utils/schemas/ownersSchema';
 
 const Owners = ({ onSubmit }) => {
-  const { testIsAddressRevealed } = useAddressRevealCheck();
-  const testAddress = useRef(cacheTest(testIsAddressRevealed));
-
   const schema = Yup.object().shape({
-    entities: ownersSchema(testAddress),
+    entities: ownersSchema,
   });
 
   return (
@@ -31,27 +27,16 @@ const Owners = ({ onSubmit }) => {
           entities: [{ id: 0, value: '', isPubKey: false }],
         }}
         validationSchema={schema}
+        validateOnChange={false}
+        validateOnBlur={false}
         onSubmit={(values, { setSubmitting }) => {
           onSubmit(values.entities.map((entity) => entity.value));
           setSubmitting(false);
         }}
       >
-        {({
-          values,
-          touched,
-          errors,
-          setFieldValue,
-          isSubmitting,
-          validateForm,
-        }) => (
+        {({ isSubmitting }) => (
           <Form>
-            <OwnersFields
-              values={values}
-              touched={touched}
-              errors={errors}
-              setFieldValue={setFieldValue}
-              validateForm={validateForm}
-            />
+            <OwnersFields />
 
             <div style={{ textAlign: 'right' }}>
               <Button type="submit" disabled={isSubmitting}>

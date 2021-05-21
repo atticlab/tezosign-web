@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
@@ -7,12 +7,8 @@ import { Title, Text } from '../../../styled/Text';
 import { FormSubmit } from '../../../styled/Forms';
 import OwnersFields from '../../../create-multisig/OwnersFields';
 import ThresholdsFields from '../../../create-multisig/ThresholdsFields';
-import {
-  ownersSchema,
-  cacheTest,
-} from '../../../../utils/schemas/ownersSchema';
+import { ownersSchema } from '../../../../utils/schemas/ownersSchema';
 import signaturesSchema from '../../../../utils/schemas/signaturesSchema';
-import useAddressRevealCheck from '../../../../hooks/useAddressRevealCheck';
 import useAPI from '../../../../hooks/useApi';
 import { useContractStateContext } from '../../../../store/contractContext';
 import { handleError } from '../../../../utils/errorsHandler';
@@ -26,8 +22,6 @@ const ContractEditor = ({ onCreate, onCancel }) => {
     contractInfo: { owners, threshold },
   } = useContractStateContext();
   const { setOps } = useOperationsDispatchContext();
-  const { testIsAddressRevealed } = useAddressRevealCheck();
-  const testAddress = useRef(cacheTest(testIsAddressRevealed));
 
   const entities = useMemo(() => {
     return owners.map((owner) => {
@@ -39,7 +33,7 @@ const ContractEditor = ({ onCreate, onCancel }) => {
   }, [owners]);
 
   const schema = Yup.object().shape({
-    entities: ownersSchema(testAddress),
+    entities: ownersSchema,
     signatures: signaturesSchema,
   });
 
@@ -77,6 +71,8 @@ const ContractEditor = ({ onCreate, onCancel }) => {
         signatures: threshold,
       }}
       validationSchema={schema}
+      validateOnChange={false}
+      validateOnBlur={false}
       onSubmit={(values, { setSubmitting }) => {
         update(setSubmitting, values);
       }}
@@ -88,7 +84,6 @@ const ContractEditor = ({ onCreate, onCancel }) => {
         isSubmitting,
         setFieldValue,
         setFieldTouched,
-        validateForm,
       }) => (
         <Form>
           <div>
@@ -98,13 +93,7 @@ const ContractEditor = ({ onCreate, onCancel }) => {
               their addresses
             </Text>
 
-            <OwnersFields
-              values={values}
-              touched={touched}
-              errors={errors}
-              setFieldValue={setFieldValue}
-              validateForm={validateForm}
-            />
+            <OwnersFields />
           </div>
 
           <div>

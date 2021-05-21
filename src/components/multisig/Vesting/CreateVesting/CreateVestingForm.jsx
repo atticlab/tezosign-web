@@ -21,7 +21,7 @@ import {
 } from '../../../../utils/helpers';
 import { handleError } from '../../../../utils/errorsHandler';
 import { sendOrigination } from '../../../../plugins/beacon';
-import tezosAddressSchema from '../../../../utils/schemas/tezosAddressSchema';
+import { tezosAddressSchema } from '../../../../utils/schemas/tezosAddressSchema';
 import balanceSchema from '../../../../utils/schemas/balanceSchema';
 import { secondsPerTickSchema } from './createVestingSchemas';
 
