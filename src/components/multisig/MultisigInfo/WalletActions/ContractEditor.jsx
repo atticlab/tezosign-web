@@ -37,11 +37,12 @@ const ContractEditor = ({ onCreate, onCancel }) => {
     signatures: signaturesSchema,
   });
 
-  const update = async (setSubmitting, fields) => {
+  const update = async (
+    { entities: entitiesPayload, signatures },
+    resetForm,
+  ) => {
     try {
-      setSubmitting(true);
-
-      const { entities: entitiesPayload, signatures } = fields;
+      // const { entities: entitiesPayload, signatures } = fields;
       const payload = {
         entities: entitiesPayload.map((entity) =>
           isHex(entity.value)
@@ -56,11 +57,13 @@ const ContractEditor = ({ onCreate, onCancel }) => {
         return [resp.data, ...prev];
       });
 
-      onCreate();
+      await resetForm({
+        entities: [{ id: 0, isPubKey: false, value: '' }],
+        signatures: 1,
+      });
+      await onCreate();
     } catch (e) {
       handleError(e);
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -73,8 +76,8 @@ const ContractEditor = ({ onCreate, onCancel }) => {
       validationSchema={schema}
       validateOnChange={false}
       validateOnBlur={false}
-      onSubmit={(values, { setSubmitting }) => {
-        update(setSubmitting, values);
+      onSubmit={async (values, { resetForm }) => {
+        await update(values, resetForm);
       }}
     >
       {({

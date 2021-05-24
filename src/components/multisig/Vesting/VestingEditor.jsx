@@ -30,22 +30,20 @@ const VestingEditor = ({ isEdit, name, address, onSubmit, onCancel }) => {
   const { contractAddress } = useContractStateContext();
   const { setVestings } = useVestingsDispatchContext();
 
-  const addVestingReq = async (values, setSubmitting) => {
+  const addVestingReq = async (values, resetForm) => {
     try {
-      setSubmitting(true);
       const resp = await addVesting(contractAddress, values);
       setVestings((prev) => [resp.data, ...prev]);
+
+      resetForm();
       onSubmit();
     } catch (e) {
       handleError(e);
-    } finally {
-      setSubmitting(false);
     }
   };
 
-  const editVestingReq = async (values, setSubmitting) => {
+  const editVestingReq = async (values, resetForm) => {
     try {
-      setSubmitting(true);
       const resp = await editVesting(contractAddress, values);
       setVestings((prev) => {
         const indexToModify = prev.indexOf(
@@ -55,20 +53,20 @@ const VestingEditor = ({ isEdit, name, address, onSubmit, onCancel }) => {
         res[indexToModify] = resp.data;
         return res;
       });
+
+      resetForm();
       onSubmit();
     } catch (e) {
       handleError(e);
-    } finally {
-      setSubmitting(false);
     }
   };
 
-  const addOrEditVesting = async (values, setSubmitting) => {
+  const addOrEditVesting = async (values, resetForm) => {
     if (!isEdit) {
-      return addVestingReq(values, setSubmitting);
+      return addVestingReq(values, resetForm);
     }
 
-    return editVestingReq(values, setSubmitting);
+    return editVestingReq(values, resetForm);
   };
 
   return (
@@ -78,8 +76,8 @@ const VestingEditor = ({ isEdit, name, address, onSubmit, onCancel }) => {
         address,
       }}
       validationSchema={schema}
-      onSubmit={(values, { setSubmitting }) => {
-        addOrEditVesting(values, setSubmitting);
+      onSubmit={async (values, { resetForm }) => {
+        await addOrEditVesting(values, resetForm);
       }}
     >
       {({ errors, touched, isSubmitting, setFieldTouched, setFieldValue }) => (

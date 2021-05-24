@@ -53,13 +53,8 @@ const VestingVestForm = ({
     return convertMutezToXTZ(tokensPerTick);
   }, [tokensPerTick]);
 
-  const sendVestingOperationRequest = async (
-    type,
-    { batches },
-    setSubmitting,
-  ) => {
+  const sendVestingOperationRequest = async (type, { batches }, resetForm) => {
     try {
-      setSubmitting(true);
       const resp = await sendVestingOperation({
         type,
         amount: batches,
@@ -71,11 +66,11 @@ const VestingVestForm = ({
       };
 
       await sendTx(0, vestingAddress, params);
+
+      resetForm();
       onSubmit();
     } catch (e) {
       handleError(e);
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -86,8 +81,8 @@ const VestingVestForm = ({
         batches: '',
       }}
       validationSchema={Yup.lazy(() => schema(balance, tokensPerTickInXTZ))}
-      onSubmit={(values, { setSubmitting }) => {
-        sendVestingOperationRequest('vesting_vest', values, setSubmitting);
+      onSubmit={async (values, { resetForm }) => {
+        await sendVestingOperationRequest('vesting_vest', values, resetForm);
       }}
     >
       {({

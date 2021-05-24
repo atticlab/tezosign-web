@@ -29,9 +29,8 @@ const schema = Yup.object({
 const VestingSetDelegateForm = ({ vestingAddress, onSubmit, onCancel }) => {
   const { sendVestingOperation } = useAPI();
 
-  const sendVestingOperationRequest = async (type, { to }, setSubmitting) => {
+  const sendVestingOperationRequest = async (type, { to }, resetForm) => {
     try {
-      setSubmitting(true);
       const resp = await sendVestingOperation({
         type,
         to,
@@ -44,11 +43,11 @@ const VestingSetDelegateForm = ({ vestingAddress, onSubmit, onCancel }) => {
       };
 
       await sendTx(0, vestingAddress, params);
+
+      resetForm();
       onSubmit();
     } catch (e) {
       handleError(e);
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -59,15 +58,15 @@ const VestingSetDelegateForm = ({ vestingAddress, onSubmit, onCancel }) => {
         to: '',
       }}
       validationSchema={schema}
-      onSubmit={(values, { setSubmitting }) => {
-        sendVestingOperationRequest(
+      onSubmit={async (values, { resetForm }) => {
+        await sendVestingOperationRequest(
           'vesting_set_delegate',
           values,
-          setSubmitting,
+          resetForm,
         );
       }}
     >
-      {({ errors, touched, isSubmitting, setSubmitting }) => (
+      {({ errors, touched, isSubmitting, resetForm, setSubmitting }) => (
         <Form>
           <BForm.Group controlId="to">
             <OverlayTrigger
@@ -108,13 +107,17 @@ const VestingSetDelegateForm = ({ vestingAddress, onSubmit, onCancel }) => {
               variant="info"
               style={{ marginRight: '10px' }}
               disabled={isSubmitting}
-              onClick={() =>
-                sendVestingOperationRequest(
+              onClick={async () => {
+                setSubmitting(true);
+
+                await sendVestingOperationRequest(
                   'vesting_set_delegate',
                   { to: '' },
-                  setSubmitting,
-                )
-              }
+                  resetForm,
+                );
+
+                setSubmitting(false);
+              }}
             >
               Undelegate
             </Button>
