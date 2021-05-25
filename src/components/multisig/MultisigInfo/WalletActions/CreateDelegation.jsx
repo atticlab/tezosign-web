@@ -43,9 +43,8 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
   const { createOperation } = useAPI();
   const { contractAddress } = useContractStateContext();
   const { setOps } = useOperationsDispatchContext();
-  const createDelegation = async (baker, setSubmitting) => {
+  const createDelegation = async (baker, resetForm) => {
     try {
-      setSubmitting(true);
       const newDelegation = await createOperation({
         contract_id: contractAddress,
         type: 'delegation',
@@ -54,11 +53,11 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
       await setOps((prev) => {
         return [newDelegation.data, ...prev];
       });
+
+      resetForm();
       onCreate();
     } catch (e) {
       handleError(e);
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -76,9 +75,9 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
       <Formik
         initialValues={{ baker: '' }}
         validationSchema={schema}
-        onSubmit={(values, { setSubmitting }) =>
-          createDelegation(values.baker, setSubmitting)
-        }
+        onSubmit={async (values, { resetForm }) => {
+          await createDelegation(values.baker, resetForm);
+        }}
       >
         {({
           // setFieldValue,
@@ -87,6 +86,7 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
           isSubmitting,
           errors,
           touched,
+          resetForm,
           setSubmitting,
         }) => (
           <Form>
@@ -143,7 +143,11 @@ const CreateDelegation = ({ onCreate, onCancel }) => {
                 variant="info"
                 style={{ marginRight: '10px' }}
                 disabled={isSubmitting}
-                onClick={() => createDelegation(undefined, setSubmitting)}
+                onClick={async () => {
+                  setSubmitting(true);
+                  await createDelegation(undefined, resetForm);
+                  setSubmitting(false);
+                }}
               >
                 Undelegate
               </Button>

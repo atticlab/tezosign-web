@@ -31,23 +31,19 @@ const PayloadUploadForm = ({
   const { contractAddress } = useContractStateContext();
   const { sendSignature } = useAPI();
 
-  const onSubmit = async (
-    { payloadType, signature, pubKey },
-    setSubmitting,
-  ) => {
+  const onSubmit = async ({ payloadType, signature, pubKey }, resetForm) => {
     try {
-      setSubmitting(true);
       await sendSignature(operationID, {
         type: payloadType,
         contract_id: contractAddress,
         pub_key: pubKey,
         signature,
       });
+
+      resetForm();
       onUpload();
     } catch (e) {
       handleError(e);
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -59,8 +55,8 @@ const PayloadUploadForm = ({
         pubKey: '',
       }}
       validationSchema={schema}
-      onSubmit={(values, { setSubmitting }) => {
-        onSubmit(values, setSubmitting);
+      onSubmit={async (values, { resetForm }) => {
+        await onSubmit(values, resetForm);
       }}
     >
       {({ touched, errors, isSubmitting, handleBlur, handleChange }) => (

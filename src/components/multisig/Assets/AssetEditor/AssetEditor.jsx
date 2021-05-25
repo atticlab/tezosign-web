@@ -51,19 +51,19 @@ const AssetEditor = ({
   const { setAssets } = useAssetsDispatchContext();
   const { contractAddress } = useContractStateContext();
 
-  const addAssetReq = async (contractID, assetFields, setSubmitting) => {
+  const addAssetReq = async (contractID, assetFields, resetForm) => {
     try {
       const resp = await addAsset(contractID, formAssetPayload(assetFields));
       setAssets((prev) => [resp.data, ...prev]);
+
+      resetForm();
       onSubmit();
     } catch (e) {
       handleError(e);
-    } finally {
-      setSubmitting(false);
     }
   };
 
-  const editAssetReq = async (contractID, assetFields, setSubmitting) => {
+  const editAssetReq = async (contractID, assetFields, resetForm) => {
     try {
       const resp = await editAsset(contractID, formAssetPayload(assetFields));
       setAssets((prev) => {
@@ -74,20 +74,20 @@ const AssetEditor = ({
         res[indexToModify] = resp.data;
         return res;
       });
+
+      resetForm();
       onSubmit();
     } catch (e) {
       handleError(e);
-    } finally {
-      setSubmitting(false);
     }
   };
 
-  const addOrEditAsset = (contractID, assetFields, setSubmitting) => {
+  const addOrEditAsset = (contractID, assetFields, resetForm) => {
     if (!isEdit) {
-      return addAssetReq(contractID, assetFields, setSubmitting);
+      return addAssetReq(contractID, assetFields, resetForm);
     }
 
-    return editAssetReq(contractID, assetFields, setSubmitting);
+    return editAssetReq(contractID, assetFields, resetForm);
   };
 
   return (
@@ -101,8 +101,8 @@ const AssetEditor = ({
         ticker,
       }}
       validationSchema={schema}
-      onSubmit={async (values, { setSubmitting }) => {
-        return addOrEditAsset(contractAddress, values, setSubmitting);
+      onSubmit={async (values, { resetForm }) => {
+        await addOrEditAsset(contractAddress, values, resetForm);
       }}
     >
       <AssetEditorFields

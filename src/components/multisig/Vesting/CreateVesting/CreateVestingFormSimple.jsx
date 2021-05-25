@@ -77,10 +77,9 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
       balance,
       parts,
     },
-    setSubmitting,
+    resetForm,
   ) => {
     try {
-      setSubmitting(true);
       const respCode = await getVestingContractCode();
 
       const payload = {
@@ -94,11 +93,11 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
 
       const script = { code: respCode.data, storage: respStorage.data };
       await sendOrigination(balance.toString(), script);
+
+      resetForm();
       onSubmit();
     } catch (e) {
       handleError(e);
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -114,8 +113,8 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
         balance: '',
       }}
       validationSchema={Yup.lazy(() => schema(balanceInXTZ))}
-      onSubmit={(values, { setSubmitting }) => {
-        createVesting(values, setSubmitting);
+      onSubmit={async (values, { resetForm }) => {
+        await createVesting(values, resetForm);
       }}
     >
       {({ isSubmitting }) => (

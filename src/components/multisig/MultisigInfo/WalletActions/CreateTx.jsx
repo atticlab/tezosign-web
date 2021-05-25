@@ -99,8 +99,7 @@ const CreateTx = ({ onCreate, onCancel }) => {
     );
   }, [assets]);
 
-  // eslint-disable-next-line consistent-return
-  const createTx = async ({ asset, tokenID, amount, to }, setSubmitting) => {
+  const createTx = async ({ asset, tokenID, amount, to }, resetForm) => {
     try {
       const isXTZ = asset.value === 'xtz';
       const payload = {
@@ -142,12 +141,11 @@ const CreateTx = ({ onCreate, onCancel }) => {
       await setOps((prev) => {
         return [newTx.data, ...prev];
       });
-      // eslint-disable-next-line no-unreachable
+
+      resetForm();
       onCreate();
     } catch (e) {
       handleError(e);
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -161,9 +159,9 @@ const CreateTx = ({ onCreate, onCancel }) => {
           values.asset.ticker,
         ),
       )}
-      onSubmit={async (values, { setSubmitting }) =>
-        createTx(values, setSubmitting)
-      }
+      onSubmit={async (values, { resetForm }) => {
+        await createTx(values, resetForm);
+      }}
     >
       {({
         values,

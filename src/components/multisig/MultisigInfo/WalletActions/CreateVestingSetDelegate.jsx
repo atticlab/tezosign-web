@@ -59,13 +59,11 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
     );
   }, [vestingInfo, contractAddress, isVestingInfoLoading]);
 
-  // FIXME: double submits
   const createVestingSetDelegate = async (
     { vestingAddress, to },
-    setSubmitting,
+    resetForm,
   ) => {
     try {
-      await setSubmitting(true);
       const resp = await createOperation({
         contract_id: contractAddress,
         type: 'vesting_set_delegate',
@@ -75,11 +73,11 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
       await setOps((prev) => {
         return [resp.data, ...prev];
       });
+
+      resetForm();
       onCreate();
     } catch (e) {
       handleError(e);
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -90,8 +88,8 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
         to: '',
       }}
       validationSchema={Yup.lazy(() => schema(isWalletDelegateAdmin))}
-      onSubmit={(values, { setSubmitting }) => {
-        createVestingSetDelegate(values, setSubmitting);
+      onSubmit={async (values, { resetForm }) => {
+        await createVestingSetDelegate(values, resetForm);
       }}
     >
       {({
@@ -99,6 +97,7 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
         errors,
         touched,
         isSubmitting,
+        resetForm,
         setSubmitting,
         setFieldValue,
         setFieldTouched,
@@ -172,16 +171,18 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
               variant="info"
               style={{ marginRight: '10px' }}
               disabled={isSubmitting}
-              onClick={() => {
+              onClick={async () => {
                 if (
                   !errors.vestingAddress &&
                   touched.vestingAddress &&
                   isWalletDelegateAdmin
                 ) {
-                  createVestingSetDelegate(
+                  setSubmitting(true);
+                  await createVestingSetDelegate(
                     { ...values, to: '' },
-                    setSubmitting,
+                    resetForm,
                   );
+                  setSubmitting(false);
                 }
               }}
             >

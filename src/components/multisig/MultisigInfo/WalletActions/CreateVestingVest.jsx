@@ -58,10 +58,7 @@ const CreateVestingVest = ({ onCreate, onCancel }) => {
     return convertMutezToXTZ(tokensPerTick);
   }, [tokensPerTick]);
 
-  const createVestingVest = async (
-    { vestingAddress, batches },
-    setSubmitting,
-  ) => {
+  const createVestingVest = async ({ vestingAddress, batches }, resetForm) => {
     try {
       const resp = await createOperation({
         contract_id: contractAddress,
@@ -73,11 +70,11 @@ const CreateVestingVest = ({ onCreate, onCancel }) => {
       await setOps((prev) => {
         return [resp.data, ...prev];
       });
+
+      resetForm();
       onCreate();
     } catch (e) {
       handleError(e);
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -89,8 +86,8 @@ const CreateVestingVest = ({ onCreate, onCancel }) => {
         amount: '',
       }}
       validationSchema={Yup.lazy(() => schema(tokensPerTickInXTZ))}
-      onSubmit={(values, { setSubmitting }) => {
-        createVestingVest(values, setSubmitting);
+      onSubmit={async (values, { resetForm }) => {
+        await createVestingVest(values, resetForm);
       }}
     >
       {({
