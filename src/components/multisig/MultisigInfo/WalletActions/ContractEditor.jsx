@@ -42,7 +42,6 @@ const ContractEditor = ({ onCreate, onCancel }) => {
     resetForm,
   ) => {
     try {
-      // const { entities: entitiesPayload, signatures } = fields;
       const payload = {
         entities: entitiesPayload.map((entity) =>
           isHex(entity.value)
@@ -57,11 +56,13 @@ const ContractEditor = ({ onCreate, onCancel }) => {
         return [resp.data, ...prev];
       });
 
-      await resetForm({
-        entities: [{ id: 0, isPubKey: false, value: '' }],
-        signatures: 1,
+      resetForm({
+        values: {
+          entities: [{ id: 0, value: '', isPubKey: false }],
+          signatures: 1,
+        },
       });
-      await onCreate();
+      onCreate();
     } catch (e) {
       handleError(e);
     }
