@@ -69,7 +69,7 @@ const Owners = () => {
           cols={cols}
           rows={contractInfo?.owners || []}
           rowKey="pub_key"
-          maxHeight="600px"
+          maxHeight="550px"
           stickyHeader
           isDataLoading={isContractInfoLoading}
         />

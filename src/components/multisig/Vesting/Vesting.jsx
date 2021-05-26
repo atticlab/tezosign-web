@@ -91,7 +91,7 @@ const Vesting = () => {
           cols={cols}
           rows={vestings || []}
           rowKey="address"
-          maxHeight="600px"
+          maxHeight="550px"
           stickyHeader
           isDataLoading={isVestingsLoading}
           isCollapsible
