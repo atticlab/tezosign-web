@@ -125,7 +125,7 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
           <InputUnvestedPartsAmount />
           <SelectUnvestingInterval defaultValue={unvestingIntervals[0]} />
           <InputVestingEndDate />
-          <InputBalance maxBalance={balanceInXTZ} />
+          <InputBalance maxBalance={Number(balanceInXTZ)} />
 
           <FormSubmit>
             <Button

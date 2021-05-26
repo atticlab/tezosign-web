@@ -96,7 +96,7 @@ const InputBalance = ({ maxBalance }) => {
 };
 
 InputBalance.propTypes = {
-  maxBalance: PropTypes.string.isRequired,
+  maxBalance: PropTypes.number.isRequired,
 };
 
 export default InputBalance;

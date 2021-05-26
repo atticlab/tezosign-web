@@ -316,7 +316,7 @@ const Operations = () => {
           cols={cols}
           rows={opsLists || []}
           rowKey="operation_id"
-          maxHeight="560px"
+          maxHeight="550px"
           stickyHeader
           lastItem={lastItem}
           isDataLoading={isOpsLoading}
