@@ -57,7 +57,7 @@ const VestingVestForm = ({
     try {
       const resp = await sendVestingOperation({
         type,
-        amount: batches,
+        ticks: batches,
       });
 
       const params = {
