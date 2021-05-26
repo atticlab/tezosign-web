@@ -47,8 +47,8 @@ const InputBalance = ({ maxBalance }) => {
           autoComplete="off"
           isInvalid={!!errors.balance && touched.balance}
           isValid={!errors.balance && touched.balance}
-          step={values.tokensPerTick}
-          min={values.tokensPerTick}
+          step={values.tokensPerTick || 0.000001}
+          min={values.tokensPerTick || 0.000001}
           onKeyPress={(event) => limitInputDecimals(event, 6)}
           onBlur={(e) => {
             handleBlur(e);
@@ -73,7 +73,7 @@ const InputBalance = ({ maxBalance }) => {
               <BtnMax
                 onClick={() => {
                   setFieldValue('balance', maxBalance);
-                  setFieldTouched('balance', true, false);
+                  setFieldTouched('balance', true, true);
                 }}
               >
                 MAX
