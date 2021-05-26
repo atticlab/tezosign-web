@@ -351,6 +351,7 @@ const OperationDetails = ({ operation, resetOperations }) => {
 
               <PayloadUpload
                 operationID={operation.operation_id}
+                disabled={isActionLoading}
                 approveDisabled={
                   checkOwnersIndices(
                     address,
