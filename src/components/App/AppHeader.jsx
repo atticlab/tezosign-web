@@ -8,6 +8,8 @@ import {
   useUserStateContext,
   useUserDispatchContext,
 } from '../../store/userContext';
+import useModal from '../../hooks/useModal';
+import ModalAuth from '../ModalAuth';
 
 const TheHeader = styled.header`
   display: flex;
@@ -24,6 +26,7 @@ const AppHeader = () => {
   // isPermissionsLoading
   const { isLoggedIn, address } = useUserStateContext();
   const { connect } = useUserDispatchContext();
+  const { show, handleClose, handleShow } = useModal();
 
   return (
     <TheHeader>
@@ -37,13 +40,15 @@ const AppHeader = () => {
         ) : (
           <Button
             variant="primary"
-            onClick={() => connect()}
+            onClick={() => connect(handleShow, handleClose)}
             // disabled={isPermissionsLoading}
           >
             Connect
           </Button>
         )}
       </div>
+
+      <ModalAuth show={show} handleClose={handleClose} />
     </TheHeader>
   );
 };

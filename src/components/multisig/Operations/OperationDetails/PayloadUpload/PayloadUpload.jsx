@@ -9,6 +9,7 @@ import useModal from '../../../../../hooks/useModal';
 
 const PayloadUpload = ({
   operationID,
+  disabled,
   approveDisabled,
   rejectDisabled,
   onUpload,
@@ -19,7 +20,7 @@ const PayloadUpload = ({
     <>
       <Button
         size="sm"
-        disabled={approveDisabled && rejectDisabled}
+        disabled={(approveDisabled && rejectDisabled) || disabled}
         onClick={handleShow}
       >
         Upload signature
@@ -58,6 +59,7 @@ const PayloadUpload = ({
 
 PayloadUpload.propTypes = {
   operationID: PropTypes.string.isRequired,
+  disabled: PropTypes.bool.isRequired,
   approveDisabled: PropTypes.bool.isRequired,
   rejectDisabled: PropTypes.bool.isRequired,
   onUpload: PropTypes.func.isRequired,

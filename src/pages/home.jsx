@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Button } from 'react-bootstrap';
@@ -10,6 +10,7 @@ import {
   useUserStateContext,
   useUserDispatchContext,
 } from '../store/userContext';
+import useModal from '../hooks/useModal';
 
 const HomeStyled = styled.section`
   max-width: 732px;
@@ -20,18 +21,14 @@ const Home = () => {
   const history = useHistory();
   const { connect } = useUserDispatchContext();
   const { isLoggedIn } = useUserStateContext();
-  const [show, setShow] = useState(false);
-  const handleClose = () => {
-    setShow(false);
-  };
-  const handleShow = () => {
-    setShow(true);
-  };
+  const { show, handleClose, handleShow } = useModal();
 
   useEffect(() => {
     if (isLoggedIn) {
       history.push('/select-multisig');
     }
+
+    return () => null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
