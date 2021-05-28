@@ -22,14 +22,14 @@ import { handleError } from '../../../../utils/errorsHandler';
 
 const schema = (maxAmount = 0, tokensPerTick) => {
   return Yup.object({
-    amount: Yup.number()
-      .required('Required')
-      .max(maxAmount, `Maximum amount is ${maxAmount} XTZ`)
-      .min(tokensPerTick, `Minimum amount is ${tokensPerTick} XTZ`),
     batches: Yup.number()
       .required('Required')
       .integer('Ticks must be an integer')
       .min(1, `Minimum number of batches is 1`),
+    amount: Yup.number()
+      .required('Required')
+      .max(maxAmount, `Maximum amount is ${maxAmount} XTZ`)
+      .min(tokensPerTick, `Minimum amount is ${tokensPerTick} XTZ`),
   });
 };
 
@@ -77,8 +77,8 @@ const VestingVestForm = ({
   return (
     <Formik
       initialValues={{
-        amount: '',
         batches: '',
+        amount: '',
       }}
       validationSchema={Yup.lazy(() => schema(balance, tokensPerTickInXTZ))}
       onSubmit={async (values, { resetForm }) => {
@@ -159,7 +159,7 @@ const VestingVestForm = ({
                 autoComplete="off"
                 isInvalid={!!errors.amount && touched.amount}
                 isValid={!errors.amount && touched.amount}
-                onKeyPress={(event) => limitInputDecimals(event, 6)}
+                onKeyPress={(event) => limitInputDecimals(event, 8)}
                 onBlur={(e) => {
                   handleBlur(e);
                   setFieldValue(
