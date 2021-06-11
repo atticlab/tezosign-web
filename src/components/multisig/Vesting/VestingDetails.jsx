@@ -94,7 +94,7 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                   }
                 >
                   <span>
-                    <Bold>Seconds per tick:</Bold>{' '}
+                    <Bold>Time per tick:</Bold>{' '}
                     {toHHMMSS(vestingInfo.storage.seconds_per_tick)}
                   </span>
                 </OverlayTrigger>
@@ -148,8 +148,6 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
               <VestingActions
                 vestingAddress={vesting.address}
                 vestingDelegateAdmin={vestingInfo.storage.delegate_admin}
-                vestingBalance={vestingInfo.balance}
-                vestingOpenedBalance={vestingInfo.opened_balance}
                 tokensPerTIck={vestingInfo.storage.tokens_per_tick}
               />
             </div>

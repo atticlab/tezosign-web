@@ -21,7 +21,7 @@ const InputSecondsPerTick = () => {
           </Tooltip>
         }
       >
-        <FormLabel>Seconds per tick</FormLabel>
+        <FormLabel>Time per tick</FormLabel>
       </OverlayTrigger>
       <Field
         as={BForm.Control}

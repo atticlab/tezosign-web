@@ -22,7 +22,6 @@ import {
 import { handleError } from '../../../../utils/errorsHandler';
 import { sendOrigination } from '../../../../plugins/beacon';
 import { tezosAddressSchema } from '../../../../utils/schemas/tezosAddressSchema';
-import balanceSchema from '../../../../utils/schemas/balanceSchema';
 import { secondsPerTickSchema } from './createVestingSchemas';
 
 dayjs.extend(utc);
@@ -38,7 +37,9 @@ const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
       .max(maxTokensPerTick, `Maximum amount is ${maxTokensPerTick} XTZ`)
       .min(0.000001, `Minimum amount is ${0.000001} XTZ`),
     check: Yup.bool().oneOf([true], 'The terms must be accepted'),
-    balance: balanceSchema(maxAmount, minAmount),
+    balance: Yup.number()
+      .max(maxAmount, `Maximum amount is ${maxAmount} XTZ`)
+      .min(minAmount, `Minimum amount is ${minAmount} XTZ`),
   });
 
 const CreateVestingForm = ({ onSubmit, onCancel }) => {
@@ -70,7 +71,7 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
       const respStorage = await initVesting(payload);
 
       const script = { code: respCode.data, storage: respStorage.data };
-      await sendOrigination(balance.toString(), script);
+      await sendOrigination(balance ? balance.toString() : 0, script);
 
       resetForm();
       onSubmit();

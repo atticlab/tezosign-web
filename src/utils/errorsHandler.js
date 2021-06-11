@@ -20,6 +20,7 @@ const errorNotifications = {
     'Invalid token ID for the asset contract address.',
   ERR_NOT_ALLOWED: 'Not allowed.',
   'ERR_NOT_ALLOWED:not enough balance': 'Insufficient funds on the wallet.',
+  'ERR_NOT_ALLOWED:not enough ticks': 'No funds have been unvested yet.',
   ERR_BAD_AUTH: 'Login failed.',
   'No matching peer found.': 'No matching peer found. Try reconnect, please.',
 };

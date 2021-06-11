@@ -7,17 +7,13 @@ import { FormLabel } from '../../../../styled/Forms';
 import { DatePickerWrapper } from '../../../../styled/DatePickerStyles';
 import { dateFormatNoTime } from '../../../../../utils/constants';
 
-const today = dayjs().startOf('day').toDate();
+const today = dayjs().toDate();
 const handleDateChangeRaw = (e) => {
   e.preventDefault();
 };
 const handleDateRange = (start, end) => {
-  const startFormatted = start
-    ? dayjs(start).startOf('day').format(dateFormatNoTime)
-    : '';
-  const endFormatted = end
-    ? dayjs(end).startOf('day').format(dateFormatNoTime)
-    : '';
+  const startFormatted = start ? dayjs(start).format(dateFormatNoTime) : '';
+  const endFormatted = end ? dayjs(end).format(dateFormatNoTime) : '';
   return `${startFormatted ? `${startFormatted} -` : ''} ${endFormatted}`;
 };
 
