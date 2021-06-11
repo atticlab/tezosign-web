@@ -5,50 +5,32 @@ import * as Yup from 'yup';
 import {
   Button,
   Form as BForm,
-  InputGroup,
   OverlayTrigger,
   Tooltip,
 } from 'react-bootstrap';
 import { FormLabel, FormSubmit } from '../../../styled/Forms';
-import { BtnMax } from '../../../styled/Btns';
 import { sendTx } from '../../../../plugins/beacon';
 import useAPI from '../../../../hooks/useApi';
 import {
   convertMutezToXTZ,
-  convertXTZToMutez,
   limitInputDecimals,
 } from '../../../../utils/helpers';
 import { handleError } from '../../../../utils/errorsHandler';
 
-const schema = (maxAmount = 0, tokensPerTick) => {
-  return Yup.object({
-    batches: Yup.number()
-      .required('Required')
-      .integer('Ticks must be an integer')
-      .min(1, `Minimum number of batches is 1`),
-    amount: Yup.number()
-      .required('Required')
-      .max(maxAmount, `Maximum amount is ${maxAmount} XTZ`)
-      .min(tokensPerTick, `Minimum amount is ${tokensPerTick} XTZ`),
-  });
-};
+const schema = Yup.object({
+  batches: Yup.number()
+    .required('Required')
+    .integer('Ticks must be an integer')
+    .min(1, `Minimum number of batches is 1`),
+});
 
 const VestingVestForm = ({
   vestingAddress,
-  vestingBalance,
-  vestingOpenedBalance,
   tokensPerTick,
   onSubmit,
   onCancel,
 }) => {
   const { sendVestingOperation } = useAPI();
-  const balance = useMemo(() => {
-    if (vestingBalance < vestingOpenedBalance) {
-      const int = Math.floor(vestingBalance - (vestingBalance % tokensPerTick));
-      return convertMutezToXTZ(int);
-    }
-    return convertMutezToXTZ(vestingOpenedBalance);
-  }, [vestingBalance, vestingOpenedBalance, tokensPerTick]);
   const tokensPerTickInXTZ = useMemo(() => {
     return convertMutezToXTZ(tokensPerTick);
   }, [tokensPerTick]);
@@ -80,7 +62,7 @@ const VestingVestForm = ({
         batches: '',
         amount: '',
       }}
-      validationSchema={Yup.lazy(() => schema(balance, tokensPerTickInXTZ))}
+      validationSchema={schema}
       onSubmit={async (values, { resetForm }) => {
         await sendVestingOperationRequest('vesting_vest', values, resetForm);
       }}
@@ -148,57 +130,26 @@ const VestingVestForm = ({
             >
               <FormLabel>Amount</FormLabel>
             </OverlayTrigger>
-            <InputGroup>
-              <Field
-                as={BForm.Control}
-                type="number"
-                name="amount"
-                aria-label="amount"
-                step={tokensPerTickInXTZ}
-                min={tokensPerTickInXTZ}
-                autoComplete="off"
-                isInvalid={!!errors.amount && touched.amount}
-                isValid={!errors.amount && touched.amount}
-                onKeyPress={(event) => limitInputDecimals(event, 8)}
-                onBlur={(e) => {
-                  handleBlur(e);
-                  setFieldValue(
-                    'batches',
-                    convertXTZToMutez(values.amount) / tokensPerTick,
-                  );
-                  setFieldTouched('batches', true, false);
-                }}
-              />
 
-              <InputGroup.Append>
-                <InputGroup.Text style={{ paddingTop: 0, paddingBottom: 0 }}>
-                  <span style={{ display: 'flex', alignItems: 'center' }}>
-                    <BtnMax
-                      onClick={async () => {
-                        await setFieldValue(
-                          'batches',
-                          convertXTZToMutez(balance) / tokensPerTick,
-                        );
-                        await setFieldTouched('batches', true, false);
-                        await setFieldValue('amount', balance);
-                        setFieldTouched('amount', true, false);
-                      }}
-                    >
-                      MAX
-                    </BtnMax>
-                    <span style={{ fontSize: '12px', marginBottom: '2px' }}>
-                      {balance}
-                    </span>
-                  </span>
-                </InputGroup.Text>
-              </InputGroup.Append>
+            <Field
+              as={BForm.Control}
+              type="number"
+              name="amount"
+              aria-label="amount"
+              step={tokensPerTickInXTZ}
+              min={tokensPerTickInXTZ}
+              autoComplete="off"
+              isInvalid={!!errors.amount && touched.amount}
+              isValid={!errors.amount && touched.amount}
+              onKeyPress={(event) => limitInputDecimals(event, 8)}
+              disabled
+            />
 
-              <ErrorMessage
-                component={BForm.Control.Feedback}
-                name="amount"
-                type="invalid"
-              />
-            </InputGroup>
+            <ErrorMessage
+              component={BForm.Control.Feedback}
+              name="amount"
+              type="invalid"
+            />
           </BForm.Group>
 
           <FormSubmit>
@@ -222,8 +173,6 @@ const VestingVestForm = ({
 
 VestingVestForm.propTypes = {
   vestingAddress: PropTypes.string.isRequired,
-  vestingBalance: PropTypes.number.isRequired,
-  vestingOpenedBalance: PropTypes.number.isRequired,
   tokensPerTick: PropTypes.number.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,

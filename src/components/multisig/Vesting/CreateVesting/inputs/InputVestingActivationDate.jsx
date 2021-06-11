@@ -9,7 +9,7 @@ import { DatePickerWrapper } from '../../../../styled/DatePickerStyles';
 const handleDateChangeRaw = (e) => {
   e.preventDefault();
 };
-const today = dayjs().startOf('day').toDate();
+const today = dayjs().toDate();
 
 const VestingActivationDate = () => {
   const {
@@ -28,7 +28,7 @@ const VestingActivationDate = () => {
           name="startDate"
           aria-label="startDate"
           as={DatePicker}
-          dateFormat="yyyy/MM/dd"
+          dateFormat="yyyy/MM/dd h:mm aa"
           minDate={today}
           wrapperClassName={
             // eslint-disable-next-line no-nested-ternary
@@ -48,6 +48,11 @@ const VestingActivationDate = () => {
             />
           }
           onChange={(date) => {
+            const now = new Date();
+            date.setHours(now.getHours());
+            date.setMinutes(now.getMinutes());
+            date.setSeconds(now.getSeconds());
+
             setFieldTouched('startDate', true);
             setFieldValue('startDate', date);
           }}

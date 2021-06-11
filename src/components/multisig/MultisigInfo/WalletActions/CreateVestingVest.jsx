@@ -15,30 +15,21 @@ import { useOperationsDispatchContext } from '../../../../store/operationsContex
 import useAPI from '../../../../hooks/useApi';
 import useRequest from '../../../../hooks/useRequest';
 import { handleError } from '../../../../utils/errorsHandler';
-import {
-  bs58Validation,
-  limitInputDecimals,
-  convertMutezToXTZ,
-  convertXTZToMutez,
-} from '../../../../utils/helpers';
+import { bs58Validation, convertMutezToXTZ } from '../../../../utils/helpers';
 
-const schema = (minAmount = 0.000001) =>
-  Yup.object({
-    vestingAddress: Yup.string()
-      .required('Required')
-      .matches('KT1', 'Tezos contract address must start with KT1')
-      .matches(/^\S+$/, 'No spaces are allowed')
-      .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
-      .length(36, 'Tezos address must be 36 characters long')
-      .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
-    batches: Yup.number()
-      .required('Required')
-      .integer('Ticks must be an integer')
-      .min(1, `Minimum number of batches is 1`),
-    amount: Yup.number()
-      .required('Required')
-      .min(minAmount, `Minimum amount is ${minAmount} XTZ`),
-  });
+const schema = Yup.object({
+  vestingAddress: Yup.string()
+    .required('Required')
+    .matches('KT1', 'Tezos contract address must start with KT1')
+    .matches(/^\S+$/, 'No spaces are allowed')
+    .matches(/^[a-km-zA-HJ-NP-Z1-9]+$/, 'Invalid Tezos address')
+    .length(36, 'Tezos address must be 36 characters long')
+    .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
+  batches: Yup.number()
+    .required('Required')
+    .integer('Ticks must be an integer')
+    .min(1, `Minimum number of batches is 1`),
+});
 
 const CreateVestingVest = ({ onCreate, onCancel }) => {
   const { createOperation, getVestingInfo } = useAPI();
@@ -85,7 +76,7 @@ const CreateVestingVest = ({ onCreate, onCancel }) => {
         batches: '',
         amount: '',
       }}
-      validationSchema={Yup.lazy(() => schema(tokensPerTickInXTZ))}
+      validationSchema={schema}
       onSubmit={async (values, { resetForm }) => {
         await createVestingVest(values, resetForm);
       }}
@@ -194,18 +185,7 @@ const CreateVestingVest = ({ onCreate, onCancel }) => {
               autoComplete="off"
               isInvalid={!!errors.amount && touched.amount}
               isValid={!errors.amount && touched.amount}
-              disabled={
-                isVestingInfoLoading || !values.vestingAddress || !tokensPerTick
-              }
-              onKeyPress={(event) => limitInputDecimals(event, 6)}
-              onBlur={(e) => {
-                handleBlur(e);
-                setFieldValue(
-                  'batches',
-                  convertXTZToMutez(values.amount) / tokensPerTick,
-                );
-                setFieldTouched('batches', true, false);
-              }}
+              disabled
             />
 
             <ErrorMessage
