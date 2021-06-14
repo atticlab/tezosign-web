@@ -12,6 +12,7 @@ const CreateVesting = () => {
   const [show, setShow] = useState(false);
   const [isAdvanced, setIsAdvanced] = useState(false);
   const [transactionHash, setTransactionHash] = useState('');
+  const [vestingName, setVestingName] = useState('');
 
   const handleClose = () => {
     setTransactionHash('');
@@ -49,19 +50,22 @@ const CreateVesting = () => {
           {transactionHash ? (
             <CreateVestingResult
               transactionHash={transactionHash}
+              vestingName={vestingName}
               onDone={handleClose}
             />
           ) : isAdvanced ? (
             <CreateVestingForm
-              onSubmit={(hash) => {
+              onSubmit={(hash, name) => {
                 setTransactionHash(() => hash);
+                setVestingName(() => name);
               }}
               onCancel={handleClose}
             />
           ) : (
             <CreateVestingFormSimple
-              onSubmit={(hash) => {
+              onSubmit={(hash, name) => {
                 setTransactionHash(() => hash);
+                setVestingName(() => name);
               }}
               onCancel={handleClose}
             />

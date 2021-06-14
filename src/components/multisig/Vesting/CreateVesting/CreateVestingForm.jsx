@@ -12,6 +12,7 @@ import InputDelegateAdmin from './inputs/InputDelegateAdmin';
 import InputVestingActivationDate from './inputs/InputVestingActivationDate';
 import InputSecondsPerTick from './inputs/InputSecondsPerTick';
 import InputXTZPerTick from './inputs/InputXTZPerTick';
+import InputVestingName from '../InputVestingName';
 import CheckboxExplanation from './inputs/CheckboxExplanation';
 import useAPI from '../../../../hooks/useApi';
 import useBalances from './useBalances';
@@ -22,6 +23,7 @@ import {
 import { handleError } from '../../../../utils/errorsHandler';
 import { sendOrigination } from '../../../../plugins/beacon';
 import { tezosAddressSchema } from '../../../../utils/schemas/tezosAddressSchema';
+import vestingNameSchema from '../../../../utils/schemas/vestingNameSchema';
 import { secondsPerTickSchema } from './createVestingSchemas';
 
 dayjs.extend(utc);
@@ -40,6 +42,7 @@ const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
     balance: Yup.number()
       .max(maxAmount, `Maximum amount is ${maxAmount} XTZ`)
       .min(minAmount, `Minimum amount is ${minAmount} XTZ`),
+    name: vestingNameSchema,
   });
 
 const CreateVestingForm = ({ onSubmit, onCancel }) => {
@@ -55,6 +58,7 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
       secondsPerTick,
       tokensPerTick,
       balance,
+      name,
     },
     resetForm,
   ) => {
@@ -77,7 +81,7 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
       );
 
       resetForm();
-      onSubmit(resp.transactionHash);
+      onSubmit(resp.transactionHash, name);
     } catch (e) {
       handleError(e);
     }
@@ -93,6 +97,7 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
         tokensPerTick: '',
         check: false,
         balance: '',
+        name: '',
       }}
       validationSchema={Yup.lazy((values) =>
         schema(balanceConverted, balanceInXTZ, values.tokensPerTick),
@@ -110,6 +115,7 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
           <InputXTZPerTick onChange={setCurrentTokensPerTick} />
           <CheckboxExplanation />
           <InputBalance maxBalance={Number(balanceConverted)} />
+          <InputVestingName />
 
           <FormSubmit>
             <Button

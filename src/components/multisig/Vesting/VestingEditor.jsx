@@ -4,18 +4,16 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Form as BForm } from 'react-bootstrap';
 import { FormLabel, FormSubmit } from '../../styled/Forms';
+import InputVestingName from './InputVestingName';
 import useAPI from '../../../hooks/useApi';
 import { useContractStateContext } from '../../../store/contractContext';
 import { bs58Validation } from '../../../utils/helpers';
 import { handleError } from '../../../utils/errorsHandler';
 import { useVestingsDispatchContext } from '../../../store/vestingsContext';
+import vestingNameSchema from '../../../utils/schemas/vestingNameSchema';
 
 const schema = Yup.object({
-  name: Yup.string()
-    .required('Required')
-    .max(32, 'At most 32 characters')
-    .matches(/^[\w ]*$/, 'Only latin characters and numbers are allowed')
-    .matches(/^[\w]+( [\w]+)*$/, 'Unnecessary spaces'),
+  name: vestingNameSchema.required('Required'),
   address: Yup.string()
     .required('Required')
     .matches('KT1', 'Tezos contract address must start with KT1')
@@ -82,24 +80,7 @@ const VestingEditor = ({ isEdit, name, address, onSubmit, onCancel }) => {
     >
       {({ errors, touched, isSubmitting, setFieldTouched, setFieldValue }) => (
         <Form>
-          <BForm.Group>
-            <FormLabel>Vesting contract name</FormLabel>
-            <Field
-              as={BForm.Control}
-              type="text"
-              name="name"
-              aria-label="name"
-              autoComplete="off"
-              isInvalid={!!errors.name && touched.name}
-              isValid={!errors.name && touched.name}
-            />
-
-            <ErrorMessage
-              component={BForm.Control.Feedback}
-              name="name"
-              type="invalid"
-            />
-          </BForm.Group>
+          <InputVestingName />
 
           <BForm.Group>
             <FormLabel>Vesting contract address</FormLabel>
