@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { FormSubmit } from '../../../styled/Forms';
@@ -9,16 +9,17 @@ import useAPI from '../../../../hooks/useApi';
 import { useVestingsDispatchContext } from '../../../../store/vestingsContext';
 import { handleError } from '../../../../utils/errorsHandler';
 import { useContractStateContext } from '../../../../store/contractContext';
-
-const explorerNetworks = {
-  florence: 'florencenet',
-};
+import useExplorerOperationLink from '../../../../hooks/useExplorerOperationLink';
+import useOriginationCheck from '../../../../hooks/useOriginationCheck';
 
 const CreateVestingResult = ({ transactionHash, vestingName, onDone }) => {
-  const [originatedContract, setOriginatedContract] = useState('');
   const { contractAddress } = useContractStateContext();
-  const { getOriginatedContract, addVesting } = useAPI();
+  const { addVesting } = useAPI();
   const { setVestings } = useVestingsDispatchContext();
+  const { explorerOperationLink } = useExplorerOperationLink(transactionHash);
+  const { originatedContract, setOriginatedContract } = useOriginationCheck(
+    transactionHash,
+  );
 
   const addVestingReq = async (values) => {
     try {
@@ -28,32 +29,6 @@ const CreateVestingResult = ({ transactionHash, vestingName, onDone }) => {
       handleError(e);
     }
   };
-
-  const explorerOperationLink = useMemo(() => {
-    return `https://${
-      explorerNetworks[process.env.REACT_APP_TEZOS_NETWORK]
-    }.tzkt.io/${transactionHash}`;
-  }, [transactionHash]);
-
-  useEffect(() => {
-    if (!transactionHash) return null;
-
-    const interval = setInterval(async () => {
-      try {
-        const resp = await getOriginatedContract(transactionHash);
-        if (resp.data.contract) {
-          setOriginatedContract(resp.data.contract);
-          clearInterval(interval);
-        }
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      }
-    }, 7000);
-
-    return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transactionHash]);
 
   useEffect(() => {
     if (!originatedContract || !vestingName) return null;

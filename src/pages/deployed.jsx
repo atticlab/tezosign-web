@@ -1,21 +1,18 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory, Link } from 'react-router-dom';
 import { Text } from '../components/styled/Text';
 import Card from '../components/styled/Card';
 import Spinner from '../components/Spinner';
 import BtnBack from '../components/BtnBack';
-import useAPI from '../hooks/useApi';
-
-const explorerNetworks = {
-  florence: 'florencenet',
-};
+import useExplorerOperationLink from '../hooks/useExplorerOperationLink';
+import useOriginationCheck from '../hooks/useOriginationCheck';
 
 const Deployed = () => {
   const location = useLocation();
   const history = useHistory();
   const [transactionHash, setTransactionHash] = useState('');
-  const [originatedContract, setOriginatedContract] = useState('');
-  const { getOriginatedContract } = useAPI();
+  const { explorerOperationLink } = useExplorerOperationLink(transactionHash);
+  const { originatedContract } = useOriginationCheck(transactionHash);
 
   useEffect(() => {
     if (!location.state) {
@@ -24,32 +21,6 @@ const Deployed = () => {
     }
     setTransactionHash(location.state.transactionHash);
   }, [history, location]);
-
-  useEffect(() => {
-    if (!transactionHash) return null;
-
-    const interval = setInterval(async () => {
-      try {
-        const resp = await getOriginatedContract(transactionHash);
-        if (resp.data.contract) {
-          setOriginatedContract(resp.data.contract);
-          clearInterval(interval);
-        }
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      }
-    }, 7000);
-
-    return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transactionHash]);
-
-  const explorerOperationLink = useMemo(() => {
-    return `https://${
-      explorerNetworks[process.env.REACT_APP_TEZOS_NETWORK]
-    }.tzkt.io/${transactionHash}`;
-  }, [transactionHash]);
 
   return (
     <>
