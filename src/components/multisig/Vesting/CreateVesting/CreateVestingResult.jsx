@@ -6,14 +6,28 @@ import { Text, BreakTxt } from '../../../styled/Text';
 import Spinner from '../../../Spinner';
 import BtnCopy from '../../../BtnCopy';
 import useAPI from '../../../../hooks/useApi';
+import { useVestingsDispatchContext } from '../../../../store/vestingsContext';
+import { handleError } from '../../../../utils/errorsHandler';
+import { useContractStateContext } from '../../../../store/contractContext';
 
 const explorerNetworks = {
   florence: 'florencenet',
 };
 
-const CreateVestingResult = ({ transactionHash, onDone }) => {
+const CreateVestingResult = ({ transactionHash, vestingName, onDone }) => {
   const [originatedContract, setOriginatedContract] = useState('');
-  const { getOriginatedContract } = useAPI();
+  const { contractAddress } = useContractStateContext();
+  const { getOriginatedContract, addVesting } = useAPI();
+  const { setVestings } = useVestingsDispatchContext();
+
+  const addVestingReq = async (values) => {
+    try {
+      const resp = await addVesting(contractAddress, values);
+      setVestings((prev) => [resp.data, ...prev]);
+    } catch (e) {
+      handleError(e);
+    }
+  };
 
   const explorerOperationLink = useMemo(() => {
     return `https://${
@@ -40,6 +54,13 @@ const CreateVestingResult = ({ transactionHash, onDone }) => {
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactionHash]);
+
+  useEffect(() => {
+    if (!originatedContract || !vestingName) return null;
+
+    return addVestingReq({ address: originatedContract, name: vestingName });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [originatedContract, vestingName]);
 
   return (
     <div>
@@ -91,6 +112,7 @@ const CreateVestingResult = ({ transactionHash, onDone }) => {
 
 CreateVestingResult.propTypes = {
   transactionHash: PropTypes.string.isRequired,
+  vestingName: PropTypes.string.isRequired,
   onDone: PropTypes.func.isRequired,
 };
 

@@ -12,12 +12,14 @@ import InputVestingActivationDate from './inputs/InputVestingActivationDate';
 import SelectUnvestingInterval from './inputs/SelectUnvestingInterval';
 import InputUnvestedPartsAmount from './inputs/InputUnvestedPartsAmount';
 import InputVestingEndDate from './inputs/InputVestingEndDate';
+import InputVestingName from '../InputVestingName';
 import useBalances from './useBalances';
 import useAPI from '../../../../hooks/useApi';
 import { handleError } from '../../../../utils/errorsHandler';
 import { convertXTZToMutez } from '../../../../utils/helpers';
 import { tezosAddressSchema } from '../../../../utils/schemas/tezosAddressSchema';
 import balanceSchema from '../../../../utils/schemas/balanceSchema';
+import vestingNameSchema from '../../../../utils/schemas/vestingNameSchema';
 import { secondsPerTickSchema } from './createVestingSchemas';
 import { sendOrigination } from '../../../../plugins/beacon';
 import { unvestingIntervals } from '../../../../utils/constants';
@@ -62,6 +64,7 @@ const schema = (maxAmount, minAmount = 0.000001) =>
     secondsPerTick: secondsPerTickSchema,
     endDate: Yup.string().required('Required'),
     balance: balanceSchema(maxAmount, minAmount),
+    name: vestingNameSchema,
   });
 
 const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
@@ -76,6 +79,7 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
       secondsPerTick,
       balance,
       parts,
+      name,
     },
     resetForm,
   ) => {
@@ -95,7 +99,7 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
       const resp = await sendOrigination(balance.toString(), script);
 
       resetForm();
-      onSubmit(resp.transactionHash);
+      onSubmit(resp.transactionHash, name);
     } catch (e) {
       handleError(e);
     }
@@ -111,6 +115,7 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
         secondsPerTick: unvestingIntervals[0].value,
         endDate: '',
         balance: '',
+        name: '',
       }}
       validationSchema={Yup.lazy(() => schema(balanceInXTZ))}
       onSubmit={async (values, { resetForm }) => {
@@ -126,6 +131,7 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
           <SelectUnvestingInterval defaultValue={unvestingIntervals[0]} />
           <InputVestingEndDate />
           <InputBalance maxBalance={Number(balanceInXTZ)} />
+          <InputVestingName />
 
           <FormSubmit>
             <Button
