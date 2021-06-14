@@ -92,10 +92,10 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
       const respStorage = await initVesting(payload);
 
       const script = { code: respCode.data, storage: respStorage.data };
-      await sendOrigination(balance.toString(), script);
+      const resp = await sendOrigination(balance.toString(), script);
 
       resetForm();
-      onSubmit();
+      onSubmit(resp.transactionHash);
     } catch (e) {
       handleError(e);
     }

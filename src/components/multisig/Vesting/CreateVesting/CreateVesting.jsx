@@ -6,11 +6,15 @@ import Modal from '../../../styled/Modal';
 import { Title } from '../../../styled/Text';
 import CreateVestingForm from './CreateVestingForm';
 import CreateVestingFormSimple from './CreateVestingFormSimple';
+import CreateVestingResult from './CreateVestingResult';
 
 const CreateVesting = () => {
   const [show, setShow] = useState(false);
   const [isAdvanced, setIsAdvanced] = useState(false);
+  const [transactionHash, setTransactionHash] = useState('');
+
   const handleClose = () => {
+    setTransactionHash('');
     setShow(false);
   };
   const handleShow = () => {
@@ -41,11 +45,24 @@ const CreateVesting = () => {
         </Modal.Header>
 
         <Modal.Body style={{ padding: '15px 30px' }}>
-          {isAdvanced ? (
-            <CreateVestingForm onSubmit={handleClose} onCancel={handleClose} />
+          {/* eslint-disable-next-line no-nested-ternary */}
+          {transactionHash ? (
+            <CreateVestingResult
+              transactionHash={transactionHash}
+              onDone={handleClose}
+            />
+          ) : isAdvanced ? (
+            <CreateVestingForm
+              onSubmit={(hash) => {
+                setTransactionHash(() => hash);
+              }}
+              onCancel={handleClose}
+            />
           ) : (
             <CreateVestingFormSimple
-              onSubmit={handleClose}
+              onSubmit={(hash) => {
+                setTransactionHash(() => hash);
+              }}
               onCancel={handleClose}
             />
           )}
