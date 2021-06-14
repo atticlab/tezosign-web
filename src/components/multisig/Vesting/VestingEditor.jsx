@@ -13,7 +13,7 @@ import { useVestingsDispatchContext } from '../../../store/vestingsContext';
 import vestingNameSchema from '../../../utils/schemas/vestingNameSchema';
 
 const schema = Yup.object({
-  name: vestingNameSchema,
+  name: vestingNameSchema.required('Required'),
   address: Yup.string()
     .required('Required')
     .matches('KT1', 'Tezos contract address must start with KT1')

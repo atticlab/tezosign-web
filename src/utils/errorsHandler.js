@@ -12,6 +12,7 @@ const errorNotifications = {
   'ERR_BAD_PARAM:wrong contract type': 'Wrong contract type',
   'ERR_BAD_REQUEST:wrong pubKey format': 'Wrong public key format.',
   'ERR_ALREADY_EXISTS:asset': 'Asset with the same address already exists.',
+  'ERR_ALREADY_EXISTS:vesting': 'Vesting with the same address already exists.',
   'ERR_NOT_ALLOWED:global asset': 'Global assets cannot be edited.',
   ERR_NOT_FOUND: 'Not found.',
   'ERR_NOT_FOUND:contract':
