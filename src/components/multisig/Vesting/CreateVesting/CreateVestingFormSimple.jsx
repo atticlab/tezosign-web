@@ -8,6 +8,7 @@ import { FormSubmit } from '../../../styled/Forms';
 import InputVestingAddress from './inputs/InputVestingAddress';
 import InputBalance from './inputs/InputBalance';
 import InputDelegateAdmin from './inputs/InputDelegateAdmin';
+import InputDelegate from './inputs/InputDelegate';
 import InputVestingActivationDate from './inputs/InputVestingActivationDate';
 import SelectUnvestingInterval from './inputs/SelectUnvestingInterval';
 import InputUnvestedPartsAmount from './inputs/InputUnvestedPartsAmount';
@@ -17,7 +18,10 @@ import useBalances from './useBalances';
 import useAPI from '../../../../hooks/useApi';
 import { handleError } from '../../../../utils/errorsHandler';
 import { convertXTZToMutez } from '../../../../utils/helpers';
-import { tezosAddressSchema } from '../../../../utils/schemas/tezosAddressSchema';
+import {
+  tezosAddressSchema,
+  delegateOptional,
+} from '../../../../utils/schemas/tezosAddressSchema';
 import balanceSchema from '../../../../utils/schemas/balanceSchema';
 import vestingNameSchema from '../../../../utils/schemas/vestingNameSchema';
 import { secondsPerTickSchema } from './createVestingSchemas';
@@ -33,6 +37,7 @@ const schema = (maxAmount, minAmount = 0.000001) =>
   Yup.object({
     vestingAddress: tezosAddressSchema,
     delegateAddress: tezosAddressSchema,
+    delegate: delegateOptional,
     startDate: Yup.string().required('Required'),
     parts: Yup.number()
       .required('Required')
@@ -75,6 +80,7 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
     {
       vestingAddress,
       delegateAddress,
+      delegate,
       startDate,
       secondsPerTick,
       balance,
@@ -94,9 +100,9 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
         tokens_per_tick: calcTokensPerTick(balance, parts),
       };
       const respStorage = await initVesting(payload);
-
       const script = { code: respCode.data, storage: respStorage.data };
-      const resp = await sendOrigination(balance.toString(), script);
+
+      const resp = await sendOrigination(balance.toString(), script, delegate);
 
       resetForm();
       onSubmit(resp.transactionHash, name);
@@ -110,6 +116,7 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
       initialValues={{
         vestingAddress: '',
         delegateAddress: '',
+        delegate: '',
         startDate: '',
         parts: '',
         secondsPerTick: unvestingIntervals[0].value,
@@ -126,6 +133,7 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
         <Form>
           <InputVestingAddress />
           <InputDelegateAdmin />
+          <InputDelegate />
           <InputVestingActivationDate />
           <InputUnvestedPartsAmount />
           <SelectUnvestingInterval defaultValue={unvestingIntervals[0]} />
