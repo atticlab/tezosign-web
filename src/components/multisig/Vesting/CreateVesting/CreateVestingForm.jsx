@@ -9,6 +9,7 @@ import { FormSubmit } from '../../../styled/Forms';
 import InputVestingAddress from './inputs/InputVestingAddress';
 import InputBalance from './inputs/InputBalance';
 import InputDelegateAdmin from './inputs/InputDelegateAdmin';
+import InputDelegate from './inputs/InputDelegate';
 import InputVestingActivationDate from './inputs/InputVestingActivationDate';
 import InputSecondsPerTick from './inputs/InputSecondsPerTick';
 import InputXTZPerTick from './inputs/InputXTZPerTick';
@@ -22,7 +23,10 @@ import {
 } from '../../../../utils/helpers';
 import { handleError } from '../../../../utils/errorsHandler';
 import { sendOrigination } from '../../../../plugins/beacon';
-import { tezosAddressSchema } from '../../../../utils/schemas/tezosAddressSchema';
+import {
+  tezosAddressSchema,
+  delegateOptional,
+} from '../../../../utils/schemas/tezosAddressSchema';
 import vestingNameSchema from '../../../../utils/schemas/vestingNameSchema';
 import { secondsPerTickSchema } from './createVestingSchemas';
 
@@ -32,6 +36,7 @@ const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
   Yup.object({
     vestingAddress: tezosAddressSchema,
     delegateAddress: tezosAddressSchema,
+    delegate: delegateOptional,
     startDate: Yup.string().required('Required'),
     secondsPerTick: secondsPerTickSchema,
     tokensPerTick: Yup.number()
@@ -54,6 +59,7 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
     {
       vestingAddress,
       delegateAddress,
+      delegate,
       startDate,
       secondsPerTick,
       tokensPerTick,
@@ -78,6 +84,7 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
       const resp = await sendOrigination(
         balance ? balance.toString() : 0,
         script,
+        delegate,
       );
 
       resetForm();
@@ -92,6 +99,7 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
       initialValues={{
         vestingAddress: '',
         delegateAddress: '',
+        delegate: '',
         startDate: '',
         secondsPerTick: '',
         tokensPerTick: '',
@@ -110,6 +118,7 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
         <Form>
           <InputVestingAddress />
           <InputDelegateAdmin />
+          <InputDelegate />
           <InputVestingActivationDate />
           <InputSecondsPerTick />
           <InputXTZPerTick onChange={setCurrentTokensPerTick} />

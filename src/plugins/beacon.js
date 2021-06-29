@@ -52,13 +52,13 @@ const resetPeer = () => {
   return client.setActivePeer(undefined);
 };
 
-const sendOrigination = async (balance = '0', script) => {
+const sendOrigination = async (balance = '0', script, delegate = null) => {
   return client.requestOperation({
     operationDetails: [
       {
         kind: TezosOperationType.ORIGINATION,
         balance,
-        // delegate,
+        delegate,
         script,
       },
     ],
