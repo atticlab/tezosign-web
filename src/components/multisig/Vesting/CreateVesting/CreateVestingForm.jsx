@@ -22,7 +22,6 @@ import {
   getSecondsFromHHMMSS,
 } from '../../../../utils/helpers';
 import { handleError } from '../../../../utils/errorsHandler';
-import { sendOrigination } from '../../../../plugins/beacon';
 import {
   tezosAddressSchema,
   delegateOptional,
@@ -51,7 +50,7 @@ const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
   });
 
 const CreateVestingForm = ({ onSubmit, onCancel }) => {
-  const { getVestingContractCode, initVesting } = useAPI();
+  const { initVesting } = useAPI();
   const [currentTokensPerTick, setCurrentTokensPerTick] = useState(null);
   const { balanceConverted, balanceInXTZ } = useBalances(currentTokensPerTick);
 
@@ -69,8 +68,6 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
     resetForm,
   ) => {
     try {
-      const respCode = await getVestingContractCode();
-
       const payload = {
         vesting_address: vestingAddress,
         delegate_admin: delegateAddress,
@@ -80,15 +77,13 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
       };
       const respStorage = await initVesting(payload);
 
-      const script = { code: respCode.data, storage: respStorage.data };
-      const resp = await sendOrigination(
-        balance ? balance.toString() : 0,
-        script,
+      onSubmit({
+        storage: respStorage.data,
+        name,
         delegate,
-      );
-
+        balance,
+      });
       resetForm();
-      onSubmit(resp.transactionHash, name);
     } catch (e) {
       handleError(e);
     }

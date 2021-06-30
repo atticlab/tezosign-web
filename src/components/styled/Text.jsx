@@ -41,6 +41,12 @@ const TextLeft = styled.span`
   text-align: left;
 `;
 
+const PreCode = styled.pre`
+  color: #ff338d;
+  max-height: 400px;
+  overflow: auto;
+`;
+
 export {
   Title,
   TitleStyles,
@@ -51,4 +57,5 @@ export {
   Green,
   Red,
   TextLeft,
+  PreCode,
 };

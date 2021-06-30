@@ -2,24 +2,17 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { Form, Formik } from 'formik';
-import styled from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from 'react-bootstrap';
 import Modal from '../../../styled/Modal';
-import { Bold, Title } from '../../../styled/Text';
+import { Bold, Title, PreCode } from '../../../styled/Text';
 import Card from '../../../styled/Card';
 import { FlexCenter } from '../../../styled/Flex';
 import PayloadType from './PayloadDownload/PayloadType';
 import Spinner from '../../../Spinner';
 import payloadTypeSchema from '../../../../utils/schemas/payloadTypeSchema';
-
-const PreCode = styled.pre`
-  color: #ff338d;
-  max-height: 400px;
-  overflow: auto;
-`;
 
 const schema = Yup.object({
   payloadType: payloadTypeSchema,

@@ -25,7 +25,6 @@ import {
 import balanceSchema from '../../../../utils/schemas/balanceSchema';
 import vestingNameSchema from '../../../../utils/schemas/vestingNameSchema';
 import { secondsPerTickSchema } from './createVestingSchemas';
-import { sendOrigination } from '../../../../plugins/beacon';
 import { unvestingIntervals } from '../../../../utils/constants';
 
 const calcTokensPerTick = (balance, parts) => {
@@ -73,7 +72,7 @@ const schema = (maxAmount, minAmount = 0.000001) =>
   });
 
 const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
-  const { getVestingContractCode, initVesting } = useAPI();
+  const { initVesting } = useAPI();
   const { balanceInXTZ } = useBalances();
 
   const createVesting = async (
@@ -90,8 +89,6 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
     resetForm,
   ) => {
     try {
-      const respCode = await getVestingContractCode();
-
       const payload = {
         vesting_address: vestingAddress,
         delegate_admin: delegateAddress,
@@ -100,12 +97,14 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
         tokens_per_tick: calcTokensPerTick(balance, parts),
       };
       const respStorage = await initVesting(payload);
-      const script = { code: respCode.data, storage: respStorage.data };
 
-      const resp = await sendOrigination(balance.toString(), script, delegate);
-
+      onSubmit({
+        storage: respStorage.data,
+        name,
+        delegate,
+        balance,
+      });
       resetForm();
-      onSubmit(resp.transactionHash, name);
     } catch (e) {
       handleError(e);
     }
