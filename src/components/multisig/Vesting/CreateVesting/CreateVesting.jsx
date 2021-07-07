@@ -19,15 +19,21 @@ const CreateVesting = () => {
   const [vestingOriginationPayload, setVestingOriginationPayload] = useState(
     '',
   );
+  const [formData, setFormData] = useState({});
 
   const handleClose = () => {
     setIsAdvanced(false);
     setVestingOriginationPayload('');
     setTransactionHash('');
+    setFormData({});
     setShow(false);
   };
   const handleShow = () => {
     setShow(true);
+  };
+  const handleModeToggle = () => {
+    setIsAdvanced((prev) => !prev);
+    setFormData({});
   };
 
   useEffect(() => {
@@ -50,21 +56,25 @@ const CreateVesting = () => {
       <>
         <BtnTransparent
           style={{ marginBottom: '10px' }}
-          onClick={() => setIsAdvanced((prev) => !prev)}
+          onClick={handleModeToggle}
         >
           {isAdvanced ? 'Standard mode' : 'Advanced mode'}
         </BtnTransparent>
 
         {isAdvanced ? (
           <CreateVestingForm
-            onSubmit={(payload) => {
+            formData={formData}
+            onSubmit={(raw, payload) => {
+              setFormData(() => raw);
               setVestingOriginationPayload(() => payload);
             }}
             onCancel={handleClose}
           />
         ) : (
           <CreateVestingFormSimple
-            onSubmit={(payload) => {
+            formData={formData}
+            onSubmit={(raw, payload) => {
+              setFormData(() => raw);
               setVestingOriginationPayload(() => payload);
             }}
             onCancel={handleClose}
@@ -84,9 +94,10 @@ const CreateVesting = () => {
     ) : (
       <CreateVestingConfirm
         script={script}
-        balance={vestingOriginationPayload.balance}
-        delegate={vestingOriginationPayload.delegate}
+        formData={formData}
+        isFormAdvanced={isAdvanced}
         onSubmit={(txHash) => setTransactionHash(() => txHash)}
+        onBack={() => setVestingOriginationPayload('')}
       />
     );
   };

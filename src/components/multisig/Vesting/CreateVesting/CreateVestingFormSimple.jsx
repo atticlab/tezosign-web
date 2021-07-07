@@ -71,12 +71,24 @@ const schema = (maxAmount, minAmount = 0.000001) =>
     name: vestingNameSchema,
   });
 
-const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
+const initialValues = {
+  vestingAddress: '',
+  delegateAddress: '',
+  delegate: '',
+  startDate: '',
+  parts: '',
+  secondsPerTick: unvestingIntervals[0].value,
+  endDate: '',
+  balance: '',
+  name: '',
+};
+
+const CreateVestingFormSimple = ({ formData, onSubmit, onCancel }) => {
   const { initVesting } = useAPI();
   const { balanceInXTZ } = useBalances();
 
-  const createVesting = async (
-    {
+  const submitVestingForm = async (values) => {
+    const {
       vestingAddress,
       delegateAddress,
       delegate,
@@ -85,9 +97,8 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
       balance,
       parts,
       name,
-    },
-    resetForm,
-  ) => {
+    } = values;
+
     try {
       const payload = {
         vesting_address: vestingAddress,
@@ -98,13 +109,12 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
       };
       const respStorage = await initVesting(payload);
 
-      onSubmit({
+      onSubmit(values, {
         storage: respStorage.data,
         name,
         delegate,
         balance,
       });
-      resetForm();
     } catch (e) {
       handleError(e);
     }
@@ -112,20 +122,12 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
 
   return (
     <Formik
-      initialValues={{
-        vestingAddress: '',
-        delegateAddress: '',
-        delegate: '',
-        startDate: '',
-        parts: '',
-        secondsPerTick: unvestingIntervals[0].value,
-        endDate: '',
-        balance: '',
-        name: '',
-      }}
+      initialValues={
+        Object.keys(formData).length ? { ...formData } : initialValues
+      }
       validationSchema={Yup.lazy(() => schema(balanceInXTZ))}
       onSubmit={async (values, { resetForm }) => {
-        await createVesting(values, resetForm);
+        await submitVestingForm(values, resetForm);
       }}
     >
       {({ isSubmitting }) => (
@@ -159,8 +161,12 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
 };
 
 CreateVestingFormSimple.propTypes = {
+  formData: PropTypes.objectOf(PropTypes.any),
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+};
+CreateVestingFormSimple.defaultProps = {
+  formData: initialValues,
 };
 
 export default CreateVestingFormSimple;
