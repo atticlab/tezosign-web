@@ -22,7 +22,6 @@ import {
   getSecondsFromHHMMSS,
 } from '../../../../utils/helpers';
 import { handleError } from '../../../../utils/errorsHandler';
-import { sendOrigination } from '../../../../plugins/beacon';
 import {
   tezosAddressSchema,
   delegateOptional,
@@ -50,13 +49,25 @@ const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
     name: vestingNameSchema,
   });
 
-const CreateVestingForm = ({ onSubmit, onCancel }) => {
-  const { getVestingContractCode, initVesting } = useAPI();
+const initialValues = {
+  vestingAddress: '',
+  delegateAddress: '',
+  delegate: '',
+  startDate: '',
+  secondsPerTick: '',
+  tokensPerTick: '',
+  check: false,
+  balance: '',
+  name: '',
+};
+
+const CreateVestingForm = ({ formData, onSubmit, onCancel }) => {
+  const { initVesting } = useAPI();
   const [currentTokensPerTick, setCurrentTokensPerTick] = useState(null);
   const { balanceConverted, balanceInXTZ } = useBalances(currentTokensPerTick);
 
-  const createVesting = async (
-    {
+  const submitVestingForm = async (values) => {
+    const {
       vestingAddress,
       delegateAddress,
       delegate,
@@ -65,12 +76,9 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
       tokensPerTick,
       balance,
       name,
-    },
-    resetForm,
-  ) => {
-    try {
-      const respCode = await getVestingContractCode();
+    } = values;
 
+    try {
       const payload = {
         vesting_address: vestingAddress,
         delegate_admin: delegateAddress,
@@ -80,15 +88,12 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
       };
       const respStorage = await initVesting(payload);
 
-      const script = { code: respCode.data, storage: respStorage.data };
-      const resp = await sendOrigination(
-        balance ? balance.toString() : 0,
-        script,
+      onSubmit(values, {
+        storage: respStorage.data,
+        name,
         delegate,
-      );
-
-      resetForm();
-      onSubmit(resp.transactionHash, name);
+        balance,
+      });
     } catch (e) {
       handleError(e);
     }
@@ -96,22 +101,14 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
 
   return (
     <Formik
-      initialValues={{
-        vestingAddress: '',
-        delegateAddress: '',
-        delegate: '',
-        startDate: '',
-        secondsPerTick: '',
-        tokensPerTick: '',
-        check: false,
-        balance: '',
-        name: '',
-      }}
+      initialValues={
+        Object.keys(formData).length ? { ...formData } : initialValues
+      }
       validationSchema={Yup.lazy((values) =>
         schema(balanceConverted, balanceInXTZ, values.tokensPerTick),
       )}
       onSubmit={async (values, { resetForm }) => {
-        await createVesting(values, resetForm);
+        await submitVestingForm(values, resetForm);
       }}
     >
       {({ isSubmitting }) => (
@@ -121,7 +118,10 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
           <InputDelegate />
           <InputVestingActivationDate />
           <InputSecondsPerTick />
-          <InputXTZPerTick onChange={setCurrentTokensPerTick} />
+          <InputXTZPerTick
+            balanceInXTZ={balanceInXTZ}
+            onChange={setCurrentTokensPerTick}
+          />
           <CheckboxExplanation />
           <InputBalance maxBalance={Number(balanceConverted)} />
           <InputVestingName />
@@ -145,8 +145,12 @@ const CreateVestingForm = ({ onSubmit, onCancel }) => {
 };
 
 CreateVestingForm.propTypes = {
+  formData: PropTypes.objectOf(PropTypes.any),
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+};
+CreateVestingForm.defaultProps = {
+  formData: initialValues,
 };
 
 export default CreateVestingForm;

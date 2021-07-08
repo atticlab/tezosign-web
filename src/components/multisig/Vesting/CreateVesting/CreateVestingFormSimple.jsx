@@ -25,7 +25,6 @@ import {
 import balanceSchema from '../../../../utils/schemas/balanceSchema';
 import vestingNameSchema from '../../../../utils/schemas/vestingNameSchema';
 import { secondsPerTickSchema } from './createVestingSchemas';
-import { sendOrigination } from '../../../../plugins/beacon';
 import { unvestingIntervals } from '../../../../utils/constants';
 
 const calcTokensPerTick = (balance, parts) => {
@@ -72,12 +71,24 @@ const schema = (maxAmount, minAmount = 0.000001) =>
     name: vestingNameSchema,
   });
 
-const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
-  const { getVestingContractCode, initVesting } = useAPI();
+const initialValues = {
+  vestingAddress: '',
+  delegateAddress: '',
+  delegate: '',
+  startDate: '',
+  parts: '',
+  secondsPerTick: unvestingIntervals[0].value,
+  endDate: '',
+  balance: '',
+  name: '',
+};
+
+const CreateVestingFormSimple = ({ formData, onSubmit, onCancel }) => {
+  const { initVesting } = useAPI();
   const { balanceInXTZ } = useBalances();
 
-  const createVesting = async (
-    {
+  const submitVestingForm = async (values) => {
+    const {
       vestingAddress,
       delegateAddress,
       delegate,
@@ -86,12 +97,9 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
       balance,
       parts,
       name,
-    },
-    resetForm,
-  ) => {
-    try {
-      const respCode = await getVestingContractCode();
+    } = values;
 
+    try {
       const payload = {
         vesting_address: vestingAddress,
         delegate_admin: delegateAddress,
@@ -100,12 +108,13 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
         tokens_per_tick: calcTokensPerTick(balance, parts),
       };
       const respStorage = await initVesting(payload);
-      const script = { code: respCode.data, storage: respStorage.data };
 
-      const resp = await sendOrigination(balance.toString(), script, delegate);
-
-      resetForm();
-      onSubmit(resp.transactionHash, name);
+      onSubmit(values, {
+        storage: respStorage.data,
+        name,
+        delegate,
+        balance,
+      });
     } catch (e) {
       handleError(e);
     }
@@ -113,20 +122,12 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
 
   return (
     <Formik
-      initialValues={{
-        vestingAddress: '',
-        delegateAddress: '',
-        delegate: '',
-        startDate: '',
-        parts: '',
-        secondsPerTick: unvestingIntervals[0].value,
-        endDate: '',
-        balance: '',
-        name: '',
-      }}
+      initialValues={
+        Object.keys(formData).length ? { ...formData } : initialValues
+      }
       validationSchema={Yup.lazy(() => schema(balanceInXTZ))}
       onSubmit={async (values, { resetForm }) => {
-        await createVesting(values, resetForm);
+        await submitVestingForm(values, resetForm);
       }}
     >
       {({ isSubmitting }) => (
@@ -160,8 +161,12 @@ const CreateVestingFormSimple = ({ onSubmit, onCancel }) => {
 };
 
 CreateVestingFormSimple.propTypes = {
+  formData: PropTypes.objectOf(PropTypes.any),
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+};
+CreateVestingFormSimple.defaultProps = {
+  formData: initialValues,
 };
 
 export default CreateVestingFormSimple;
