@@ -14,13 +14,12 @@ import {
   convertXTZToMutez,
   limitInputDecimals,
 } from '../../../../../utils/helpers';
-import useBalances from '../useBalances';
 
 const calcMaxAllowedBalance = (balance, tokensPerTick) => {
   return Math.floor(balance / tokensPerTick) * tokensPerTick;
 };
 
-const InputXTZPerTick = ({ onChange }) => {
+const InputXTZPerTick = ({ balanceInXTZ, onChange }) => {
   const {
     values,
     errors,
@@ -29,7 +28,6 @@ const InputXTZPerTick = ({ onChange }) => {
     setFieldValue,
     setFieldTouched,
   } = useFormikContext();
-  const { balanceInXTZ } = useBalances();
 
   return (
     <BForm.Group>
@@ -101,6 +99,7 @@ const InputXTZPerTick = ({ onChange }) => {
 };
 
 InputXTZPerTick.propTypes = {
+  balanceInXTZ: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 

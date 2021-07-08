@@ -15,15 +15,15 @@ const CreateVesting = () => {
   const [show, setShow] = useState(false);
   const [isAdvanced, setIsAdvanced] = useState(false);
   const [transactionHash, setTransactionHash] = useState('');
-  const [vestingCode, setVestingCode] = useState('');
+  const [vestingCode, setVestingCode] = useState({});
   const [vestingOriginationPayload, setVestingOriginationPayload] = useState(
-    '',
+    {},
   );
   const [formData, setFormData] = useState({});
 
   const handleClose = () => {
     setIsAdvanced(false);
-    setVestingOriginationPayload('');
+    setVestingOriginationPayload({});
     setTransactionHash('');
     setFormData({});
     setShow(false);
@@ -97,7 +97,7 @@ const CreateVesting = () => {
         formData={formData}
         isFormAdvanced={isAdvanced}
         onSubmit={(txHash) => setTransactionHash(() => txHash)}
-        onBack={() => setVestingOriginationPayload('')}
+        onBack={() => setVestingOriginationPayload({})}
       />
     );
   };
@@ -122,7 +122,9 @@ const CreateVesting = () => {
         </Modal.Header>
 
         <Modal.Body style={{ padding: '15px 30px' }}>
-          {vestingOriginationPayload ? renderFinalSteps() : renderForms()}
+          {Object.keys(vestingOriginationPayload).length
+            ? renderFinalSteps()
+            : renderForms()}
         </Modal.Body>
       </Modal>
 

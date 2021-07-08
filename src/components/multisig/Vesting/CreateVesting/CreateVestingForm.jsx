@@ -118,7 +118,10 @@ const CreateVestingForm = ({ formData, onSubmit, onCancel }) => {
           <InputDelegate />
           <InputVestingActivationDate />
           <InputSecondsPerTick />
-          <InputXTZPerTick onChange={setCurrentTokensPerTick} />
+          <InputXTZPerTick
+            balanceInXTZ={balanceInXTZ}
+            onChange={setCurrentTokensPerTick}
+          />
           <CheckboxExplanation />
           <InputBalance maxBalance={Number(balanceConverted)} />
           <InputVestingName />

@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Button } from 'react-bootstrap';
+import styled from 'styled-components';
 import Card from '../../../styled/Card';
 import { Bold, PreCode } from '../../../styled/Text';
 import { FormSubmit } from '../../../styled/Forms';
@@ -11,7 +12,11 @@ import { sendOrigination } from '../../../../plugins/beacon';
 import { handleError } from '../../../../utils/errorsHandler';
 import { BtnTransparent } from '../../../styled/Btns';
 import { dateFormat, unvestingIntervals } from '../../../../utils/constants';
-import { toHHMMSS } from '../../../../utils/helpers';
+
+const Ul = styled.ul`
+  padding: 0;
+  list-style-type: none;
+`;
 
 const copy = () => toast.success('Payload copied!');
 
@@ -53,24 +58,41 @@ const CreateVestingConfirm = ({
 
       <div>
         <Bold>Summary:</Bold>
-        <ul>
-          <li>Withdrawal address: {formData.vestingAddress}</li>
-          <li>Delegate admin address: {formData.delegateAddress}</li>
-          <li>Delegate address: {formData.delegate}</li>
+        <Ul>
           <li>
-            Vesting activation date:{' '}
+            {' '}
+            <Bold>Withdrawal address: </Bold>
+            {formData.vestingAddress}
+          </li>
+          <li>
+            {' '}
+            <Bold>Delegate admin address:</Bold> {formData.delegateAddress}
+          </li>
+          <li>
+            {' '}
+            <Bold>Delegate address: </Bold>
+            {formData.delegate}
+          </li>
+          <li>
+            <Bold>Vesting activation date:</Bold>{' '}
             {dayjs(formData.startDate).format(dateFormat)}
           </li>
           {isFormAdvanced ? (
             <>
-              <li>Time per tick: {toHHMMSS(formData.secondsPerTick)}</li>
-              <li>XTZ per tick: {`${formData.tokensPerTick} XTZ`}</li>
+              <li>
+                <Bold>Time per tick:</Bold> {formData.secondsPerTick}
+              </li>
+              <li>
+                <Bold>XTZ per tick:</Bold> {`${formData.tokensPerTick} XTZ`}
+              </li>
             </>
           ) : (
             <>
-              <li>Number of unvested parts: {formData.parts}</li>
               <li>
-                Unvesting interval:{' '}
+                <Bold>Number of unvested parts:</Bold> {formData.parts}
+              </li>
+              <li>
+                <Bold>Unvesting interval: </Bold>
                 {
                   unvestingIntervals.find(
                     (item) => item.value === formData.secondsPerTick,
@@ -78,13 +100,18 @@ const CreateVestingConfirm = ({
                 }
               </li>
               <li>
-                Vesting end date: {dayjs(formData.endDate).format(dateFormat)}
+                <Bold>Vesting end date:</Bold>{' '}
+                {dayjs(formData.endDate).format(dateFormat)}
               </li>
             </>
           )}
-          <li>Balance: {`${formData.balance} XTZ`}</li>
-          <li>Vesting contract name: {formData.name} </li>
-        </ul>
+          <li>
+            <Bold>Balance:</Bold> {`${formData.balance} XTZ`}
+          </li>
+          <li>
+            <Bold>Vesting contract name:</Bold> {formData.name}{' '}
+          </li>
+        </Ul>
       </div>
 
       <Bold>Code:</Bold>
