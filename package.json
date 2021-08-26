@@ -84,15 +84,15 @@
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "src/**/*.{js,jsx}": [
       "eslint --fix",
       "pretty-quick --staged"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }

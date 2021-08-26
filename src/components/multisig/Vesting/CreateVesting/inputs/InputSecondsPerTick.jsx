@@ -16,8 +16,8 @@ const InputSecondsPerTick = () => {
       <OverlayTrigger
         overlay={
           <Tooltip>
-            The interval of time needed for a certain amount of XTZ (XTZ per
-            tick) to become available for a withdrawal.
+            Time interval at which a portion of XTZ becomes unvested and
+            available for withdrawal.
           </Tooltip>
         }
       >

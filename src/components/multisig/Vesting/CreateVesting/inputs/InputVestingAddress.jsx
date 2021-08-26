@@ -10,10 +10,7 @@ const InputVestingAddress = () => {
     <BForm.Group>
       <OverlayTrigger
         overlay={
-          <Tooltip>
-            The address where a withdrawn amount of XTZ from a vesting contract
-            is sent.
-          </Tooltip>
+          <Tooltip>The address to which the unvested XTZ is sent.</Tooltip>
         }
       >
         <FormLabel>Withdrawal address</FormLabel>

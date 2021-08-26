@@ -11,8 +11,8 @@ const InputDelegateAdmin = () => {
       <OverlayTrigger
         overlay={
           <Tooltip>
-            The address that can set and change a delegate of a vesting
-            contract. No other address is allowed to do this action.
+            The address that sets and changes the delegate/baker for a vesting
+            contract.
           </Tooltip>
         }
       >

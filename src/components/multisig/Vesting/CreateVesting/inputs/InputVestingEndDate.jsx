@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import dayjs from 'dayjs';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
-import { Form as BForm } from 'react-bootstrap';
+import { Form as BForm, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import { FormLabel } from '../../../../styled/Forms';
 import { DatePickerWrapper } from '../../../../styled/DatePickerStyles';
@@ -41,7 +41,16 @@ const InputVestingEndDate = () => {
 
   return (
     <BForm.Group>
-      <FormLabel>Vesting end date</FormLabel>
+      <OverlayTrigger
+        overlay={
+          <Tooltip>
+            The date when all the vested funds become available.
+          </Tooltip>
+        }
+      >
+        <FormLabel>Vesting end date</FormLabel>
+      </OverlayTrigger>
+
       <DatePickerWrapper>
         <Field
           name="endDate"

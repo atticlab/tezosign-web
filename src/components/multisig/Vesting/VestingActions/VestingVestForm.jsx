@@ -82,8 +82,8 @@ const VestingVestForm = ({
               overlay={
                 <Tooltip>
                   Single unlock iteration of a certain amount of XTZ. The period
-                  is defined by &quot;Seconds per tick&quot;, the amount of XTZ
-                  is defined by &quot;XTZ per tick&quot;.
+                  is defined by &quot;Time per tick&quot;, the amount of XTZ is
+                  defined by &quot;XTZ per tick&quot;.
                 </Tooltip>
               }
             >
