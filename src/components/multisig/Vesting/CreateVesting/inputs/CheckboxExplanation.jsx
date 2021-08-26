@@ -28,24 +28,26 @@ const CheckboxExplanation = () => {
   return (
     <BForm.Group controlId="check">
       <WarningBox>
-        Attention! To avoid any problems with your vesting contract check the
+        Please read and confirm before confirming the creation of a vesting
+        contract. To avoid any problems with your vesting contract check the
         following points:
         <ul>
           <li>
-            Make sure the balance on your vesting contract has not a greater
-            number of decimals as your &quot;XTZ per tick&quot; field.
-            Otherwise, you will not be able to withdraw all the tokens from the
-            contract.
+            Tick is a composition unit of the funds under vesting. It has
+            attributes of both time and amount of XTZ.
+          </li>
+          <li>
+            Tick defines the lowest amount of XTZ that gets unvested and can be
+            subsequently withdrawn. Please make sure the balance you have can be
+            divided evenly without remainders based on the time/XTZ per tick.
+            E.g. If your balance is 1.2 XTZ and your XTZ per tick is .5 XTZ, you
+            won’t be able to withdraw the remaining .2 XTZ since it’s less than
+            the preferred XTZ per tick amount.
           </li>
           <li>
             Make sure the balance on your vesting contract is not less than your
             &quot;XTZ per tick&quot; field. Otherwise, you will not be able to
             withdraw any tokens from the contract.
-          </li>
-          <li>
-            The least number of tokens you can withdraw from your vesting
-            contract equals the &quot;XTZ per tick&quot; field. You cannot
-            withdraw less.
           </li>
         </ul>
       </WarningBox>

@@ -52,7 +52,17 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                 {`${convertMutezToXTZ(vestingInfo.balance)} XTZ`}
               </div>
               <div>
-                <Bold>Delegate:</Bold> {vestingInfo.delegate}
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip>
+                      The baker that a vesting contract delegates its funds to.
+                    </Tooltip>
+                  }
+                >
+                  <span>
+                    <Bold>Delegate address:</Bold> {vestingInfo.delegate}
+                  </span>
+                </OverlayTrigger>
               </div>
               <div>
                 <OverlayTrigger
@@ -72,14 +82,13 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                 <OverlayTrigger
                   overlay={
                     <Tooltip>
-                      The address that can set and change a delegate of a
-                      vesting contract. No other address is allowed to do this
-                      action.
+                      The address that sets and changes the delegate/baker for a
+                      vesting contract.
                     </Tooltip>
                   }
                 >
                   <span>
-                    <Bold>Delegate admin:</Bold>{' '}
+                    <Bold>Delegate admin address:</Bold>{' '}
                     {vestingInfo.storage.delegate_admin}
                   </span>
                 </OverlayTrigger>
@@ -88,8 +97,8 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                 <OverlayTrigger
                   overlay={
                     <Tooltip>
-                      The interval of time needed for a certain amount of XTZ
-                      (XTZ per tick) to become available for a withdrawal.
+                      Time interval at which a portion of XTZ becomes unvested
+                      and available for withdrawal.
                     </Tooltip>
                   }
                 >
@@ -100,18 +109,24 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                 </OverlayTrigger>
               </div>
               <div>
-                <Bold>Activation date:</Bold>{' '}
-                {dayjs
-                  .unix(vestingInfo.storage.timestamp)
-                  .utc()
-                  .format(dateFormatNoTime)}
+                <OverlayTrigger
+                  overlay={<Tooltip>Vesting start date.</Tooltip>}
+                >
+                  <span>
+                    <Bold>Activation date:</Bold>{' '}
+                    {dayjs
+                      .unix(vestingInfo.storage.timestamp)
+                      .utc()
+                      .format(dateFormatNoTime)}
+                  </span>
+                </OverlayTrigger>
               </div>
               <div>
                 <OverlayTrigger
                   overlay={
                     <Tooltip>
-                      The amount of XTZ that becomes available for a withdrawal
-                      every tick.
+                      Amount to become unvested and the smallest unit that can
+                      be withdrawn.
                     </Tooltip>
                   }
                 >
@@ -131,8 +146,7 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                 <OverlayTrigger
                   overlay={
                     <Tooltip>
-                      The address where a withdrawn amount of XTZ from a vesting
-                      contract is sent.
+                      The address to which the unvested XTZ is sent.
                     </Tooltip>
                   }
                 >

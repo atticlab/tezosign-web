@@ -1,6 +1,6 @@
 import React from 'react';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
-import { Form as BForm } from 'react-bootstrap';
+import { Form as BForm, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { FormLabel } from '../../../../styled/Forms';
 
 const InputDelegate = () => {
@@ -8,7 +8,15 @@ const InputDelegate = () => {
 
   return (
     <BForm.Group>
-      <FormLabel>Delegate address</FormLabel>
+      <OverlayTrigger
+        overlay={
+          <Tooltip>
+            The baker that a vesting contract delegates its funds to.
+          </Tooltip>
+        }
+      >
+        <FormLabel>Delegate address</FormLabel>
+      </OverlayTrigger>
 
       <Field
         as={BForm.Control}

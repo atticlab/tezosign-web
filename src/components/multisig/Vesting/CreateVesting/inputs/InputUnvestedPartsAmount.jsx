@@ -11,12 +11,12 @@ const InputUnvestedPartsAmount = () => {
       <OverlayTrigger
         overlay={
           <Tooltip>
-            The number of parts the vesting contract balance will be divided
-            into.
+            Number of parts the vested funds are split into. Each part gets
+            unvested upon hitting the set time interval.
           </Tooltip>
         }
       >
-        <FormLabel>Number of unvested parts</FormLabel>
+        <FormLabel>Vested parts number</FormLabel>
       </OverlayTrigger>
 
       <Field

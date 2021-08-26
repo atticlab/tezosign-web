@@ -1,7 +1,8 @@
 import React from 'react';
+import styled from 'styled-components';
 import Card from '../styled/Card';
 import { FlexCenter } from '../styled/Flex';
-import { TextAccent, TextLeft } from '../styled/Text';
+import { TextAccent, BreakTxt } from '../styled/Text';
 import { TblGenInfo } from '../styled/Tbl';
 import Table from '../Table';
 import Spinner from '../Spinner';
@@ -9,7 +10,11 @@ import BtnCopy from '../BtnCopy';
 import IndentIcon from '../IdentIcon';
 import { useContractStateContext } from '../../store/contractContext';
 import useThemeContext from '../../hooks/useThemeContext';
-import { ellipsis } from '../../utils/helpers';
+
+const BreakTxtAddress = styled(BreakTxt)`
+  min-width: 200px;
+  margin-right: 10px;
+`;
 
 const Owners = () => {
   const theme = useThemeContext();
@@ -28,7 +33,7 @@ const Owners = () => {
               <IndentIcon address={address} scale={4} />
             </div>
 
-            <TextLeft>{ellipsis(address)}</TextLeft>
+            <BreakTxtAddress>{address}</BreakTxtAddress>
 
             <BtnCopy textToCopy={address} style={{ padding: 0 }} />
           </FlexCenter>
@@ -44,7 +49,7 @@ const Owners = () => {
 
         return (
           <FlexCenter>
-            <TextLeft>{ellipsis(pubKey)}</TextLeft>
+            <BreakTxtAddress>{pubKey}</BreakTxtAddress>
 
             <BtnCopy textToCopy={pubKey} style={{ padding: 0 }} />
           </FlexCenter>

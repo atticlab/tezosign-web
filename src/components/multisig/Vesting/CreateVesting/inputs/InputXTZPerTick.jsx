@@ -34,8 +34,8 @@ const InputXTZPerTick = ({ balanceInXTZ, onChange }) => {
       <OverlayTrigger
         overlay={
           <Tooltip>
-            The amount of XTZ that becomes available for a withdrawal every
-            tick.
+            Amount to become unvested and the smallest unit that can be
+            withdrawn.
           </Tooltip>
         }
       >

@@ -2,7 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import DatePicker from 'react-datepicker';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
-import { Form as BForm } from 'react-bootstrap';
+import { Form as BForm, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { FormLabel } from '../../../../styled/Forms';
 import { DatePickerWrapper } from '../../../../styled/DatePickerStyles';
 
@@ -22,7 +22,10 @@ const VestingActivationDate = () => {
 
   return (
     <BForm.Group>
-      <FormLabel>Vesting activation date</FormLabel>
+      <OverlayTrigger overlay={<Tooltip>Vesting start date.</Tooltip>}>
+        <FormLabel>Vesting activation date</FormLabel>
+      </OverlayTrigger>
+
       <DatePickerWrapper>
         <Field
           name="startDate"

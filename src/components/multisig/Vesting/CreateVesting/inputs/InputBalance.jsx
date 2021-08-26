@@ -31,13 +31,16 @@ const InputBalance = ({ maxBalance }) => {
       <OverlayTrigger
         overlay={
           <Tooltip>
-            The balance field is recalculated to a maximum allowed number every
-            time it cannot be evenly divided by &quot;XTZ per tick&quot;.
+            The amount that is going to be vested. Takes into account Vesting
+            activation/end date, Vested parts number and Vesting interval to
+            make sure the funds can be evenly unvested and distributed on each
+            time interval.
           </Tooltip>
         }
       >
         <FormLabel>Balance</FormLabel>
       </OverlayTrigger>
+
       <InputGroup>
         <Field
           as={BForm.Control}

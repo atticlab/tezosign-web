@@ -1,6 +1,6 @@
 import React from 'react';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
-import { Form as BForm } from 'react-bootstrap';
+import { Form as BForm, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { FormLabel } from '../../styled/Forms';
 
 const InputVestingName = () => {
@@ -8,7 +8,12 @@ const InputVestingName = () => {
 
   return (
     <BForm.Group>
-      <FormLabel>Vesting contract name</FormLabel>
+      <OverlayTrigger
+        overlay={<Tooltip>A name to be attributed with the contract.</Tooltip>}
+      >
+        <FormLabel>Vesting contract name</FormLabel>
+      </OverlayTrigger>
+
       <Field
         as={BForm.Control}
         type="text"
