@@ -61,7 +61,14 @@ const InputBalance = ({ maxBalance }) => {
         />
 
         <InputGroup.Append>
-          <InputGroup.Text style={{ paddingTop: 0, paddingBottom: 0 }}>
+          <InputGroup.Text
+            style={{
+              paddingTop: 0,
+              paddingBottom: 0,
+              borderTopRightRadius: '5px',
+              borderBottomRightRadius: '5px',
+            }}
+          >
             <span style={{ display: 'flex', alignItems: 'center' }}>
               <BtnMax
                 onClick={() => {
