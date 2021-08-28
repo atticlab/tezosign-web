@@ -1,13 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
-import {
-  Form as BForm,
-  InputGroup,
-  OverlayTrigger,
-  Tooltip,
-} from 'react-bootstrap';
-import { FormLabel } from '../../../../styled/Forms';
+import { Form as BForm, InputGroup } from 'react-bootstrap';
+import FormLabelWithTooltip from '../../../../FormLabelWithTooltip';
 import { BtnMax } from '../../../../styled/Btns';
 import {
   convertMutezToXTZ,
@@ -28,18 +23,13 @@ const InputBalance = ({ maxBalance }) => {
 
   return (
     <BForm.Group controlId="balance">
-      <OverlayTrigger
-        overlay={
-          <Tooltip>
-            The amount that is going to be vested. Takes into account Vesting
+      <FormLabelWithTooltip
+        labelTxt="Balance"
+        tooltipTxt="The amount that is going to be vested. Takes into account Vesting
             activation/end date, Vested parts number and Vesting interval to
             make sure the funds can be evenly unvested and distributed on each
-            time interval.
-          </Tooltip>
-        }
-      >
-        <FormLabel>Balance</FormLabel>
-      </OverlayTrigger>
+            time interval."
+      />
 
       <InputGroup>
         <Field

@@ -1,23 +1,18 @@
 import React from 'react';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
-import { Form as BForm, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { FormLabel } from '../../../../styled/Forms';
+import { Form as BForm } from 'react-bootstrap';
+import FormLabelWithTooltip from '../../../../FormLabelWithTooltip';
 
 const InputUnvestedPartsAmount = () => {
   const { errors, touched } = useFormikContext();
 
   return (
     <BForm.Group>
-      <OverlayTrigger
-        overlay={
-          <Tooltip>
-            Number of parts the vested funds are split into. Each part gets
-            unvested upon hitting the set time interval.
-          </Tooltip>
-        }
-      >
-        <FormLabel>Vested parts number</FormLabel>
-      </OverlayTrigger>
+      <FormLabelWithTooltip
+        labelTxt="Vested parts number"
+        tooltipTxt="Number of parts the vested funds are split into. Each part gets
+            unvested upon hitting the set time interval."
+      />
 
       <Field
         as={BForm.Control}

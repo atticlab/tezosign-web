@@ -1,22 +1,17 @@
 import React from 'react';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
-import { Form as BForm, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { FormLabel } from '../../../../styled/Forms';
+import { Form as BForm } from 'react-bootstrap';
+import FormLabelWithTooltip from '../../../../FormLabelWithTooltip';
 
 const InputDelegate = () => {
   const { errors, touched } = useFormikContext();
 
   return (
     <BForm.Group>
-      <OverlayTrigger
-        overlay={
-          <Tooltip>
-            The baker that a vesting contract delegates its funds to.
-          </Tooltip>
-        }
-      >
-        <FormLabel>Delegate address</FormLabel>
-      </OverlayTrigger>
+      <FormLabelWithTooltip
+        labelTxt="Delegate address"
+        tooltipTxt="The baker that a vesting contract delegates its funds to."
+      />
 
       <Field
         as={BForm.Control}

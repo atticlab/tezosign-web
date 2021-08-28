@@ -1,18 +1,17 @@
 import React from 'react';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
-import { Form as BForm, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { FormLabel } from '../../styled/Forms';
+import { Form as BForm } from 'react-bootstrap';
+import FormLabelWithTooltip from '../../FormLabelWithTooltip';
 
 const InputVestingName = () => {
   const { errors, touched } = useFormikContext();
 
   return (
     <BForm.Group>
-      <OverlayTrigger
-        overlay={<Tooltip>A name to be attributed with the contract.</Tooltip>}
-      >
-        <FormLabel>Vesting contract name</FormLabel>
-      </OverlayTrigger>
+      <FormLabelWithTooltip
+        labelTxt="Vesting contract name"
+        tooltipTxt="A name to be attributed with the contract."
+      />
 
       <Field
         as={BForm.Control}

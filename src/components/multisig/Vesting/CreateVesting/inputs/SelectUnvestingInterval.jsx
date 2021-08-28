@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ErrorMessage, useFormikContext } from 'formik';
-import { Form as BForm, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { FormLabel } from '../../../../styled/Forms';
+import { Form as BForm } from 'react-bootstrap';
+import FormLabelWithTooltip from '../../../../FormLabelWithTooltip';
 import SelectCustom from '../../../../SelectCustom';
 import { unvestingIntervals } from '../../../../../utils/constants';
 
@@ -16,16 +16,11 @@ const SelectUnvestingInterval = ({ defaultValue }) => {
 
   return (
     <BForm.Group>
-      <OverlayTrigger
-        overlay={
-          <Tooltip>
-            Time interval at which a portion of XTZ becomes unvested and
-            available for withdrawal.
-          </Tooltip>
-        }
-      >
-        <FormLabel>Vesting interval</FormLabel>
-      </OverlayTrigger>
+      <FormLabelWithTooltip
+        labelTxt="Vesting interval"
+        tooltipTxt="Time interval at which a portion of XTZ becomes unvested and
+            available for withdrawal."
+      />
 
       <SelectCustom
         options={unvestingIntervals}

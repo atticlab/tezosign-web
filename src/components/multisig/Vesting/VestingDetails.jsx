@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styled from 'styled-components';
 import { Bold } from '../../styled/Text';
 import Spinner from '../../Spinner';
@@ -11,6 +10,7 @@ import useAPI from '../../../hooks/useApi';
 import useRequest from '../../../hooks/useRequest';
 import { convertMutezToXTZ, toHHMMSS } from '../../../utils/helpers';
 import { dateFormatNoTime } from '../../../utils/constants';
+import IconTooltip from '../../IconTooltip';
 
 dayjs.extend(utc);
 
@@ -52,109 +52,57 @@ const VestingDetails = ({ vesting, isRowCollapsed }) => {
                 {`${convertMutezToXTZ(vestingInfo.balance)} XTZ`}
               </div>
               <div>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip>
-                      The baker that a vesting contract delegates its funds to.
-                    </Tooltip>
-                  }
-                >
-                  <span>
-                    <Bold>Delegate address:</Bold> {vestingInfo.delegate}
-                  </span>
-                </OverlayTrigger>
+                <Bold>Delegate address:</Bold>
+                <IconTooltip tooltipTxt="The baker that a vesting contract delegates its funds to." />{' '}
+                {vestingInfo.delegate}
               </div>
               <div>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip>
-                      The limit of XTZ available for a withdrawal.
-                    </Tooltip>
-                  }
-                >
-                  <span>
-                    <Bold>Withdrawal limit:</Bold>{' '}
-                    {`${convertMutezToXTZ(vestingInfo.opened_balance)} XTZ`}
-                  </span>
-                </OverlayTrigger>
+                <Bold>Withdrawal limit:</Bold>
+                <IconTooltip tooltipTxt="The limit of XTZ available for a withdrawal." />{' '}
+                {`${convertMutezToXTZ(vestingInfo.opened_balance)} XTZ`}
               </div>
               <div>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip>
-                      The address that sets and changes the delegate/baker for a
-                      vesting contract.
-                    </Tooltip>
-                  }
-                >
-                  <span>
-                    <Bold>Delegate admin address:</Bold>{' '}
-                    {vestingInfo.storage.delegate_admin}
-                  </span>
-                </OverlayTrigger>
+                <Bold>Delegate admin address:</Bold>
+                <IconTooltip
+                  tooltipTxt="The address that sets and changes the delegate/baker for a
+                      vesting contract."
+                />{' '}
+                {vestingInfo.storage.delegate_admin}
               </div>
               <div>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip>
-                      Time interval at which a portion of XTZ becomes unvested
-                      and available for withdrawal.
-                    </Tooltip>
-                  }
-                >
-                  <span>
-                    <Bold>Time per tick:</Bold>{' '}
-                    {toHHMMSS(vestingInfo.storage.seconds_per_tick)}
-                  </span>
-                </OverlayTrigger>
+                <Bold>Time per tick:</Bold>
+                <IconTooltip
+                  tooltipTxt="Time interval at which a portion of XTZ becomes unvested
+                      and available for withdrawal."
+                />{' '}
+                {toHHMMSS(vestingInfo.storage.seconds_per_tick)}
               </div>
               <div>
-                <OverlayTrigger
-                  overlay={<Tooltip>Vesting start date.</Tooltip>}
-                >
-                  <span>
-                    <Bold>Activation date:</Bold>{' '}
-                    {dayjs
-                      .unix(vestingInfo.storage.timestamp)
-                      .utc()
-                      .format(dateFormatNoTime)}
-                  </span>
-                </OverlayTrigger>
+                <Bold>Activation date:</Bold>
+                <IconTooltip tooltipTxt="Vesting start date." />{' '}
+                {dayjs
+                  .unix(vestingInfo.storage.timestamp)
+                  .utc()
+                  .format(dateFormatNoTime)}
               </div>
               <div>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip>
-                      Amount to become unvested and the smallest unit that can
-                      be withdrawn.
-                    </Tooltip>
-                  }
-                >
-                  <span>
-                    <Bold>XTZ per tick:</Bold>{' '}
-                    {`${convertMutezToXTZ(
-                      vestingInfo.storage.tokens_per_tick,
-                    )} XTZ`}
-                  </span>
-                </OverlayTrigger>
+                <Bold>XTZ per tick:</Bold>
+                <IconTooltip
+                  tooltipTxt=" Amount to become unvested and the smallest unit that can
+                      be withdrawn."
+                />{' '}
+                {`${convertMutezToXTZ(
+                  vestingInfo.storage.tokens_per_tick,
+                )} XTZ`}
               </div>
               <div>
                 <Bold>Vested amount</Bold>{' '}
                 {`${convertMutezToXTZ(vestingInfo.storage.vested_amount)} XTZ`}
               </div>
               <div>
-                <OverlayTrigger
-                  overlay={
-                    <Tooltip>
-                      The address to which the unvested XTZ is sent.
-                    </Tooltip>
-                  }
-                >
-                  <span>
-                    <Bold>Withdrawal address: </Bold>{' '}
-                    {vestingInfo.storage.vesting_address}
-                  </span>
-                </OverlayTrigger>
+                <Bold>Withdrawal address:</Bold>
+                <IconTooltip tooltipTxt="The address to which the unvested XTZ is sent." />{' '}
+                {vestingInfo.storage.vesting_address}
               </div>
             </Grid>
 

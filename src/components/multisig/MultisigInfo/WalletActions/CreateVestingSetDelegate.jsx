@@ -2,13 +2,9 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import {
-  Button,
-  Form as BForm,
-  OverlayTrigger,
-  Tooltip,
-} from 'react-bootstrap';
+import { Button, Form as BForm } from 'react-bootstrap';
 import VestingsSelect from './VestingsSelect';
+import FormLabelWithTooltip from '../../../FormLabelWithTooltip';
 import { FormLabel, FormSubmit } from '../../../styled/Forms';
 import { useContractStateContext } from '../../../../store/contractContext';
 import { bs58Validation } from '../../../../utils/helpers';
@@ -130,16 +126,12 @@ const CreateVestingSetDelegate = ({ onCreate, onCancel }) => {
           </BForm.Group>
 
           <BForm.Group controlId="to">
-            <OverlayTrigger
-              overlay={
-                <Tooltip>
-                  Delegate must be a valid baker address. Otherwise, a
-                  transaction will fail.
-                </Tooltip>
-              }
-            >
-              <FormLabel>Delegate address</FormLabel>
-            </OverlayTrigger>
+            <FormLabelWithTooltip
+              labelTxt="Delegate address"
+              tooltipTxt="Delegate must be a valid baker address. Otherwise, a
+                  transaction will fail."
+            />
+
             <Field
               as={BForm.Control}
               type="text"

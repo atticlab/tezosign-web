@@ -2,13 +2,8 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import {
-  Button,
-  Form as BForm,
-  InputGroup,
-  OverlayTrigger,
-  Tooltip,
-} from 'react-bootstrap';
+import { Button, Form as BForm, InputGroup } from 'react-bootstrap';
+import FormLabelWithTooltip from '../../../FormLabelWithTooltip';
 import { FormLabel, FormSubmit } from '../../../styled/Forms';
 import { FlexAlignItemsCenter } from '../../../styled/Flex';
 import SelectCustom from '../../../SelectCustom';
@@ -202,15 +197,11 @@ const CreateTx = ({ onCreate, onCancel }) => {
           </BForm.Group>
 
           <BForm.Group controlId="tokenID">
-            <OverlayTrigger
-              overlay={
-                <Tooltip>
-                  Token ID is needed for transferring FA2 assets.
-                </Tooltip>
-              }
-            >
-              <FormLabel>Enter token ID</FormLabel>
-            </OverlayTrigger>
+            <FormLabelWithTooltip
+              labelTxt="Enter token ID"
+              tooltipTxt="Token ID is needed for transferring FA2 assets."
+            />
+
             <Field
               as={BForm.Control}
               type="number"
