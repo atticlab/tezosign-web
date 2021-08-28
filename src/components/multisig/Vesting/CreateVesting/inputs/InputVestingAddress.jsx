@@ -1,20 +1,18 @@
 import React from 'react';
-import { Form as BForm, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Form as BForm } from 'react-bootstrap';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
-import { FormLabel } from '../../../../styled/Forms';
+import FormLabelWithTooltip from '../../../../FormLabelWithTooltip';
 
 const InputVestingAddress = () => {
   const { errors, touched } = useFormikContext();
 
   return (
     <BForm.Group>
-      <OverlayTrigger
-        overlay={
-          <Tooltip>The address to which the unvested XTZ is sent.</Tooltip>
-        }
-      >
-        <FormLabel>Withdrawal address</FormLabel>
-      </OverlayTrigger>
+      <FormLabelWithTooltip
+        labelTxt="Withdrawal address"
+        tooltipTxt="The address to which the unvested XTZ is sent."
+      />
+
       <Field
         as={BForm.Control}
         type="text"

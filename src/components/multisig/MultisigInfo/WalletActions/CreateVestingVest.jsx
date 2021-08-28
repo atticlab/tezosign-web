@@ -2,12 +2,8 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import {
-  Button,
-  Form as BForm,
-  OverlayTrigger,
-  Tooltip,
-} from 'react-bootstrap';
+import { Button, Form as BForm } from 'react-bootstrap';
+import FormLabelWithTooltip from '../../../FormLabelWithTooltip';
 import VestingsSelect from './VestingsSelect';
 import { FormLabel, FormSubmit } from '../../../styled/Forms';
 import { useContractStateContext } from '../../../../store/contractContext';
@@ -118,17 +114,13 @@ const CreateVestingVest = ({ onCreate, onCancel }) => {
           </BForm.Group>
 
           <BForm.Group controlId="batches">
-            <OverlayTrigger
-              overlay={
-                <Tooltip>
-                  Single unlock iteration of a certain amount of XTZ. The period
-                  is defined by &quot;Time per tick&quot;, the amount of XTZ is
-                  defined by &quot;XTZ per tick&quot;.
-                </Tooltip>
-              }
-            >
-              <FormLabel>Ticks</FormLabel>
-            </OverlayTrigger>
+            <FormLabelWithTooltip
+              labelTxt="Ticks"
+              tooltipTxt='Single unlock iteration of a certain amount of XTZ. The period
+                  is defined by "Time per tick", the amount of XTZ is
+                  defined by "XTZ per tick".'
+            />
+
             <Field
               as={BForm.Control}
               type="number"
@@ -159,21 +151,16 @@ const CreateVestingVest = ({ onCreate, onCancel }) => {
           </BForm.Group>
 
           <BForm.Group controlId="amount">
-            <OverlayTrigger
-              overlay={
-                <Tooltip>
-                  Withdrawal amount. It must be evenly divided by &quot;XTZ per
-                  tick&quot;, so that ticks are always an integer. The minimum
-                  equals &quot;XTZ per tick&quot;. Usually, the maximum equals
+            <FormLabelWithTooltip
+              labelTxt="Amount"
+              tooltipTxt='Withdrawal amount. It must be evenly divided by "XTZ per
+                  tick", so that ticks are always an integer. The minimum
+                  equals "XTZ per tick". Usually, the maximum equals
                   the withdrawal limit. In case the withdrawal limit is greater
                   than the balance on the vesting contract, the allowed maximum
                   is the closest to the balance number which is evenly divided
-                  by &quot;XTZ per tick&quot;.
-                </Tooltip>
-              }
-            >
-              <FormLabel>Amount</FormLabel>
-            </OverlayTrigger>
+                  by "XTZ per tick".'
+            />
 
             <Field
               as={BForm.Control}

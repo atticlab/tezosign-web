@@ -1,13 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
-import {
-  Form as BForm,
-  InputGroup,
-  OverlayTrigger,
-  Tooltip,
-} from 'react-bootstrap';
-import { FormLabel } from '../../../../styled/Forms';
+import { Form as BForm, InputGroup } from 'react-bootstrap';
+import FormLabelWithTooltip from '../../../../FormLabelWithTooltip';
 import { BtnMax } from '../../../../styled/Btns';
 import {
   convertMutezToXTZ,
@@ -31,16 +26,12 @@ const InputXTZPerTick = ({ balanceInXTZ, onChange }) => {
 
   return (
     <BForm.Group>
-      <OverlayTrigger
-        overlay={
-          <Tooltip>
-            Amount to become unvested and the smallest unit that can be
-            withdrawn.
-          </Tooltip>
-        }
-      >
-        <FormLabel>XTZ per tick</FormLabel>
-      </OverlayTrigger>
+      <FormLabelWithTooltip
+        labelTxt="XTZ per tick"
+        tooltipTxt="Amount to become unvested and the smallest unit that can be
+            withdrawn."
+      />
+
       <InputGroup>
         <Field
           as={BForm.Control}

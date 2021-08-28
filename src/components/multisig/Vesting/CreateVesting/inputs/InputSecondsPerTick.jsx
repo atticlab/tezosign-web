@@ -1,7 +1,7 @@
 import React from 'react';
 import { ErrorMessage, Field, useFormikContext } from 'formik';
-import { Form as BForm, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { FormLabel } from '../../../../styled/Forms';
+import { Form as BForm } from 'react-bootstrap';
+import FormLabelWithTooltip from '../../../../FormLabelWithTooltip';
 import { toHHMMSS, getSecondsFromHHMMSS } from '../../../../../utils/helpers';
 
 const convertInputToTime = (e) => {
@@ -13,16 +13,12 @@ const InputSecondsPerTick = () => {
 
   return (
     <BForm.Group>
-      <OverlayTrigger
-        overlay={
-          <Tooltip>
-            Time interval at which a portion of XTZ becomes unvested and
-            available for withdrawal.
-          </Tooltip>
-        }
-      >
-        <FormLabel>Time per tick</FormLabel>
-      </OverlayTrigger>
+      <FormLabelWithTooltip
+        labelTxt="Time per tick"
+        tooltipTxt="Time interval at which a portion of XTZ becomes unvested and
+            available for withdrawal."
+      />
+
       <Field
         as={BForm.Control}
         type="text"

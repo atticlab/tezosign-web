@@ -18,6 +18,7 @@ import {
   faKey,
   faCaretUp,
   faCaretDown,
+  faQuestionCircle,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -39,4 +40,5 @@ library.add(
   faKey,
   faCaretUp,
   faCaretDown,
+  faQuestionCircle,
 );
