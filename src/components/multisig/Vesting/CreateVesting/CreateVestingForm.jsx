@@ -31,7 +31,7 @@ import { secondsPerTickSchema } from './createVestingSchemas';
 
 dayjs.extend(utc);
 
-const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
+const schema = (maxAmount = 30000, minAmount = 0.000001) =>
   Yup.object({
     vestingAddress: tezosAddressSchema,
     delegateAddress: tezosAddressSchema,
@@ -40,7 +40,6 @@ const schema = (maxAmount = 30000, maxTokensPerTick, minAmount = 0.000001) =>
     secondsPerTick: secondsPerTickSchema,
     tokensPerTick: Yup.number()
       .required('Required')
-      .max(maxTokensPerTick, `Maximum amount is ${maxTokensPerTick} XTZ`)
       .min(0.000001, `Minimum amount is ${0.000001} XTZ`),
     check: Yup.bool().oneOf([true], 'The terms must be accepted'),
     balance: Yup.number()
@@ -64,7 +63,7 @@ const initialValues = {
 const CreateVestingForm = ({ formData, onSubmit, onCancel }) => {
   const { initVesting } = useAPI();
   const [currentTokensPerTick, setCurrentTokensPerTick] = useState(null);
-  const { balanceConverted, balanceInXTZ } = useBalances(currentTokensPerTick);
+  const { balanceConverted } = useBalances(currentTokensPerTick);
 
   const submitVestingForm = async (values) => {
     const {
@@ -105,7 +104,7 @@ const CreateVestingForm = ({ formData, onSubmit, onCancel }) => {
         Object.keys(formData).length ? { ...formData } : initialValues
       }
       validationSchema={Yup.lazy((values) =>
-        schema(balanceConverted, balanceInXTZ, values.tokensPerTick),
+        schema(balanceConverted, values.tokensPerTick),
       )}
       onSubmit={async (values, { resetForm }) => {
         await submitVestingForm(values, resetForm);
@@ -118,10 +117,7 @@ const CreateVestingForm = ({ formData, onSubmit, onCancel }) => {
           <InputDelegate />
           <InputVestingActivationDate />
           <InputSecondsPerTick />
-          <InputXTZPerTick
-            balanceInXTZ={balanceInXTZ}
-            onChange={setCurrentTokensPerTick}
-          />
+          <InputXTZPerTick onChange={setCurrentTokensPerTick} />
           <CheckboxExplanation />
           <InputBalance maxBalance={Number(balanceConverted)} />
           <InputVestingName />
