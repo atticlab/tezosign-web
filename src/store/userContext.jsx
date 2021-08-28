@@ -206,6 +206,7 @@ const UserProvider = ({ children }) => {
       setBalance(resp.data);
     } catch (e) {
       handleError(e);
+      setBalance({ balance: 0 });
     } finally {
       setIsBalanceLoading(false);
     }

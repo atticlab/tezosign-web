@@ -19,6 +19,8 @@ const errorNotifications = {
     "Contract is not found. It probably doesn't exist in the current network.",
   'ERR_NOT_FOUND:big_map value':
     'Invalid token ID for the asset contract address.',
+  'ERR_NOT_FOUND:address':
+    'Your current address is not found in the network. Probably, it has never taken part in any operations.',
   ERR_NOT_ALLOWED: 'Not allowed.',
   'ERR_NOT_ALLOWED:not enough balance': 'Insufficient funds on the wallet.',
   'ERR_NOT_ALLOWED:not enough ticks': 'No funds have been unvested yet.',
