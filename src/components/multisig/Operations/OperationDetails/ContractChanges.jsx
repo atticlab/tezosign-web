@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styled from 'styled-components';
@@ -17,10 +17,22 @@ Change.Item = styled.li`
   padding: 5px;
 `;
 
-const ContractChanges = ({ newKeys, newThreshold }) => {
+const ContractChanges = ({ newKeys, newThreshold, oldKeys, oldThreshold }) => {
   const {
     contractInfo: { owners, threshold },
   } = useContractStateContext();
+
+  const prevOwners = useMemo(
+    () =>
+      oldKeys.length
+        ? oldKeys.map((key) => ({
+            address: getAddressFromPubKey(key),
+            pub_key: key,
+          }))
+        : owners,
+    [oldKeys, owners],
+  );
+  const prevThreshold = oldThreshold ?? threshold;
 
   return (
     <div>
@@ -31,9 +43,9 @@ const ContractChanges = ({ newKeys, newThreshold }) => {
           <div style={{ marginLeft: '10px' }}>
             <Bold>Owners:</Bold>
             <Change old>
-              {owners &&
-                owners.length &&
-                owners.map((owner) => (
+              {prevOwners &&
+                prevOwners.length &&
+                prevOwners.map((owner) => (
                   <Change.Item key={owner.address}>
                     <OverlayTrigger
                       overlay={<Tooltip>Public key: {owner.pub_key}</Tooltip>}
@@ -51,7 +63,7 @@ const ContractChanges = ({ newKeys, newThreshold }) => {
             <Bold>Threshold:</Bold>
             <Change old>
               <Change.Item>
-                <Red>{threshold}</Red>
+                <Red>{prevThreshold}</Red>
               </Change.Item>
             </Change>
           </div>
@@ -102,6 +114,12 @@ const ContractChanges = ({ newKeys, newThreshold }) => {
 ContractChanges.propTypes = {
   newKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   newThreshold: PropTypes.number.isRequired,
+  oldKeys: PropTypes.arrayOf(PropTypes.string),
+  oldThreshold: PropTypes.number,
+};
+ContractChanges.defaultProps = {
+  oldKeys: [],
+  oldThreshold: null,
 };
 
 export default ContractChanges;
