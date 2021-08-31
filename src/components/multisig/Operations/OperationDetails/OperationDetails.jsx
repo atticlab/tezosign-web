@@ -261,10 +261,25 @@ const OperationDetails = ({ operation, resetOperations }) => {
         })()}
         {operation.operation_info.type === 'storage_update' ? (
           <InfoBox.Item style={{ flex: '1 0 50%' }}>
-            <ContractChanges
-              newKeys={operation.operation_info.keys}
-              newThreshold={operation.operation_info.threshold}
-            />
+            {operation.storage_diff ? (
+              <ContractChanges
+                oldKeys={
+                  operation.storage_diff.keys.previous ??
+                  operation.storage_diff.keys.current
+                }
+                oldThreshold={
+                  operation.storage_diff.threshold.previous ??
+                  operation.storage_diff.threshold.current
+                }
+                newKeys={operation.storage_diff.keys.current}
+                newThreshold={operation.storage_diff.threshold.current}
+              />
+            ) : (
+              <ContractChanges
+                newKeys={operation.operation_info.keys}
+                newThreshold={operation.operation_info.threshold}
+              />
+            )}
           </InfoBox.Item>
         ) : (
           ''
