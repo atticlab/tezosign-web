@@ -232,6 +232,9 @@ const useAPI = () => {
   const getAddressBalance = (address) => {
     return API.get(`/${network}/${address}/balance`);
   };
+  const getWalletContracts = () => {
+    return API.get(`/${network}/contracts`);
+  };
   const getAssetMetaData = async (assetContractID, params = {}) => {
     return API.get(
       `/${network}/asset/${assetContractID}/meta_data${formatParams({
@@ -326,6 +329,7 @@ const useAPI = () => {
     editVesting,
     deleteVesting,
     getAddressBalance,
+    getWalletContracts,
   };
 };
 

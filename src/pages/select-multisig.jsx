@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import styled from 'styled-components';
 import { Form as BForm, Button } from 'react-bootstrap';
-import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
+import { Formik, Form as FForm, ErrorMessage } from 'formik';
 // TODO: Research import variants
 import * as Yup from 'yup';
 import { Text, Bold } from '../components/styled/Text';
-// import SelectCustom from '../components/SelectCustom';
+import SelectCustom from '../components/SelectCustom';
 import CardMultisigType from '../components/select-multisig/CardMultisigType';
 import { bs58Validation } from '../utils/helpers';
+import useAPI from '../hooks/useApi';
+import useRequest from '../hooks/useRequest';
 
 const SelectMultisigStyled = styled.section`
   display: flex;
@@ -47,14 +49,19 @@ const schema = Yup.object({
     .test('bs58check', 'Invalid checksum', (val) => bs58Validation(val)),
 });
 
-// const availableContracts = [
-//   'KT1fffffffffffffffffffffffffffffffff',
-//   'KT1NtGnEjacAkBph7k9HWVrN38PoYjcXTxdY',
-//   'KT1cvvvvvvvvvvdvvfdDDvvvvvvvvvvvvvvd',
-// ];
-
 const SelectMultisig = () => {
   const history = useHistory();
+  const { getWalletContracts } = useAPI();
+  const {
+    request: loadWalletContracts,
+    resp: walletContracts,
+    isLoading: isWalletContractsLoading,
+  } = useRequest(getWalletContracts);
+
+  useEffect(() => {
+    loadWalletContracts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <SelectMultisigStyled>
@@ -138,39 +145,26 @@ const SelectMultisig = () => {
               history.push(`/multisig/${values.address}`);
             }}
           >
-            {/* setFieldValue,  values */}
-            {({ isSubmitting, errors, touched }) => (
+            {({ isSubmitting, values, errors, touched, setFieldValue }) => (
               <FForm as={BForm}>
                 <BForm.Group
                   style={{ marginBottom: '10px', textAlign: 'left' }}
                 >
-                  <Field
-                    as={BForm.Control}
-                    type="text"
-                    name="address"
-                    aria-label="address"
-                    placeholder="KT1..."
-                    size="sm"
-                    autoComplete="off"
+                  <SelectCustom
+                    options={walletContracts || []}
+                    onChange={(value) => {
+                      setFieldValue('address', value.value);
+                    }}
                     isInvalid={!!errors.address && touched.address}
                     isValid={!errors.address && touched.address}
-                    style={{ height: 'auto' }}
+                    isTouched={touched.address}
+                    placeholder="KT1..."
+                    disabled={isWalletContractsLoading}
+                    defaultValue={{
+                      label: values.address,
+                      value: values.address,
+                    }}
                   />
-
-                  {/* <SelectCustom */}
-                  {/*  options={availableContracts} */}
-                  {/*  onChange={(value) => { */}
-                  {/*    setFieldValue('address', value.value); */}
-                  {/*  }} */}
-                  {/*  isInvalid={!!errors.address && touched.address} */}
-                  {/*  isValid={!errors.address && touched.address} */}
-                  {/*  isTouched={touched.address} */}
-                  {/*  placeholder="KT1..." */}
-                  {/*  defaultValue={{ */}
-                  {/*    label: values.address, */}
-                  {/*    value: values.address, */}
-                  {/*  }} */}
-                  {/* /> */}
 
                   <ErrorMessage
                     component={BForm.Control.Feedback}
